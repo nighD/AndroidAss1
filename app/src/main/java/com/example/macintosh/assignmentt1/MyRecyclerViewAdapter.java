@@ -1,76 +1,81 @@
 package com.example.macintosh.assignmentt1;
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.List;
+import com.example.macintosh.assignmentt1.MainActivity;
+import com.example.macintosh.assignmentt1.R;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+import java.util.ArrayList;
 
-    private List<String> mData;
-    private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
+/**
+ * Created by Parsania Hardik on 29-Jun-17.
+ */
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder> {
 
-    // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context, List<String> data) {
+    private LayoutInflater inflater;
+    private Context ctx;
+    private ArrayList<DataModel> dataSet;
 
-        this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView name;
+        private TextView description;
+        private TextView webURL;
+        private TextView category;
+
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            this.name = itemView.findViewById(R.id.name);
+            this.description = itemView.findViewById(R.id.description);
+            this.webURL = itemView.findViewById(R.id.webURL);
+            this.category = itemView.findViewById(R.id.category);
+
+
+        }
+
+
+    }
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data) {
+        this.dataSet = data;
     }
 
-    // inflates the row layout from xml when needed
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
-        return new ViewHolder(view);
+    public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
+        MyViewHolder holder = new MyViewHolder(view);
+
+        return holder;
     }
 
-    // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+    public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder, final int position) {
+        TextView textViewName = holder.name;
+        TextView textViewDescription = holder.description;
+        TextView textViewWebURL = holder.webURL;
+        TextView textViewCategory = holder.category;
+        textViewName.setText(dataSet.get(position).getName());
+        textViewDescription.setText(dataSet.get(position).getDescription());
+        textViewWebURL.setText(dataSet.get(position).getWebURL());
+        textViewCategory.setText(dataSet.get(position).getCategory());
+
+
     }
 
-    // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return dataSet.size();
     }
 
 
-    // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            myTextView = itemView.findViewById(R.id.tvAnimalName);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-        }
-    }
-
-    // convenience method for getting data at click position
-    String getItem(int id) {
-        return mData.get(id);
-    }
-
-    // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
-    }
 }
+
+

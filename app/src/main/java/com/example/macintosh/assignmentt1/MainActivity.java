@@ -3,9 +3,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -18,55 +20,33 @@ import java.util.Locale;
 import java.util.Scanner;
 public class MainActivity extends AppCompatActivity {
 
+    private static RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
+    private static ArrayList<DataModel> dataa = new ArrayList<DataModel>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        TrackingService trackingService = new TrackingService();
-//        trackingService.parseFile(this);
-//        TextView textView = findViewById(R.id.textView1);
-//        textView.setText(textView.getText() + " " + trackingService.trackingList.get(0) + " , ");
-//        Trackable trackable = new Trackable();
-//        trackable.parseFile(getApplicationContext());
-//        TextView textView1 = findViewById(R.id.textView1);
-//        textView1.setText(textView1.getText() + " " + trackable.trackableList.get(0) + " , ");
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
+        Trackable trackable = new Trackable();
+        trackable.parseFile(getApplicationContext());
+        //recyclerView.setHasFixedSize(true);
+        for ( int i = 0 ; i < trackable.trackableList.size();i++){
+            dataa.add(new DataModel(
+                    trackable.trackableList.get(i).name,
+                    trackable.trackableList.get(i).description,
+                    trackable.trackableList.get(i).webURL,
+                    trackable.trackableList.get(i).Category
 
-
-        RecyclerView recyclerView = findViewById(R.id.rvAnimals);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MyRecyclerViewAdapter adapter = new MyRecyclerViewAdapter(this, animalNames);
+            ));
+        }
+        recyclerView = findViewById(R.id.my_recycler_view);
+        adapter = new MyRecyclerViewAdapter(dataa);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+
 
     }
 }
