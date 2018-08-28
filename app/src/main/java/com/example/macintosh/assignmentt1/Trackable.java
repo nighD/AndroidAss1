@@ -43,7 +43,7 @@ public class Trackable {
             while (scanner.hasNext())
             {
                 trackableInfo trackInfo = new trackableInfo();
-                trackInfo.ID = Integer.parseInt(scanner.next());
+                trackInfo.ID = Integer.parseInt(scanner.next);
                 trackInfo.name = scanner.next();
                 trackInfo.description = scanner.next();
                 trackInfo.webURL = scanner.next();
