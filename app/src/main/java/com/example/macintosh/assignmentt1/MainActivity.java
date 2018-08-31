@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import android.app.Dialog;
 import android.widget.AdapterView;
 import java.lang.reflect.Field;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+
         fab.setOnClickListener(onAddingListener());
     }
 
@@ -130,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
             return Resources.getSystem().getDrawable(resourceId);
         }
     }
-
 }
+
 
 
 
