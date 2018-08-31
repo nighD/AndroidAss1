@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.TextViewCompat;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
 implements Filterable{
 
-    private LayoutInflater inflater;
     private Context ctx;
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
@@ -84,13 +84,13 @@ implements Filterable{
         }
 
     }
+
     public MyRecyclerViewAdapter(ArrayList<DataModel> data,Context ctx, Activity activity) {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
     }
-
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -101,7 +101,6 @@ implements Filterable{
         holder.container.setOnClickListener(onClickListener(  holder.getAdapterPosition()));
         return holder;
     }
-
     @Override
     public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder, final int position) {
 
@@ -117,6 +116,7 @@ implements Filterable{
         textViewCategory.setText(dataModel.getCategory());
         String picImage = "pic" + Integer.parseInt( dataModel.image );
         id = ctx.getResources().getIdentifier(picImage,"mipmap",ctx.getPackageName());
+
         textViewName.setOnClickListener(onClickListener(position));
         textViewDescription.setOnClickListener(onClickListener(position));
         textViewWebURL.setOnClickListener(onClickListener(position));
@@ -135,11 +135,34 @@ implements Filterable{
             }
         } );
 
+        holder.container.setOnClickListener(onClickListener(position));
+        imageView.setImageResource(id);
+        //imageView.setImageResource(R.drawable.pic1);
+//        holder.setItemClickListener( new ItemClickListener() {
+//            @Override
+//            public void onItemClick(View v,int pos) {
+//                Intent i=new Intent(ctx,Detailactivity.class);
+//                i.putExtra("Name",dataSet.get( position ).getName());
+//                i.putExtra("Position",position);
+//                //i.putExtra("Image",id);
+//                //START DETAIL ACTIVITY
+//                ctx.startActivity(i);
+//            }
+//        } );
+
     }
+    private void setDataToView(TextView name, TextView desc, TextView webURL, TextView category, int position) {
+        name.setText(dataSet.get(position).getName());
+        desc.setText(dataSet.get(position).getDescription());
+        webURL.setText(dataSet.get(position).getWebURL());
+        category.setText(dataSet.get(position).getCategory());
+    }
+
     public View.OnClickListener onClickListener(final int position) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 //                final Dialog dialog = new Dialog( activity );
 //
 //                dialog.setContentView(R.layout.activity_main);
@@ -147,27 +170,39 @@ implements Filterable{
 //                dialog.setCancelable(true); // dismiss when touching outside Dialog
 //
 //                // set the custom dialog components - texts and image
-                TextView name1=  dialog.findViewById(R.id.dianame);
-                TextView desc1 =  dialog.findViewById(R.id.diadesc);
-                TextView webURL1 =  dialog.findViewById(R.id.diaweburl);
-                TextView category1 =  dialog.findViewById(R.id.diacategory);
-                name1.setText(dataSetFilter.get(position).getName());
-                desc1.setText(dataSetFilter.get(position).getDescription());
-                webURL1.setText(dataSetFilter.get(position).getWebURL());
-                category1.setText(dataSetFilter.get(position).getCategory());
+
+
+
+
+                final Dialog dialog = new Dialog(activity);
+                dialog.setContentView(R.layout.cardview);
+                dialog.setTitle("Position " + position);
+                dialog.setCancelable(true); // dismiss when touching outside Dialog
+
+                // set the custom dialog components - texts and image
+                TextView name = (TextView) dialog.findViewById(R.id.name);
+                TextView desc = (TextView) dialog.findViewById(R.id.description);
+                TextView webURL = (TextView) dialog.findViewById(R.id.webURL);
+                TextView category = (TextView) dialog.findViewById(R.id.category);
+                ImageView icon = (ImageView) dialog.findViewById(R.id.image);
+
+//                if(activity!=null)
+//                {
+                    setDataToView(name, desc, webURL, category,position);
 
 
                     //setDataToView(name, desc, webURL, category,position);
+
+
+//                }
 
                 dialog.show();
                 Toast.makeText( ctx,"Test :"+ String.valueOf( position ), Toast.LENGTH_SHORT ).show();
             }
         };
     }
-    public void setDataToView(TextView name, TextView desc, TextView webURL, TextView category, int position) {
 
 
-    }
     @Override
     public int getItemCount() {
         return dataSetFilter.size();

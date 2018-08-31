@@ -40,6 +40,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity  {
 
+
     //    private Activity activity;
     MyRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -48,6 +49,12 @@ public class MainActivity extends AppCompatActivity  {
     private ArrayList<DataModel> dataa;
     private SearchView searchView;
     private RecyclerView listener;
+
+//    private Activity activity;
+    //private FloatingActionButton fab;
+
+//    static View.OnClickListener myOnClickListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +67,14 @@ public class MainActivity extends AppCompatActivity  {
         Trackable trackable = new Trackable();
         trackable.parseFile( getApplicationContext() );
         //recyclerView.setHasFixedSize(true);
+
         dataa = new ArrayList<>();
+
+        recyclerView = findViewById(R.id.recycler_view);
+        //fab = (FloatingActionButton) findViewById(R.id.fab);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
                     trackable.trackableList.get( i ).name,
@@ -71,6 +85,7 @@ public class MainActivity extends AppCompatActivity  {
 
             ) );
         }
+
         recyclerView = findViewById( R.id.recycler_view );
         //fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -97,16 +112,26 @@ public class MainActivity extends AppCompatActivity  {
         //imageView.setImageResource(R.drawable.pic2);
 
 
+
+        adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+//        fab.setOnClickListener(onAddingListener());
+
     }
 
     private View.OnClickListener onAddingListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final Dialog dialog = new Dialog( MainActivity.this );
                 dialog.setContentView( R.layout.dialog_add ); //layout for dialog
                 dialog.setTitle( "Add a new friend" );
                 dialog.setCancelable( false ); //none-dismiss when touching outside Dialog
+
+
 
                 // set the custom dialog components - texts and image
                 EditText name = (EditText) dialog.findViewById( R.id.name );
@@ -198,6 +223,7 @@ public class MainActivity extends AppCompatActivity  {
             return true;
         }
 
+
         return super.onOptionsItemSelected( item );
     }
 
@@ -221,7 +247,9 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-}
+
+    }
+
 
 
 
