@@ -20,25 +20,28 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Dialog;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 
 /**
  * Created by Parsania Hardik on 29-Jun-17.
  */
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
+implements Filterable{
 
     private LayoutInflater inflater;
     private Context ctx;
     private ArrayList<DataModel> dataSet;
+    private ArrayList<DataModel> dataSetFilter;
     private Activity activity;
+    private RecyclerViewAdapterListener listener;
     int id;
+    Dialog dialog;
 
-//    public MyRecyclerViewAdapter(Activity activity, ArrayList<DataModel> dataSet)
-//    {
-//        this.activity = activity;
-//        this.dataSet = dataSet;
-//    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView name;
@@ -48,6 +51,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         private ImageView imageView;
         private View container;
         private CardView cardView;
+
 
         ItemClickListener itemClickListener;
 
@@ -59,14 +63,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
             container = itemView.findViewById(R.id.card_view);
-            this.cardView = itemView.findViewById( R.id.card_view );
-
-            cardView.setOnClickListener( this );
-            imageView.setOnClickListener( this );
-            name.setOnClickListener( this );
-            description.setOnClickListener( this );
-            webURL.setOnClickListener( this );
-            category.setOnClickListener( this );
+            //this.cardView = itemView.findViewById( R.id.card_view );
+//            cardView.setOnClickListener( this );
+//            imageView.setOnClickListener( this );
+//            name.setOnClickListener( this );
+//            description.setOnClickListener( this );
+//            webURL.setOnClickListener( this );
+//            category.setOnClickListener( this );
 
 
         }
@@ -85,6 +88,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
+        this.dataSetFilter = data;
     }
 
     @Override
@@ -92,96 +96,123 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.cardview, parent, false);
-        MyViewHolder holder = new MyViewHolder(view);
+        final MyViewHolder holder = new MyViewHolder(view);
 
+        holder.container.setOnClickListener(onClickListener(  holder.getAdapterPosition()));
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder, final int position) {
+
+        final DataModel dataModel = dataSetFilter.get(position);
         TextView textViewName = holder.name;
         TextView textViewDescription = holder.description;
         TextView textViewWebURL = holder.webURL;
         TextView textViewCategory = holder.category;
         final ImageView imageView = holder.imageView;
-        textViewName.setText(dataSet.get(position).getName());
-        textViewDescription.setText(dataSet.get(position).getDescription());
-        textViewWebURL.setText(dataSet.get(position).getWebURL());
-        textViewCategory.setText(dataSet.get(position).getCategory());
-        String picImage = "pic" + Integer.toString(position+1);
+        textViewName.setText(dataModel.getName());
+        textViewDescription.setText(dataModel.getDescription());
+        textViewWebURL.setText(dataModel.getWebURL());
+        textViewCategory.setText(dataModel.getCategory());
+        String picImage = "pic" + Integer.parseInt( dataModel.image );
         id = ctx.getResources().getIdentifier(picImage,"mipmap",ctx.getPackageName());
-        holder.container.setOnClickListener(onClickListener(position));
-//        holder.imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                PopupMenu popupMenu = new PopupMenu(ctx, imageView);
-//                //Inflating the Popup using xml file
-//                popupMenu.getMenuInflater().inflate(R.layout.popup_menu, popupMenu.getMenu());
-//
-//                //registering popup with OnMenuItemClickListener
-//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        Toast.makeText(,"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
-//                        return true;
-//                    }
-//                });
-//
-//                popupMenu.show();//showing popup menu
-//            }
-//        }
-//        });
+        textViewName.setOnClickListener(onClickListener(position));
+        textViewDescription.setOnClickListener(onClickListener(position));
+        textViewWebURL.setOnClickListener(onClickListener(position));
+        textViewCategory.setOnClickListener(onClickListener(position));
+        imageView.setOnClickListener(onClickListener(position));
         imageView.setImageResource(id);
-        //imageView.setImageResource(R.drawable.pic1);
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.dialog);
         holder.setItemClickListener( new ItemClickListener() {
             @Override
             public void onItemClick(View v,int pos) {
                 Intent i=new Intent(ctx,Detailactivity.class);
-                i.putExtra("Name",dataSet.get( position ).getName());
+                i.putExtra("Name",dataModel.getName());
                 i.putExtra("Position",position);
-                //i.putExtra("Image",id);
-                //START DETAIL ACTIVITY
                 ctx.startActivity(i);
             }
         } );
 
     }
-    private View.OnClickListener onClickListener(final int position) {
+    public View.OnClickListener onClickListener(final int position) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.activity_main);
-                dialog.setTitle("Position " + position);
-                dialog.setCancelable(true); // dismiss when touching outside Dialog
+//                final Dialog dialog = new Dialog( activity );
+//
+//                dialog.setContentView(R.layout.activity_main);
+//                dialog.setTitle("Position " + position);
+//                dialog.setCancelable(true); // dismiss when touching outside Dialog
+//
+//                // set the custom dialog components - texts and image
+                TextView name1=  dialog.findViewById(R.id.dianame);
+                TextView desc1 =  dialog.findViewById(R.id.diadesc);
+                TextView webURL1 =  dialog.findViewById(R.id.diaweburl);
+                TextView category1 =  dialog.findViewById(R.id.diacategory);
+                name1.setText(dataSetFilter.get(position).getName());
+                desc1.setText(dataSetFilter.get(position).getDescription());
+                webURL1.setText(dataSetFilter.get(position).getWebURL());
+                category1.setText(dataSetFilter.get(position).getCategory());
 
-                // set the custom dialog components - texts and image
-                TextView name = (TextView) dialog.findViewById(R.id.name);
-                TextView desc = (TextView) dialog.findViewById(R.id.description);
-                TextView webURL = (TextView) dialog.findViewById(R.id.webURL);
-                TextView category = (TextView) dialog.findViewById(R.id.category);
-                ImageView icon = (ImageView) dialog.findViewById(R.id.image);
 
-                if(activity!=null)
-                {
-                    setDataToView(name, desc, webURL, category,position);
+                    //setDataToView(name, desc, webURL, category,position);
 
-
-                }
                 dialog.show();
+                Toast.makeText( ctx,"Test :"+ String.valueOf( position ), Toast.LENGTH_SHORT ).show();
             }
         };
     }
-    private void setDataToView(TextView name, TextView desc, TextView webURL, TextView category, int position) {
-        name.setText(dataSet.get(position).getName());
-        desc.setText(dataSet.get(position).getDescription());
-        webURL.setText(dataSet.get(position).getWebURL());
-        category.setText(dataSet.get(position).getCategory());
-    }
+    public void setDataToView(TextView name, TextView desc, TextView webURL, TextView category, int position) {
 
+
+    }
     @Override
     public int getItemCount() {
-        return dataSet.size();
+        return dataSetFilter.size();
     }
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    dataSetFilter = dataSet;
+                } else {
+                    ArrayList<DataModel> filteredList = new ArrayList<>();
+                    for (DataModel row : dataSet) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase())
+                                ||row.getCategory().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    dataSetFilter = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = dataSetFilter;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                dataSetFilter = (ArrayList<DataModel>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public interface RecyclerViewAdapterListener {
+        void onContactSelected(DataModel dataModel);
+    }
+
+
 
 
 }
