@@ -25,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,15 +56,23 @@ public class MainActivity extends AppCompatActivity {
         }
         recyclerView = findViewById(R.id.my_recycler_view);
 
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
 
         adapter = new MyRecyclerViewAdapter(dataa, getApplicationContext());
 
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
+
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+
+
+
 
         fab.setOnClickListener(onAddingListener());
         //String pic0 = "pic2";
@@ -149,7 +156,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     }
+
 
 
 }
