@@ -2,10 +2,15 @@ package com.example.macintosh.assignmentt1;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+<<<<<<< HEAD
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.widget.TextViewCompat;
+=======
+import android.content.Intent;
+import android.support.v7.widget.CardView;
+>>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -13,17 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+<<<<<<< HEAD
 import android.widget.Toast;
 import android.app.Dialog;
+=======
+>>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
 
-import com.example.macintosh.assignmentt1.MainActivity;
-import com.example.macintosh.assignmentt1.R;
-
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +40,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private Activity activity;
     int id;
 
+<<<<<<< HEAD
 //    public MyRecyclerViewAdapter(Activity activity, ArrayList<DataModel> dataSet)
 //    {
 //        this.activity = activity;
@@ -44,25 +48,54 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
+=======
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+>>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
 
         private TextView name;
         private TextView description;
         private TextView webURL;
         private TextView category;
         private ImageView imageView;
+<<<<<<< HEAD
         private View container;
+=======
+        private CardView cardView;
+>>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
 
+        ItemClickListener itemClickListener;
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(final View itemView) {
             super(itemView);
             this.name = itemView.findViewById(R.id.name);
             this.description = itemView.findViewById(R.id.description);
             this.webURL = itemView.findViewById(R.id.webURL);
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
+<<<<<<< HEAD
             container = itemView.findViewById(R.id.card_view);
+=======
+            this.cardView = itemView.findViewById( R.id.card_view );
+
+            cardView.setOnClickListener( this );
+            imageView.setOnClickListener( this );
+            name.setOnClickListener( this );
+            description.setOnClickListener( this );
+            webURL.setOnClickListener( this );
+            category.setOnClickListener( this );
+>>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
 
 
+        }
+        public void setItemClickListener(ItemClickListener itemClickListener)
+        {
+            this.itemClickListener=itemClickListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            this.itemClickListener.onItemClick(v,getLayoutPosition());
         }
 
     }
@@ -117,6 +150,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        });
         imageView.setImageResource(id);
         //imageView.setImageResource(R.drawable.pic1);
+        holder.setItemClickListener( new ItemClickListener() {
+            @Override
+            public void onItemClick(View v,int pos) {
+                Intent i=new Intent(ctx,Detailactivity.class);
+                i.putExtra("Name",dataSet.get( position ).getName());
+                i.putExtra("Position",position);
+                //i.putExtra("Image",id);
+                //START DETAIL ACTIVITY
+                ctx.startActivity(i);
+            }
+        } );
 
     }
     private View.OnClickListener onClickListener(final int position) {
