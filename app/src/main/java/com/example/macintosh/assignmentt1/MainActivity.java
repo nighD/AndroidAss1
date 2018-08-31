@@ -30,11 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
 //    private Activity activity;
     private static RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+//    private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
     private FloatingActionButton fab;
     private static ArrayList<DataModel> dataa = new ArrayList<DataModel>();
-    static View.OnClickListener myOnClickListener;
+//    static View.OnClickListener myOnClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
         Trackable trackable = new Trackable();
         trackable.parseFile(getApplicationContext());
         //recyclerView.setHasFixedSize(true);
-
+        recyclerView = findViewById(R.id.my_recycler_view);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add(new DataModel(
                     trackable.trackableList.get(i).name,
@@ -53,24 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
             ));
         }
-        recyclerView = findViewById(R.id.my_recycler_view);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
         adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         fab.setOnClickListener(onAddingListener());
-        //String pic0 = "pic2";
-        //int id = getApplicationContext().getResources().getIdentifier(pic0,"drawable",getPackageName());
-        //TextView textView = findViewById(R.id.name);
-        //TextView textView1 = findViewById(R.id.description);
-        //textView.setText(id);
-        //ImageView imageView = findViewById(R.id.thumbnail);
-//        textView1.setText("android:resource//"+getPackageName()+"/");
-        //imageView.setImageResource(R.drawable.pic2);
-
-
     }
 
     private View.OnClickListener onAddingListener() {
@@ -79,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(MainActivity.this);
                 dialog.setContentView(R.layout.dialog_add); //layout for dialog
-                dialog.setTitle("Add a new friend");
+                dialog.setTitle("Add a new Trackable");
                 dialog.setCancelable(false); //none-dismiss when touching outside Dialog
 
                 // set the custom dialog components - texts and image
