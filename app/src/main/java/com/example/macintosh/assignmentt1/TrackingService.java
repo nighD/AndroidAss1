@@ -72,7 +72,7 @@ public class TrackingService
         trackingList.clear();
         // resource reference to tracking_data.txt in res/raw/ folder of your project
         // supports trailing comments with //
-        try (Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.food_truck_data)))
+        try (Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.tracking_data)))
         {
             // match comma and 0 or more whitespace OR trailing space and newline
             scanner.useDelimiter(",\\s*|\\s*\\n+");

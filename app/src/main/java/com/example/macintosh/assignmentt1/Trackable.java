@@ -15,10 +15,11 @@ public class Trackable {
     public static final String LOG_TAG = TrackingService.class.getName();
     public List<trackableInfo> trackableList = new ArrayList<>();
     public static Context context;
+    public String lineBuffer;
     public Trackable(){
     }
     public static class trackableInfo{
-        private int ID;
+        public String ID;
         public String name;
         public String description;
         public String webURL;
@@ -43,11 +44,13 @@ public class Trackable {
             while (scanner.hasNext())
             {
                 trackableInfo trackInfo = new trackableInfo();
-                trackInfo.ID = Integer.parseInt(scanner.next);
-                trackInfo.name = scanner.next();
-                trackInfo.description = scanner.next();
-                trackInfo.webURL = scanner.next();
-                trackInfo.Category = scanner.next();
+                trackInfo.ID = scanner.next();
+                if(scanner.hasNext()){
+                    trackInfo.name = scanner.next();
+                    trackInfo.description = scanner.next();
+                    trackInfo.webURL = scanner.next();
+                    trackInfo.Category = scanner.next();
+                }
                 trackableList.add(trackInfo);
             }
         }
