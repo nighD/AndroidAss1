@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-<<<<<<< HEAD
+
 import android.app.Dialog;
 import android.widget.AdapterView;
 import java.lang.reflect.Field;
@@ -25,8 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-=======
->>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,17 +56,17 @@ public class MainActivity extends AppCompatActivity {
             ));
         }
         recyclerView = findViewById(R.id.my_recycler_view);
-<<<<<<< HEAD
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
-=======
+
         adapter = new MyRecyclerViewAdapter(dataa, getApplicationContext());
->>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
+
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-<<<<<<< HEAD
+
         fab.setOnClickListener(onAddingListener());
         //String pic0 = "pic2";
         //int id = getApplicationContext().getResources().getIdentifier(pic0,"drawable",getPackageName());
@@ -149,10 +148,10 @@ public class MainActivity extends AppCompatActivity {
             return Resources.getSystem().getDrawable(resourceId);
         }
     }
-=======
+
     }
 
->>>>>>> 2bab2eb4900f98b7db6b47f4b3ccd1e2ba92f5bf
+
 }
 
 
