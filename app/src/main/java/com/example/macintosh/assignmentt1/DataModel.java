@@ -6,12 +6,14 @@ public class DataModel {
     String description;
     String webURL;
     String category;
+    String image;
 
-    public DataModel(String name, String description, String webURL, String category) {
+    public DataModel(String name, String description, String webURL, String category,String image) {
         this.name = name;
         this.description = description;
         this.webURL = webURL;
         this.category = category;
+        this.image = image;
     }
 
     public String getName() {
@@ -29,4 +31,6 @@ public class DataModel {
     public String getCategory() {
         return category;
     }
+
+    public String getImage(){return image;}
 }

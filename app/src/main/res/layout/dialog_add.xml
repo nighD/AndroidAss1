@@ -17,7 +17,7 @@
             android:text="@string/name" />
 
         <EditText
-            android:id="@+id/name"
+            android:id="@+id/aname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -37,7 +37,7 @@
             android:text="@string/job" />
 
         <EditText
-            android:id="@+id/job"
+            android:id="@+id/ajob"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"

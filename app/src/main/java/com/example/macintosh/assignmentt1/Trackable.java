@@ -19,7 +19,7 @@ public class Trackable {
     public Trackable(){
     }
     public static class trackableInfo{
-        public String ID;
+        private String ID;
         public String name;
         public String description;
         public String webURL;
@@ -29,8 +29,11 @@ public class Trackable {
         {
             return String.format(Locale.getDefault(), "ID: %d, name : %s, description : %s, webURL : %s, category : %s", ID, name ,description,webURL,Category);
         }
+        public String getID(){return ID;}
 
     }
+
+
     public void parseFile(Context context)
     {
         trackableList.clear();
