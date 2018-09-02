@@ -114,11 +114,11 @@ implements Filterable{
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
-        try {
+        //try {
             String picImage = "pic" + Integer.parseInt(dataModel.image);
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
-        }
-        catch(NumberFormatException e){}
+        //}
+        //catch(NumberFormatException e){}
         textViewName.setOnClickListener(onClickListener(position));
         textViewDescription.setOnClickListener(onClickListener(position));
         textViewWebURL.setOnClickListener(onClickListener(position));
