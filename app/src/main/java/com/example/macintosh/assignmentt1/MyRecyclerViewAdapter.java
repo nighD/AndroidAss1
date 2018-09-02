@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ implements Filterable{
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
-    private ArrayList<DataTrackingModel> dataTrackingSet;
+//    private ArrayList<DataTrackingModel> dataTrackingSet;
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
     private RecyclerViewAdapterListener listener;
@@ -66,6 +67,7 @@ implements Filterable{
         private ImageView imageView;
         private View container;
         private CardView cardView;
+        private ImageButton removeButton;
 
 
         ItemClickListener itemClickListener;
@@ -82,7 +84,9 @@ implements Filterable{
             this.stopTime = itemView.findViewById(R.id.StopTime);
             this.latitude = itemView.findViewById(R.id.Latitude);
             this.longitude = itemView.findViewById(R.id.Longitude);
+            removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
             container = itemView.findViewById(R.id.card_view);
+
             //this.cardView = itemView.findViewById( R.id.card_view );
 //            cardView.setOnClickListener( this );
 //            imageView.setOnClickListener( this );
@@ -110,7 +114,7 @@ implements Filterable{
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
-        this.dataTrackingSet = dataTracking;
+//        this.dataTrackingSet = dataTracking;
         this.dataTrackingModels = dataTracking;
     }
     @Override
@@ -187,6 +191,16 @@ implements Filterable{
 //                ctx.startActivity(i);
 //            }
 //        } );
+        holder.removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String itemLabel = dataTrackingModels.get(position).toString();
+                dataTrackingModels.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,dataTrackingModels.size());
+                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
     private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
