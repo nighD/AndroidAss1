@@ -27,7 +27,12 @@ import android.widget.Toolbar;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Parsania Hardik on 29-Jun-17.
@@ -40,6 +45,7 @@ implements Filterable{
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
     private ArrayList<DataTrackingModel> dataTrackingSet;
+    public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
     private RecyclerViewAdapterListener listener;
     int id;
@@ -136,11 +142,14 @@ implements Filterable{
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
-        textViewDate.setText(dataTrackingModel.getDate().toString());
-        textViewID.setText(dataTrackingModel.getTrackableId());
-        textViewStopTime.setText(dataTrackingModel.getStopTime());
-        textViewLatitude.setText(Double.toString(dataTrackingModel.getLatitude()));
-        textViewLongitude.setText(Double.toString(dataTrackingModel.getLongitude()));
+        try{
+            textViewDate.setText(dateFormat.format(dataTrackingModel.getDate()));
+            textViewID.setText(String.valueOf(dataTrackingModel.getTrackableId()));
+            textViewStopTime.setText(String.valueOf(dataTrackingModel.getStopTime()));
+            textViewLatitude.setText(Double.toString(dataTrackingModel.getLatitude()));
+            textViewLongitude.setText(Double.toString(dataTrackingModel.getLongitude()));
+        }
+        catch (NullPointerException e){}
         try {
             String picImage = "pic" + Integer.parseInt(dataModel.image);
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
@@ -182,8 +191,8 @@ implements Filterable{
     }
     private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
         trackingDate.setText(dataTrackingModels.get(position).getDate().toString());
-        trackableID.setText(dataTrackingModels.get(position).getTrackableId());
-        stopTime.setText(dataTrackingModels.get(position).getStopTime());
+        trackableID.setText(String.valueOf(dataTrackingModels.get(position).getTrackableId()));
+        stopTime.setText(String.valueOf(dataTrackingModels.get(position).getStopTime()));
         latitude.setText(Double.toString(dataTrackingModels.get(position).getLatitude()));
         longitude.setText(Double.toString(dataTrackingModels.get(position).getLongitude()));
     }
