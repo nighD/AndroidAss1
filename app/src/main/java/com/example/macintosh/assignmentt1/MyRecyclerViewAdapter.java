@@ -25,6 +25,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toolbar;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -36,6 +38,8 @@ implements Filterable{
     private Context ctx;
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
+    private ArrayList<DataTrackingModel> dataTrackingModels;
+    private ArrayList<DataTrackingModel> dataTrackingSet;
     private Activity activity;
     private RecyclerViewAdapterListener listener;
     int id;
@@ -48,6 +52,11 @@ implements Filterable{
         private TextView description;
         private TextView webURL;
         private TextView category;
+        private TextView trackingDate;
+        private TextView trackableID;
+        private TextView stopTime;
+        private TextView latitude;
+        private TextView longitude;
         private ImageView imageView;
         private View container;
         private CardView cardView;
@@ -62,6 +71,11 @@ implements Filterable{
             this.webURL = itemView.findViewById(R.id.webURL);
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
+            this.trackingDate = itemView.findViewById(R.id.trackingDate);
+            this.trackableID = itemView.findViewById(R.id.trackableID);
+            this.stopTime = itemView.findViewById(R.id.StopTime);
+            this.latitude = itemView.findViewById(R.id.Latitude);
+            this.longitude = itemView.findViewById(R.id.Longitude);
             container = itemView.findViewById(R.id.card_view);
             //this.cardView = itemView.findViewById( R.id.card_view );
 //            cardView.setOnClickListener( this );
@@ -85,11 +99,13 @@ implements Filterable{
 
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data,Context ctx, Activity activity) {
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity) {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
+        this.dataTrackingSet = dataTracking;
+        this.dataTrackingModels = dataTracking;
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -105,15 +121,26 @@ implements Filterable{
     public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder, final int position) {
 
         final DataModel dataModel = dataSetFilter.get(position);
+        final DataTrackingModel dataTrackingModel = dataTrackingModels.get(position);
         TextView textViewName = holder.name;
         TextView textViewDescription = holder.description;
         TextView textViewWebURL = holder.webURL;
         TextView textViewCategory = holder.category;
+        TextView textViewDate = holder.trackingDate;
+        TextView textViewID = holder.trackableID;
+        TextView textViewStopTime = holder.stopTime;
+        TextView textViewLatitude = holder.latitude;
+        TextView textViewLongitude = holder.longitude;
         final ImageView imageView = holder.imageView;
         textViewName.setText(dataModel.getName());
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
+        textViewDate.setText(dataTrackingModel.getDate().toString());
+        textViewID.setText(dataTrackingModel.getTrackableId());
+        textViewStopTime.setText(dataTrackingModel.getStopTime());
+        textViewLatitude.setText(Double.toString(dataTrackingModel.getLatitude()));
+        textViewLongitude.setText(Double.toString(dataTrackingModel.getLongitude()));
         try {
             String picImage = "pic" + Integer.parseInt(dataModel.image);
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
@@ -153,11 +180,12 @@ implements Filterable{
 //        } );
 
     }
-    private void setDataToView(TextView name, TextView desc, TextView webURL, TextView category, int position) {
-        name.setText(dataSet.get(position).getName());
-        desc.setText(dataSet.get(position).getDescription());
-        webURL.setText(dataSet.get(position).getWebURL());
-        category.setText(dataSet.get(position).getCategory());
+    private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
+        trackingDate.setText(dataTrackingModels.get(position).getDate().toString());
+        trackableID.setText(dataTrackingModels.get(position).getTrackableId());
+        stopTime.setText(dataTrackingModels.get(position).getStopTime());
+        latitude.setText(Double.toString(dataTrackingModels.get(position).getLatitude()));
+        longitude.setText(Double.toString(dataTrackingModels.get(position).getLongitude()));
     }
 
     public View.OnClickListener onClickListener(final int position) {
@@ -177,20 +205,20 @@ implements Filterable{
 
 
                 final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.cardview);
+                dialog.setContentView(R.layout.dialog);
                 dialog.setTitle("Position " + position);
                 dialog.setCancelable(true); // dismiss when touching outside Dialog
 
                 // set the custom dialog components - texts and image
-                TextView name = (TextView) dialog.findViewById(R.id.name);
-                TextView desc = (TextView) dialog.findViewById(R.id.description);
-                TextView webURL = (TextView) dialog.findViewById(R.id.webURL);
-                TextView category = (TextView) dialog.findViewById(R.id.category);
-                ImageView icon = (ImageView) dialog.findViewById(R.id.image);
+                TextView trackingDate = (TextView) dialog.findViewById(R.id.trackingDate);
+                TextView trackableID = (TextView) dialog.findViewById(R.id.trackableID);
+                TextView stopTime = (TextView) dialog.findViewById(R.id.StopTime);
+                TextView latitude = (TextView) dialog.findViewById(R.id.Latitude);
+                TextView longitude = (TextView) dialog.findViewById(R.id.Longitude);
 
 //                if(activity!=null)
 //                {
-                    setDataToView(name, desc, webURL, category,position);
+                    setDataToView(trackingDate, trackableID, stopTime, latitude, longitude,position);
 
 
                     //setDataToView(name, desc, webURL, category,position);

@@ -13,27 +13,34 @@
 
 
     <TextView
-        android:id = "@+id/dianame"
+        android:id = "@+id/trackableID"
         android:layout_width="wrap_content"
         android:layout_height = "wrap_content"
         android:text="Test"
         />
     <TextView
-        android:id = "@+id/diaweburl"
+        android:id = "@+id/trackingDate"
         android:layout_width="match_parent"
         android:layout_height = "wrap_content"
         android:text="Test"
         android:layout_marginBottom="5dp"
         />
     <TextView
-        android:id = "@+id/diacategory"
+        android:id = "@+id/StopTime"
         android:layout_width="wrap_content"
         android:layout_height = "wrap_content"
         android:text="Test"
         android:layout_marginBottom="5dp"
         />
     <TextView
-        android:id = "@+id/diadesc"
+        android:id = "@+id/Latitude"
+        android:layout_width="wrap_content"
+        android:layout_height = "wrap_content"
+        android:text="Test"
+        android:layout_marginBottom="5dp"
+        />
+    <TextView
+        android:id = "@+id/Longitude"
         android:layout_width="wrap_content"
         android:layout_height = "wrap_content"
         android:text="Test"
