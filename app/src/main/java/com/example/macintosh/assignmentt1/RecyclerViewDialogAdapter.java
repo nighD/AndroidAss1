@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
+
 import android.widget.Toast;
 
 public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerViewDialogAdapter.ViewHolder> {
@@ -63,6 +65,11 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
                     , 0,0,0,0 ));
         }
+    }
+    public void AddTrackingData()
+    {
+        Date date = new Date();
+        trackingData1.add(0,new DataTrackingModel(date, position1, 2, 954.3, 107.5));
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
