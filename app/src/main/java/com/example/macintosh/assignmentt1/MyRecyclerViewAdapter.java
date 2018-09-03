@@ -89,9 +89,9 @@ implements Filterable{
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
 
-            container = itemView.findViewById(R.id.card_view);
+//            container = itemView.findViewById(R.id.card_view);
 
-            removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
+//            removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
             container = itemView.findViewById(R.id.card_view);
 
             //this.cardView = itemView.findViewById( R.id.card_view );
@@ -175,30 +175,17 @@ implements Filterable{
             }
         } );
         imageView.setImageResource(id);
-
-        //imageView.setImageResource(R.drawable.pic1);
-//        holder.setItemClickListener( new ItemClickListener() {
+//        holder.removeButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onItemClick(View v,int pos) {
-//                Intent i=new Intent(ctx,Detailactivity.class);
-//                i.putExtra("Name",dataSet.get( position ).getName());
-//                i.putExtra("Position",position);
-//                //i.putExtra("Image",id);
-//                //START DETAIL ACTIVITY
-//                ctx.startActivity(i);
+//            public void onClick(View v) {
+//                String itemLabel = dataTrackingModels.get(position).toString();
+//                dataTrackingModels.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position,dataTrackingModels.size());
+//                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
+//
 //            }
-//        } );
-        holder.removeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String itemLabel = dataTrackingModels.get(position).toString();
-                dataTrackingModels.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,dataTrackingModels.size());
-                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
-
-            }
-        });
+//        });
 
 
     }

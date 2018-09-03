@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.SearchView;
@@ -49,8 +48,6 @@ public class MainActivity extends AppCompatActivity  {
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
     private SearchView searchView;
-//    private RecyclerView listener;
-    private Button addButton;
 
 
     @Override
@@ -67,7 +64,6 @@ public class MainActivity extends AppCompatActivity  {
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
-//        addButton = (Button)findViewById(R.id.btn_add);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -105,19 +101,6 @@ public class MainActivity extends AppCompatActivity  {
         adapter = new MyRecyclerViewAdapter(dataa,trackingData,getApplicationContext(),this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-////        addButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(),"Button Pressed",Toast.LENGTH_SHORT).show();
-//                Date date = new Date();
-//                int position = 0;
-//                String itemLabel = "New Trackable";
-//                trackingData.add(new DataTrackingModel(date,trackingData.size(),0,0,0));
-//                adapter.notifyItemInserted(position);
-//                recyclerView.scrollToPosition(position);
-//                Toast.makeText(getApplicationContext(),"Added : " + itemLabel,Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
     }
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {
@@ -144,24 +127,19 @@ public class MainActivity extends AppCompatActivity  {
         searchView.setSearchableInfo( searchManager
                 .getSearchableInfo( getComponentName() ) );
         searchView.setMaxWidth( Integer.MAX_VALUE );
-        //adapter.get
         // listening to search query text change
         searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // filter recycler view when query submitted
-                //adapter.
                 adapter.getFilter().filter( query );
-                //adapter.getFilter().convertResultToString( adapter.getFilter(). )
                 System.out.println( query );
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                // filter recycler view when text is changed
                 adapter.getFilter().filter( query );
-                //System.out.println(query);
                 return false;
             }
         } );
@@ -170,12 +148,7 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             return true;
         }

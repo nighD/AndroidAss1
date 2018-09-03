@@ -10,12 +10,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Button;
+import java.time.LocalDateTime;
+import android.widget.Toast;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ShowFragment extends DialogFragment  {
     int finalPosition;
+    private Button addButton;
+    private Trackable trackable;
+    private TrackingService trackingService;
     public ShowFragment newInstance(final int num) {
        ShowFragment f = new ShowFragment();
 
@@ -36,18 +42,19 @@ public class ShowFragment extends DialogFragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //String strtext=getArguments().getString("ID");
+
         Bundle aa = this.getArguments();
         if (aa != null) {
 
 
         finalPosition = aa.getInt("num");}
         System.out.println("finalPosition is: "+finalPosition);
-        View rootView=inflater.inflate(R.layout.fraglayout,container);
+        final View rootView=inflater.inflate(R.layout.fraglayout,container);
 
         //RECYCER
         dataa = new ArrayList<>( );
         trackingData = new ArrayList<>();
-        Trackable trackable = new Trackable();
+        trackable = new Trackable();
         trackable.parseFile( this.getContext() );
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
@@ -59,7 +66,7 @@ public class ShowFragment extends DialogFragment  {
 
             ) );
         }
-        TrackingService trackingService = new TrackingService();
+        trackingService = new TrackingService();
         trackingService.parseFile(this.getContext());
         for (int i = 0; i < trackingService.trackingList.size(); i++){
             trackingData.add(new DataTrackingModel(trackingService.trackingList.get(i).date,
@@ -68,9 +75,10 @@ public class ShowFragment extends DialogFragment  {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
+        addButton = (Button) rootView.findViewById(R.id.btn_add);
         rv= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-
+        getDialog().setTitle("Tracking data "+ "\n" + trackable.trackableList.get(finalPosition).name);
         //ADAPTER
         try {
             adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition);
@@ -78,8 +86,21 @@ public class ShowFragment extends DialogFragment  {
             e.printStackTrace();
         }
         rv.setAdapter(adapter);
+        final Context ctx = this.getContext();
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Date date = new Date();
+                int i = trackable.trackableList.size();
+                trackingData.add(finalPosition,new DataTrackingModel(date, finalPosition, 0, 0.0, 0.0));
+                adapter.notifyItemInserted(i);
+                rv.scrollToPosition(i);
 
-        this.getDialog().setTitle("TV Shows");
+                // Show the added item label
+                Toast.makeText(ctx,"Added",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         getDialog().setCancelable(true);
         return rootView;
     }
