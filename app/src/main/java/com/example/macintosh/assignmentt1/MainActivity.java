@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity  {
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
+        addButton = (Button)findViewById(R.id.btn_add);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity  {
                                                     trackingService.trackingList.get(i).latitude,
                                                     trackingService.trackingList.get(i).longitude));
         }
-        addButton = (Button)findViewById(R.id.btn_add);
         recyclerView = findViewById( R.id.recycler_view );
 
         adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
@@ -108,10 +108,11 @@ public class MainActivity extends AppCompatActivity  {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Button Pressed",Toast.LENGTH_SHORT).show();
                 Date date = new Date();
                 int position = 0;
                 String itemLabel = "New Trackable";
-                trackingData.add(0,new DataTrackingModel(date,trackingData.size(),0,0,0));
+                trackingData.add(new DataTrackingModel(date,trackingData.size(),0,0,0));
                 adapter.notifyItemInserted(position);
                 recyclerView.scrollToPosition(position);
                 Toast.makeText(getApplicationContext(),"Added : " + itemLabel,Toast.LENGTH_SHORT).show();
@@ -119,13 +120,10 @@ public class MainActivity extends AppCompatActivity  {
         });
 
     }
-
-
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView parent, View view, int position, long id) {
-
             }
 
             @Override
