@@ -1,17 +1,25 @@
 package com.example.macintosh.assignmentt1;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import java.util.Calendar;
+import java.util.Date;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,36 +38,52 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-    TextView date;
     TextView trackableID;
-    TextView stoptime;
-    TextView longtitude;
-    TextView latitude;
+    TextView title;
+    TextView starttime;
+    TextView endtime;
+    TextView meettime;
+    TextView currentlocation;
+    TextView meetlocation;
     ImageButton Delete;
+    ImageButton Edit;
+    ImageButton Add;
         public ViewHolder (View itemView) {
             super(itemView);
-            date= itemView.findViewById(R.id.date);
+
             trackableID = itemView.findViewById( R.id.trackableID );
-            stoptime = itemView.findViewById( R.id.stoptime );
-            longtitude = itemView.findViewById( R.id.longtitude );
-            latitude = itemView.findViewById( R.id.latitude );
+            title = itemView.findViewById( R.id.title );
+            starttime = itemView.findViewById( R.id.starttime );
+            endtime = itemView.findViewById( R.id.endtime );
+            meettime = itemView.findViewById( R.id.meettime );
+            currentlocation = itemView.findViewById( R.id.currentLocation );
+            meetlocation = itemView.findViewById( R.id.meetLocation );
             Delete = itemView.findViewById( R.id.deleteButton );
+            Edit = itemView.findViewById( R.id.edit );
+            Add = itemView.findViewById( R.id.add );
+
         }
     }
     Context c;
     ArrayList<DataTrackingModel> trackingData;
     ArrayList<DataTrackingModel> trackingData1;
+    ArrayList<DataTracking> dataTrackings;
     ArrayList<DataModel> trackableData;
     int position1;
-    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position) throws ParseException {
+    Dialog dialog;
+    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position,ArrayList<DataTracking> dataTrackings) throws ParseException {
         this.c = c;
         this.trackingData = trackingData;
+        //dataTrackings = new ArrayList<>(  );
         this.trackableData = trackableData;
-
+        this.dataTrackings = dataTrackings;
         this.position1 = position;
         this.trackingData1 = compartID( trackingData,position1 );
-        if (trackingData1.isEmpty()){
-            trackingData1.add(new DataTrackingModel(
+
+        if (dataTrackings.isEmpty()){
+            this.dataTrackings.add(new DataTracking(position1 +1,"No tracking data",
+                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
+                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
                     DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
                     , 0,0,0,0 ));
         }
@@ -73,15 +97,22 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
             holder.Delete.setOnClickListener(onClickListener(position));
-            holder.date.setText("Date: " + trackingData1.get( position ).getDate().toString() );
-            holder.stoptime.setText( "Stop Time : " + Integer.toString( trackingData1.get( position ).getStopTime() ) );
-            holder.latitude.setText( "Latitude : "+ Double.toString( trackingData1.get( position ).getLatitude() ) );
-            holder.longtitude.setText( "Longtitude : "+Double.toString( trackingData1.get( position ).getLongitude() ) );
+            holder.trackableID.setText("Trackable ID: "+ Integer.toString( dataTrackings.get(position).trackableId ));
+            holder.title.setText("Title: "+ dataTrackings.get(position).title );
+            holder.starttime.setText("Start Time: "+ dataTrackings.get(position).starttime.toString() );
+            holder.endtime.setText("End Time: " +dataTrackings.get( position ).endtime.toString());
+            holder.meettime.setText( "Meet Time: "+dataTrackings.get(position).meettime.toString() );
+            holder.currentlocation.setText("Current Location: "+ Double.toString(dataTrackings.get( position ).currentLocationlatitude )
+                    + Double.toString(dataTrackings.get( position ).currentLocationlongtitude ) );
+            holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get( position ).meetLocationlatitude )
+                    + Double.toString(dataTrackings.get( position ).meetLocationlongtitude ) );
+            holder.Add.setOnClickListener( onClickListener(position) );
+
     }
 
     @Override
     public int getItemCount() {
-        return trackingData1.size();
+        return dataTrackings.size();
     }
     private ArrayList<DataTrackingModel> compartID(ArrayList<DataTrackingModel> dataTrackingModels, int position){
         ArrayList<DataTrackingModel> dataTrackingModels1 = new ArrayList<>(  );
@@ -97,8 +128,39 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//
+                dialog = new Dialog(c);
+                dialog.setTitle( "Add" );
+                dialog.setContentView(R.layout.dialog_template);
+                final EditText Write = dialog.findViewById(R.id.writeTitle);
+                Button SaveMyName = dialog.findViewById(R.id.SaveNow);
+                final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
+                 final TimePicker timePicker =  dialog.findViewById(R.id.time_picker);
+
+                Write.setEnabled(true);
+                SaveMyName.setEnabled(true);
+
+                SaveMyName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        dataTrackings.get( 0 ).title = Write.getText().toString();
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),timePicker.getHour(),timePicker.getMinute(),0 );
+                        Date date = calendar.getTime();
+                        dataTrackings.get( 0 ).meettime = date;
+                        notifyDataSetChanged();
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
             }
         };
+    }
+    public void SharedPrefesSAVE(String Name){
+        SharedPreferences prefs = c.getSharedPreferences("NAME", 0);
+        SharedPreferences.Editor prefEDIT = prefs.edit();
+        prefEDIT.putString("Name", Name);
+        prefEDIT.commit();
     }
 }

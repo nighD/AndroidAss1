@@ -83,22 +83,9 @@ implements Filterable{
             this.webURL = itemView.findViewById(R.id.webURL);
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
-
             container = itemView.findViewById(R.id.card_view);
-
-            removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
+            //removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
             container = itemView.findViewById(R.id.card_view);
-
-            //this.cardView = itemView.findViewById( R.id.card_view );
-//            cardView.setOnClickListener( this );
-//            imageView.setOnClickListener( this );
-//            name.setOnClickListener( this );
-//            description.setOnClickListener( this );
-//            webURL.setOnClickListener( this );
-//            category.setOnClickListener( this );
-
-
-
         }
         public void setItemClickListener(ItemClickListener itemClickListener)
         {
@@ -160,26 +147,9 @@ implements Filterable{
         imageView.setOnClickListener(onClickListener(tv,position));
         imageView.setImageResource(id);
 
-        holder.setItemClickListener( new ItemClickListener() {
-            @Override
-            public void onItemClick(View v,int pos) {
-                Intent i=new Intent(ctx,Detailactivity.class);
-                i.putExtra("Name",dataModel.getName());
-                i.putExtra("Position",position);
-                ctx.startActivity(i);
-            }
-        } );
+
         imageView.setImageResource(id);
-        holder.removeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String itemLabel = dataTrackingModels.get(position).toString();
-                dataTrackingModels.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,dataTrackingModels.size());
-                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
 
     }

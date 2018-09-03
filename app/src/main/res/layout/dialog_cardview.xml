@@ -15,28 +15,39 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/add"
+            android:layout_marginLeft="95dp"
+            />
+        <ImageButton
+            android:id="@+id/edit"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/edit"
+            android:layout_marginLeft="10dp"
+            />
         <ImageButton
             android:id="@+id/deleteButton"
             android:layout_width="20dp"
             android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
             android:src="@mipmap/delete"
-            android:layout_gravity="center_horizontal"
             />
+    </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="No Tracking Data"
-            android:id="@+id/date"
-            android:layout_alignParentLeft="true"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="No Tracking Data"
-            android:id="@+id/stoptime"
+            android:id="@+id/trackableID"
             android:layout_alignParentLeft="true"
             />
 
@@ -45,7 +56,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="No Tracking Data"
-            android:id="@+id/longtitude"
+            android:id="@+id/title"
             android:layout_alignParentLeft="true"
             />
         <TextView
@@ -53,10 +64,41 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="No Tracking Data"
-            android:id="@+id/latitude"
+            android:id="@+id/starttime"
             android:layout_alignParentLeft="true"
             />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="No Tracking Data"
+            android:id="@+id/endtime"
+            android:layout_alignParentLeft="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="No Tracking Data"
+            android:id="@+id/meettime"
+            android:layout_alignParentLeft="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="No Tracking Data"
+            android:id="@+id/currentLocation"
+            android:layout_alignParentLeft="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="No Tracking Data"
+            android:id="@+id/meetLocation"
+            android:layout_alignParentLeft="true"
+            />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

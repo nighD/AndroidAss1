@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -31,7 +32,7 @@ public class ShowFragment extends DialogFragment  {
     RecyclerViewDialogAdapter adapter;
     private ArrayList<DataTrackingModel> trackingData;
     private ArrayList<DataModel> dataa;
-
+    private ArrayList<DataTracking> dataTrackings;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,12 +70,13 @@ public class ShowFragment extends DialogFragment  {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
+        dataTrackings = new ArrayList<>(  );
         rv= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        getDialog().setTitle("Tracking data "+ "\n" + trackable.trackableList.get(finalPosition).name);
+        getDialog().setTitle("Tracking data: "+ "\r" + trackable.trackableList.get(finalPosition).name);
         //ADAPTER
         try {
-            adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition);
+            adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition,dataTrackings);
         } catch (ParseException e) {
             e.printStackTrace();
         }
