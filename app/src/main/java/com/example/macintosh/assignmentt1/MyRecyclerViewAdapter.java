@@ -58,6 +58,7 @@ implements Filterable{
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
+    private static ArrayList<DataTracking> dataTrackings;
 //    private ArrayList<DataTrackingModel> dataTrackingSet;
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
@@ -113,13 +114,14 @@ implements Filterable{
 
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity) {
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking, ArrayList<DataTracking> dataTrackings,Context ctx, Activity activity) {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
 //        this.dataTrackingSet = dataTracking;
         this.dataTrackingModels = dataTracking;
+        this.dataTrackings = dataTrackings;
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -206,8 +208,9 @@ implements Filterable{
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
-                showFragment.newInstance(position);
-
+                showFragment.newInstance(position, dataTrackings);
+                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
+                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
                 showFragment.show(manager,"dialog");
             }
         };
@@ -261,7 +264,11 @@ implements Filterable{
         void onContactSelected(DataModel dataModel);
     }
 
-
+    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
+                                double meetLat, double meetLong)
+    {
+        this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
+    }
 
 
 }

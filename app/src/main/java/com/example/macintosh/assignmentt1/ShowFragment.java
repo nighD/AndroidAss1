@@ -1,7 +1,9 @@
 package com.example.macintosh.assignmentt1;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -10,8 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
+import java.util.Calendar;
+import java.util.Date;
 import java.text.DateFormat;
 
 import android.widget.Button;
@@ -25,9 +30,10 @@ import java.util.Date;
 public class ShowFragment extends DialogFragment  {
     int finalPosition;
     private Button addButton;
+    private Dialog dialog;
     private Trackable trackable;
     private TrackingService trackingService;
-    public ShowFragment newInstance(final int num) {
+    public ShowFragment newInstance(final int num, ArrayList<DataTracking> dataTrackings1) {
        ShowFragment f = new ShowFragment();
 
         // Supply num input as an argument.
@@ -36,13 +42,14 @@ public class ShowFragment extends DialogFragment  {
         f.setArguments(args);
         finalPosition = num;
         System.out.println("Num is: "+num);
+        this.dataTrackings = dataTrackings1;
         return f;
     }
     RecyclerView rv;
     RecyclerViewDialogAdapter adapter;
     private ArrayList<DataTrackingModel> trackingData;
     private ArrayList<DataModel> dataa;
-    private ArrayList<DataTracking> dataTrackings;
+    private static ArrayList<DataTracking> dataTrackings;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,22 +102,68 @@ public class ShowFragment extends DialogFragment  {
         }
         rv.setAdapter(adapter);
         final Context ctx = this.getContext();
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Date date = new Date();
-                int i = trackable.trackableList.size();
-                trackingData.add(0,new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
-                adapter.AddTrackingData(new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
-                adapter.notifyItemInserted(i);
-                rv.scrollToPosition(i);
-
-                // Show the added item label
-                Toast.makeText(ctx,"Added",Toast.LENGTH_SHORT).show();
-            }
-        });
-
+//        addButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Date date = new Date();
+//                int i = trackable.trackableList.size();
+//                trackingData.add(0,new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
+//                adapter.AddTrackingData(new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
+//                adapter.notifyItemInserted(i);
+//                rv.scrollToPosition(i);
+//
+//                // Show the added item label
+//                Toast.makeText(ctx,"Added",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+         addButton.setOnClickListener(onClickListener(finalPosition));
         getDialog().setCancelable(true);
         return rootView;
+    }
+   public View.OnClickListener onClickListener(final int position) {
+        final Context c = this.getContext();
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(c);
+                dialog.setTitle( "Add" );
+                dialog.setContentView(R.layout.dialog_template);
+                final EditText Write = dialog.findViewById(R.id.writeTitle);
+                Button SaveMyName = dialog.findViewById(R.id.SaveNow);
+                final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
+                 final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
+                 final TimePicker endTimePicker = dialog.findViewById(R.id.end_time_picker);
+                final EditText WriteCurrLat = dialog.findViewById(R.id.writeCurrLat);
+                final EditText WriteCurrLong = dialog.findViewById(R.id.writeCurrLong);
+                final EditText WriteMeetLat = dialog.findViewById(R.id.writeMeetLat);
+                final EditText WriteMeetLong = dialog.findViewById(R.id.writeMeetLong);
+                Write.setEnabled(true);
+                SaveMyName.setEnabled(true);
+
+                SaveMyName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        dataTrackings.get( 0 ).title = Write.getText().toString();
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
+                        Date date = calendar.getTime();
+                        dataTrackings.get( 0 ).meettime = date;
+                        adapter.addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
+                        addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
+                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemInserted(position);
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        };
+    }
+    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
+                                double meetLat, double meetLong)
+    {
+        this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
 }

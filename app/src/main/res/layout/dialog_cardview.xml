@@ -22,13 +22,6 @@
         android:orientation="horizontal"
         >
         <ImageButton
-            android:id="@+id/add"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
-            android:src="@mipmap/add"
-            android:layout_marginLeft="95dp"
-            />
-        <ImageButton
             android:id="@+id/edit"
             android:layout_width="20dp"
             android:layout_height="30dp"

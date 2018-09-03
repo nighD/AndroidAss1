@@ -50,7 +50,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     TextView meetlocation;
     ImageButton Delete;
     ImageButton Edit;
-    ImageButton Add;
+//    Button Add;
         TextView date;
 
         TextView stoptime;
@@ -69,14 +69,14 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             meetlocation = itemView.findViewById( R.id.meetLocation );
             Delete = itemView.findViewById( R.id.deleteButton );
             Edit = itemView.findViewById( R.id.edit );
-            Add = itemView.findViewById( R.id.add );
+//            Add = itemView.findViewById( R.id.btn_add );
 
         }
     }
     Context c;
     ArrayList<DataTrackingModel> trackingData;
     ArrayList<DataTrackingModel> trackingData1;
-    ArrayList<DataTracking> dataTrackings;
+     static ArrayList<DataTracking> dataTrackings;
     ArrayList<DataModel> trackableData;
     int position1;
     Dialog dialog;
@@ -101,6 +101,11 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     {
         trackingData1.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
         trackingData.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
+        this.dataTrackings.add(new DataTracking(position1 +1,"No tracking data",
+                new Date(),
+                new Date(),
+                new Date()
+                , 0,0,0,0 ));
     }
     public void RemoveTrackingData(int position )
     {
@@ -116,7 +121,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
 
     public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.Delete.setOnClickListener(onClickListener(position));
+//            holder.Delete.setOnClickListener(onClickListener(position));
             holder.trackableID.setText("Trackable ID: "+ Integer.toString( dataTrackings.get(position).trackableId ));
             holder.title.setText("Title: "+ dataTrackings.get(position).title );
             holder.starttime.setText("Start Time: "+ dataTrackings.get(position).starttime.toString() );
@@ -126,7 +131,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     + Double.toString(dataTrackings.get( position ).currentLocationlongtitude ) );
             holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get( position ).meetLocationlatitude )
                     + Double.toString(dataTrackings.get( position ).meetLocationlongtitude ) );
-            holder.Add.setOnClickListener( onClickListener(position) );
+//            holder.Add.setOnClickListener( onClickListener(position) );
 
 
 //    public void onBindViewHolder(ViewHolder holder, final int position) {
@@ -173,8 +178,12 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                 final EditText Write = dialog.findViewById(R.id.writeTitle);
                 Button SaveMyName = dialog.findViewById(R.id.SaveNow);
                 final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
-                 final TimePicker timePicker =  dialog.findViewById(R.id.time_picker);
-
+                 final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
+                 final TimePicker endTimePicker = dialog.findViewById(R.id.end_time_picker);
+                final EditText WriteCurrLat = dialog.findViewById(R.id.writeCurrLat);
+                final EditText WriteCurrLong = dialog.findViewById(R.id.writeCurrLong);
+                final EditText WriteMeetLat = dialog.findViewById(R.id.writeMeetLat);
+                final EditText WriteMeetLong = dialog.findViewById(R.id.writeMeetLong);
                 Write.setEnabled(true);
                 SaveMyName.setEnabled(true);
 
@@ -185,11 +194,12 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                         dataTrackings.get( 0 ).title = Write.getText().toString();
 
                         Calendar calendar = Calendar.getInstance();
-                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),timePicker.getHour(),timePicker.getMinute(),0 );
+                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
                         Date date = calendar.getTime();
                         dataTrackings.get( 0 ).meettime = date;
                         notifyDataSetChanged();
                         dialog.cancel();
+                        addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
                     }
                 });
                 dialog.show();
@@ -203,6 +213,11 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         prefEDIT.commit();
     }
 
+    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
+                                double meetLat, double meetLong)
+    {
+        this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
+    }
 //    public View.OnClickListener onClickListener(final int position) {
 //        return new View.OnClickListener() {
 //            @Override
