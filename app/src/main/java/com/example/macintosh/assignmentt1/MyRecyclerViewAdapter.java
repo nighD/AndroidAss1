@@ -170,19 +170,6 @@ implements Filterable{
             }
         } );
         imageView.setImageResource(id);
-
-        //imageView.setImageResource(R.drawable.pic1);
-//        holder.setItemClickListener( new ItemClickListener() {
-//            @Override
-//            public void onItemClick(View v,int pos) {
-//                Intent i=new Intent(ctx,Detailactivity.class);
-//                i.putExtra("Name",dataSet.get( position ).getName());
-//                i.putExtra("Position",position);
-//                //i.putExtra("Image",id);
-//                //START DETAIL ACTIVITY
-//                ctx.startActivity(i);
-//            }
-//        } );
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

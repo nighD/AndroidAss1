@@ -36,6 +36,7 @@ public class ShowFragment extends DialogFragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //String strtext=getArguments().getString("ID");
+
         Bundle aa = this.getArguments();
         if (aa != null) {
 
@@ -70,7 +71,7 @@ public class ShowFragment extends DialogFragment  {
         }
         rv= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-
+        getDialog().setTitle("Tracking data "+ "\n" + trackable.trackableList.get(finalPosition).name);
         //ADAPTER
         try {
             adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition);
@@ -79,7 +80,7 @@ public class ShowFragment extends DialogFragment  {
         }
         rv.setAdapter(adapter);
 
-        this.getDialog().setTitle("TV Shows");
+
         getDialog().setCancelable(true);
         return rootView;
     }

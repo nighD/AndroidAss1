@@ -1,13 +1,25 @@
 package com.example.macintosh.assignmentt1;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,8 +35,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     TextView stoptime;
     TextView longtitude;
     TextView latitude;
-
-
+    ImageButton Delete;
         public ViewHolder (View itemView) {
             super(itemView);
             date= itemView.findViewById(R.id.date);
@@ -32,6 +43,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             stoptime = itemView.findViewById( R.id.stoptime );
             longtitude = itemView.findViewById( R.id.longtitude );
             latitude = itemView.findViewById( R.id.latitude );
+            Delete = itemView.findViewById( R.id.deleteButton );
         }
     }
     Context c;
@@ -52,23 +64,19 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     , 0,0,0,0 ));
         }
     }
-
-    //INITIALIE VH
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_cardview,parent,false);
         ViewHolder holder=new ViewHolder(v);
         return holder;
     }
-
-    //BIND DATA
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.date.setText( trackingData1.get( position ).getDate().toString() );
-            holder.trackableID.setText( Integer.toString( trackingData1.get( position ).getTrackableId() ) );
-            holder.stoptime.setText( Integer.toString( trackingData1.get( position ).getStopTime() ) );
-            holder.latitude.setText( Double.toString( trackingData1.get( position ).getLatitude() ) );
-            holder.longtitude.setText( Double.toString( trackingData1.get( position ).getLongitude() ) );
+            holder.Delete.setOnClickListener(onClickListener(position));
+            holder.date.setText("Date: " + trackingData1.get( position ).getDate().toString() );
+            holder.stoptime.setText( "Stop Time : " + Integer.toString( trackingData1.get( position ).getStopTime() ) );
+            holder.latitude.setText( "Latitude : "+ Double.toString( trackingData1.get( position ).getLatitude() ) );
+            holder.longtitude.setText( "Longtitude : "+Double.toString( trackingData1.get( position ).getLongitude() ) );
     }
 
     @Override
@@ -79,12 +87,18 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         ArrayList<DataTrackingModel> dataTrackingModels1 = new ArrayList<>(  );
         int key = position1 + 1;
         for(int i = 0 ; i < dataTrackingModels .size();i++) {
-            System.out.println("Tracking ID is "+dataTrackingModels.get( i ).getTrackableId());
             if (key == dataTrackingModels.get( i ).getTrackableId()) {
-
                 dataTrackingModels1.add(dataTrackingModels.get(i));
             }
         }
         return dataTrackingModels1;
+    }
+    public View.OnClickListener onClickListener(final int position) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//
+            }
+        };
     }
 }

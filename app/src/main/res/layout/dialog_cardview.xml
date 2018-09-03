@@ -16,6 +16,13 @@
         android:orientation="vertical"
         >
 
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/delete"
+            android:layout_gravity="center_horizontal"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,18 +36,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="No Tracking Data"
-            android:id="@+id/trackableID"
-            android:layout_alignParentLeft="true"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="No Tracking Data"
             android:id="@+id/stoptime"
             android:layout_alignParentLeft="true"
             />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
