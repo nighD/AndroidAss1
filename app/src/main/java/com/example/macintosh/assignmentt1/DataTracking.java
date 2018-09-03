@@ -13,7 +13,6 @@ public class DataTracking {
     public Double currentLocationlongtitude;
     public Double meetLocationlatitude;
     public Double meetLocationlongtitude;
-
     public DataTracking(int trackableId,String title,Date starttime,Date endtime,Date meettime,
                         double currentLocationlatitude,double currentLocationlongtitude, double meetLocationlatitude, double meetLocationlongtitude){
         this.trackableId =trackableId;
