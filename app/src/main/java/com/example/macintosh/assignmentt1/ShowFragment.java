@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ShowFragment extends DialogFragment  {
@@ -71,7 +72,11 @@ public class ShowFragment extends DialogFragment  {
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         //ADAPTER
-        adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition);
+        try {
+            adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         rv.setAdapter(adapter);
 
         this.getDialog().setTitle("TV Shows");

@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity  {
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
-        addButton = (Button)findViewById(R.id.btn_add);
+//        addButton = (Button)findViewById(R.id.btn_add);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -105,19 +105,19 @@ public class MainActivity extends AppCompatActivity  {
         adapter = new MyRecyclerViewAdapter(dataa,trackingData,getApplicationContext(),this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Button Pressed",Toast.LENGTH_SHORT).show();
-                Date date = new Date();
-                int position = 0;
-                String itemLabel = "New Trackable";
-                trackingData.add(new DataTrackingModel(date,trackingData.size(),0,0,0));
-                adapter.notifyItemInserted(position);
-                recyclerView.scrollToPosition(position);
-                Toast.makeText(getApplicationContext(),"Added : " + itemLabel,Toast.LENGTH_SHORT).show();
-            }
-        });
+////        addButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(),"Button Pressed",Toast.LENGTH_SHORT).show();
+//                Date date = new Date();
+//                int position = 0;
+//                String itemLabel = "New Trackable";
+//                trackingData.add(new DataTrackingModel(date,trackingData.size(),0,0,0));
+//                adapter.notifyItemInserted(position);
+//                recyclerView.scrollToPosition(position);
+//                Toast.makeText(getApplicationContext(),"Added : " + itemLabel,Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {

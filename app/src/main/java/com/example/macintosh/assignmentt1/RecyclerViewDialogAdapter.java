@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 
@@ -34,15 +36,21 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     }
     Context c;
     ArrayList<DataTrackingModel> trackingData;
-//    ArrayList<DataTrackingModel> trackingData1;
+    ArrayList<DataTrackingModel> trackingData1;
     ArrayList<DataModel> trackableData;
     int position1;
-    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position) {
+    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position) throws ParseException {
         this.c = c;
         this.trackingData = trackingData;
         this.trackableData = trackableData;
-        //this.trackingData1 = compartID( trackingDat;
+
         this.position1 = position;
+        this.trackingData1 = compartID( trackingData,position1 );
+        if (trackingData1.isEmpty()){
+            trackingData1.add(new DataTrackingModel(
+                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
+                    , 0,0,0,0 ));
+        }
     }
 
     //INITIALIE VH
@@ -50,7 +58,6 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_cardview,parent,false);
         ViewHolder holder=new ViewHolder(v);
-
         return holder;
     }
 
@@ -71,22 +78,27 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             }
         }
 
+            holder.date.setText( trackingData1.get( position ).getDate().toString() );
+            holder.trackableID.setText( Integer.toString( trackingData1.get( position ).getTrackableId() ) );
+            holder.stoptime.setText( Integer.toString( trackingData1.get( position ).getStopTime() ) );
+            holder.latitude.setText( Double.toString( trackingData1.get( position ).getLatitude() ) );
+            holder.longtitude.setText( Double.toString( trackingData1.get( position ).getLongitude() ) );
     }
 
     @Override
     public int getItemCount() {
-        return trackingData.size();
+        return trackingData1.size();
     }
-//    private ArrayList<DataTrackingModel> compartID(ArrayList<DataTrackingModel> dataTrackingModels, int position){
-//        ArrayList<DataTrackingModel> dataTrackingModels1 = new ArrayList<>(  );
-//        for(int a = 0 ;a<dataModels.size();a++) {
-//            for (int i = 0; i < dataTrackingModels.size(); i++) {
-//                if (Integer.parseInt( dataModels.get( a ).getImage() ) == dataTrackingModels.get( i ).getTrackableId())
-//                    dataTrackingModels1.add( dataTrackingModels.get( i ) );
-//
-//
-//            }
-//        }
-//        return dataTrackingModels1;
-//    }
+    private ArrayList<DataTrackingModel> compartID(ArrayList<DataTrackingModel> dataTrackingModels, int position){
+        ArrayList<DataTrackingModel> dataTrackingModels1 = new ArrayList<>(  );
+        int key = position1 + 1;
+        for(int i = 0 ; i < dataTrackingModels .size();i++) {
+            System.out.println("Tracking ID is "+dataTrackingModels.get( i ).getTrackableId());
+            if (key == dataTrackingModels.get( i ).getTrackableId()) {
+
+                dataTrackingModels1.add(dataTrackingModels.get(i));
+            }
+        }
+        return dataTrackingModels1;
+    }
 }
