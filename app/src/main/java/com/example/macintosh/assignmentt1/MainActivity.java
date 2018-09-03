@@ -22,18 +22,6 @@ import android.support.v7.widget.SearchView;
 
 import android.app.Dialog;
 import android.widget.AdapterView;
-import java.lang.reflect.Field;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
-import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,7 +56,7 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
+//        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
                     trackable.trackableList.get( i ).name,
@@ -87,7 +75,7 @@ public class MainActivity extends AppCompatActivity  {
                                                     trackingService.trackingList.get(i).longitude));
         }
         recyclerView = findViewById( R.id.recycler_view );
-
+//        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData,this.dataTrackings, getApplicationContext(), this);
 
 
@@ -101,8 +89,8 @@ public class MainActivity extends AppCompatActivity  {
 
 
         adapter = new MyRecyclerViewAdapter(dataa,trackingData,this.dataTrackings,getApplicationContext(),this);
-        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-        adapter.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
+
+//        adapter.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 

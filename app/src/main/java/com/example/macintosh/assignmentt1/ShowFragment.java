@@ -90,7 +90,7 @@ public class ShowFragment extends DialogFragment  {
      dataTrackings = new ArrayList<>(  );
 
         addButton = (Button) rootView.findViewById(R.id.btn_add);
-
+//        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         rv= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         getDialog().setTitle("Tracking data: "+ "\r" + trackable.trackableList.get(finalPosition).name);
@@ -102,20 +102,6 @@ public class ShowFragment extends DialogFragment  {
         }
         rv.setAdapter(adapter);
         final Context ctx = this.getContext();
-//        addButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Date date = new Date();
-//                int i = trackable.trackableList.size();
-//                trackingData.add(0,new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
-//                adapter.AddTrackingData(new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
-//                adapter.notifyItemInserted(i);
-//                rv.scrollToPosition(i);
-//
-//                // Show the added item label
-//                Toast.makeText(ctx,"Added",Toast.LENGTH_SHORT).show();
-//            }
-//        });
          addButton.setOnClickListener(onClickListener(finalPosition));
         getDialog().setCancelable(true);
         return rootView;
@@ -133,9 +119,6 @@ public class ShowFragment extends DialogFragment  {
                 final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
                  final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
                  final TimePicker endTimePicker = dialog.findViewById(R.id.end_time_picker);
-                final EditText WriteCurrLat = dialog.findViewById(R.id.writeCurrLat);
-                final EditText WriteCurrLong = dialog.findViewById(R.id.writeCurrLong);
-                final EditText WriteMeetLat = dialog.findViewById(R.id.writeMeetLat);
                 final EditText WriteMeetLong = dialog.findViewById(R.id.writeMeetLong);
                 Write.setEnabled(true);
                 SaveMyName.setEnabled(true);
@@ -150,8 +133,9 @@ public class ShowFragment extends DialogFragment  {
                         calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
                         Date date = calendar.getTime();
                         dataTrackings.get( 0 ).meettime = date;
-                        adapter.addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
                         addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
+                        adapter.addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
+                        adapter.notifyItemRangeChanged(position,dataTrackings.size());
                         adapter.notifyDataSetChanged();
                         adapter.notifyItemInserted(position);
                         dialog.cancel();

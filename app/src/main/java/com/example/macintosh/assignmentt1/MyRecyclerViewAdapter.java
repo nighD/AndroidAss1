@@ -145,7 +145,7 @@ implements Filterable{
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
-
+//        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
 
 
         try {
@@ -164,19 +164,6 @@ implements Filterable{
 
         imageView.setImageResource(id);
 
-
-
-//        holder.removeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String itemLabel = dataTrackingModels.get(position).toString();
-//                dataTrackingModels.remove(position);
-//                notifyItemRemoved(position);
-//                notifyItemRangeChanged(position,dataTrackingModels.size());
-//                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
 
 
 
@@ -208,10 +195,11 @@ implements Filterable{
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
+//                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
                 showFragment.newInstance(position, dataTrackings);
-                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
+//                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
                 showFragment.show(manager,"dialog");
+                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
             }
         };
     }

@@ -7,7 +7,7 @@
         android:layout_margin="4dp"
         android:hint="Write Title Here"
         android:id="@+id/writeTitle"
-        android:layout_height="80dp" />
+        android:layout_height="100dp" />
     <DatePicker
         android:id="@+id/date_picker"
         android:layout_width="match_parent"
@@ -32,33 +32,12 @@
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:timePickerMode="spinner"
         />
-
-    <EditText
-        android:id="@+id/writeMeetLat"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="4dp"
-        android:hint="Write Meet Latitude" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:hint="Write Current Latitude"
-        android:id="@+id/writeCurrLat"
-        android:layout_height="80dp" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:hint="Write Current Longitude"
-        android:id="@+id/writeCurrLong"
-        android:layout_height="80dp" />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_margin="4dp"
         android:hint="Write Meet Longitude"
         android:id="@+id/writeMeetLong"
-        android:layout_height="80dp" />
+        android:layout_height="100dp" />
     <Button
         android:layout_width="match_parent"
         android:text="Save"
