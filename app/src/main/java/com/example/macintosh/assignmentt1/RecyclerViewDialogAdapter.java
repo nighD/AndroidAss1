@@ -41,8 +41,9 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         this.c = c;
         this.trackingData = trackingData;
         this.trackableData = trackableData;
-        //this.trackingData1 = compartID( trackingDat;
+
         this.position1 = position;
+        this.trackingData1 = compartID( trackingData,position1 );
     }
 
     //INITIALIE VH
@@ -50,25 +51,16 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_cardview,parent,false);
         ViewHolder holder=new ViewHolder(v);
-
         return holder;
     }
 
     //BIND DATA
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        System.out.println("Postition1 is "+position1);
-        for(int i = 0 ; i < trackingData .size();i++) {
-            System.out.println("Tracking ID is "+trackingData.get( i ).getTrackableId());
-            if ((position1+1) == trackingData.get( i ).getTrackableId()) {
+        System.out.println("Postition is "+position);
 
-                holder.date.setText( trackingData.get( i ).getDate().toString() );
-                holder.trackableID.setText( Integer.toString( trackingData.get( i ).getTrackableId() ) );
-                holder.stoptime.setText( Integer.toString( trackingData.get( i ).getStopTime() ) );
-                holder.latitude.setText( Double.toString( trackingData.get( i ).getLatitude() ) );
-                holder.longtitude.setText( Double.toString( trackingData.get( i ).getLongitude() ) );
-            }
-        }
+
+
 
     }
 
@@ -76,16 +68,16 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     public int getItemCount() {
         return trackingData.size();
     }
-//    private ArrayList<DataTrackingModel> compartID(ArrayList<DataTrackingModel> dataTrackingModels, int position){
-//        ArrayList<DataTrackingModel> dataTrackingModels1 = new ArrayList<>(  );
-//        for(int a = 0 ;a<dataModels.size();a++) {
-//            for (int i = 0; i < dataTrackingModels.size(); i++) {
-//                if (Integer.parseInt( dataModels.get( a ).getImage() ) == dataTrackingModels.get( i ).getTrackableId())
-//                    dataTrackingModels1.add( dataTrackingModels.get( i ) );
-//
-//
-//            }
-//        }
-//        return dataTrackingModels1;
-//    }
+    private ArrayList<DataTrackingModel> compartID(ArrayList<DataTrackingModel> dataTrackingModels, int position){
+        ArrayList<DataTrackingModel> dataTrackingModels1 = new ArrayList<>(  );
+        int key = position1 + 1;
+        for(int i = 0 ; i < dataTrackingModels .size();i++) {
+            System.out.println("Tracking ID is "+dataTrackingModels.get( i ).getTrackableId());
+            if (key == dataTrackingModels.get( i ).getTrackableId()) {
+
+                dataTrackingModels1.add(dataTrackingModels.get(i));
+            }
+        }
+        return dataTrackingModels1;
+    }
 }
