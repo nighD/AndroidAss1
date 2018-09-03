@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView = findViewById( R.id.recycler_view );
         //fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        adapter = new MyRecyclerViewAdapter( this.dataa, getApplicationContext(), this);
+        adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
 
         //fab = (FloatingActionButton) findViewById(R.id.fab);
         //adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-        adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
+        adapter = new MyRecyclerViewAdapter(dataa,trackingData,getApplicationContext(),this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
@@ -171,11 +171,7 @@ public class MainActivity extends AppCompatActivity  {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView parent, View view, int position, long id) {
-//                if (position == 0) {
-//                    gender = true;
-//                } else {
-//                    gender = false;
-//                }
+
             }
 
             @Override

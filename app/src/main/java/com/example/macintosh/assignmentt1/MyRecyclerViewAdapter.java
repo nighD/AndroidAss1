@@ -1,13 +1,17 @@
 package com.example.macintosh.assignmentt1;
 import android.app.Activity;
 import android.app.Application;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.TextViewCompat;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -24,22 +28,25 @@ import android.app.Dialog;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toolbar;
-
+import android.app.Fragment;
+import org.w3c.dom.Text;
+import android.os.Bundle;
+import android.app.DialogFragment;
 import java.util.ArrayList;
 
-/**
- * Created by Parsania Hardik on 29-Jun-17.
- */
+
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
 implements Filterable{
+
 
     private Context ctx;
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
+    private ArrayList<DataTrackingModel> dataTrackingModels;
+    private ArrayList<DataTrackingModel> dataTrackingSet;
     private Activity activity;
     private RecyclerViewAdapterListener listener;
     int id;
-    Dialog dialog;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -51,8 +58,6 @@ implements Filterable{
         private ImageView imageView;
         private View container;
         private CardView cardView;
-
-
         ItemClickListener itemClickListener;
 
         public MyViewHolder(final View itemView) {
@@ -63,14 +68,6 @@ implements Filterable{
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
             container = itemView.findViewById(R.id.card_view);
-            //this.cardView = itemView.findViewById( R.id.card_view );
-//            cardView.setOnClickListener( this );
-//            imageView.setOnClickListener( this );
-//            name.setOnClickListener( this );
-//            description.setOnClickListener( this );
-//            webURL.setOnClickListener( this );
-//            category.setOnClickListener( this );
-
 
         }
         public void setItemClickListener(ItemClickListener itemClickListener)
@@ -80,16 +77,20 @@ implements Filterable{
 
         @Override
         public void onClick(View v) {
-            this.itemClickListener.onItemClick(v,getLayoutPosition());
+
+            this.itemClickListener.onItemClick(v,getLayoutPosition() );
+
         }
 
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data,Context ctx, Activity activity) {
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity) {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
+        this.dataTrackingSet = dataTracking;
+        this.dataTrackingModels = dataTracking;
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -97,14 +98,13 @@ implements Filterable{
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.cardview, parent, false);
         final MyViewHolder holder = new MyViewHolder(view);
-
-        holder.container.setOnClickListener(onClickListener(  holder.getAdapterPosition()));
         return holder;
     }
     @Override
     public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder, final int position) {
 
         final DataModel dataModel = dataSetFilter.get(position);
+        final DataTrackingModel dataTrackingModel = dataTrackingModels.get(position);
         TextView textViewName = holder.name;
         TextView textViewDescription = holder.description;
         TextView textViewWebURL = holder.webURL;
@@ -114,19 +114,19 @@ implements Filterable{
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
-        //try {
+        try {
             String picImage = "pic" + Integer.parseInt(dataModel.image);
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
-        //}
-        //catch(NumberFormatException e){}
-        textViewName.setOnClickListener(onClickListener(position));
-        textViewDescription.setOnClickListener(onClickListener(position));
-        textViewWebURL.setOnClickListener(onClickListener(position));
-        textViewCategory.setOnClickListener(onClickListener(position));
-        imageView.setOnClickListener(onClickListener(position));
+        }
+        catch(NumberFormatException e){}
+        final  ShowFragment tv=new ShowFragment();
+        textViewName.setOnClickListener(onClickListener(tv,position));
+        textViewDescription.setOnClickListener(onClickListener(tv,position));
+        textViewWebURL.setOnClickListener(onClickListener(tv,position));
+        textViewCategory.setOnClickListener(onClickListener(tv,position));
+        imageView.setOnClickListener(onClickListener(tv,position));
         imageView.setImageResource(id);
-        final Dialog dialog = new Dialog(activity);
-        dialog.setContentView(R.layout.dialog);
+
         holder.setItemClickListener( new ItemClickListener() {
             @Override
             public void onItemClick(View v,int pos) {
@@ -136,70 +136,34 @@ implements Filterable{
                 ctx.startActivity(i);
             }
         } );
-
-        holder.container.setOnClickListener(onClickListener(position));
         imageView.setImageResource(id);
-        //imageView.setImageResource(R.drawable.pic1);
-//        holder.setItemClickListener( new ItemClickListener() {
-//            @Override
-//            public void onItemClick(View v,int pos) {
-//                Intent i=new Intent(ctx,Detailactivity.class);
-//                i.putExtra("Name",dataSet.get( position ).getName());
-//                i.putExtra("Position",position);
-//                //i.putExtra("Image",id);
-//                //START DETAIL ACTIVITY
-//                ctx.startActivity(i);
-//            }
-//        } );
 
     }
-    private void setDataToView(TextView name, TextView desc, TextView webURL, TextView category, int position) {
-        name.setText(dataSet.get(position).getName());
-        desc.setText(dataSet.get(position).getDescription());
-        webURL.setText(dataSet.get(position).getWebURL());
-        category.setText(dataSet.get(position).getCategory());
+    private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
+
+        trackingDate.setText(dataTrackingModels.get(position).getDate().toString());
+        trackableID.setText(Integer.toString(dataTrackingModels.get(position).getTrackableId()));
+        stopTime.setText(Integer.toString(dataTrackingModels.get(position).getStopTime()));
+        latitude.setText(Double.toString(dataTrackingModels.get(position).getLatitude()));
+        longitude.setText(Double.toString(dataTrackingModels.get(position).getLongitude()));
     }
 
-    public View.OnClickListener onClickListener(final int position) {
+    public View.OnClickListener onClickListener(final ShowFragment showFragment,final int position) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                final Dialog dialog = new Dialog( activity );
-//
-//                dialog.setContentView(R.layout.activity_main);
-//                dialog.setTitle("Position " + position);
-//                dialog.setCancelable(true); // dismiss when touching outside Dialog
-//
-//                // set the custom dialog components - texts and image
+                // Create and show the dialog.
+                FragmentManager manager = activity.getFragmentManager();
+                FragmentTransaction ft = manager.beginTransaction();
+                Fragment prev = manager.findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                showFragment.newInstance(position);
 
-
-
-
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.cardview);
-                dialog.setTitle("Position " + position);
-                dialog.setCancelable(true); // dismiss when touching outside Dialog
-
-                // set the custom dialog components - texts and image
-                TextView name = (TextView) dialog.findViewById(R.id.name);
-                TextView desc = (TextView) dialog.findViewById(R.id.description);
-                TextView webURL = (TextView) dialog.findViewById(R.id.webURL);
-                TextView category = (TextView) dialog.findViewById(R.id.category);
-                ImageView icon = (ImageView) dialog.findViewById(R.id.image);
-
-//                if(activity!=null)
-//                {
-                    setDataToView(name, desc, webURL, category,position);
-
-
-                    //setDataToView(name, desc, webURL, category,position);
-
-
-//                }
-
-                dialog.show();
-                Toast.makeText( ctx,"Test :"+ String.valueOf( position ), Toast.LENGTH_SHORT ).show();
+                showFragment.show(manager,"dialog");
             }
         };
     }
