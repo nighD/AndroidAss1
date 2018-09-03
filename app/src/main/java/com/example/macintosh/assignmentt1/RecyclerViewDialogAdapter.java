@@ -34,7 +34,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     }
     Context c;
     ArrayList<DataTrackingModel> trackingData;
-    ArrayList<DataTrackingModel> trackingData1;
+//    ArrayList<DataTrackingModel> trackingData1;
     ArrayList<DataModel> trackableData;
     int position1;
     public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position) {
@@ -60,13 +60,14 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         System.out.println("Postition1 is "+position1);
         for(int i = 0 ; i < trackingData .size();i++) {
             System.out.println("Tracking ID is "+trackingData.get( i ).getTrackableId());
-            if ((position1+1) == trackingData.get( i ).getTrackableId()) {
+            if ((++position1) == trackingData.get( i ).getTrackableId()) {
 
                 holder.date.setText( trackingData.get( i ).getDate().toString() );
                 holder.trackableID.setText( Integer.toString( trackingData.get( i ).getTrackableId() ) );
                 holder.stoptime.setText( Integer.toString( trackingData.get( i ).getStopTime() ) );
                 holder.latitude.setText( Double.toString( trackingData.get( i ).getLatitude() ) );
                 holder.longtitude.setText( Double.toString( trackingData.get( i ).getLongitude() ) );
+               // position1++;
             }
         }
 

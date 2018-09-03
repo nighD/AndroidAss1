@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity  {
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
     private SearchView searchView;
-    private RecyclerView listener;
+//    private RecyclerView listener;
     private Button addButton;
 
 
