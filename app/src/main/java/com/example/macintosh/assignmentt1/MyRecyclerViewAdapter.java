@@ -274,10 +274,13 @@ implements Filterable{
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
-                        if (row.getName().toLowerCase().contains(charString.toLowerCase())
-                                ||row.getCategory().toLowerCase().contains(charString.toLowerCase())) {
-                            filteredList.add(row);
+                        try{
+                            if (row.getName().toLowerCase().contains(charString.toLowerCase())
+                                    ||row.getCategory().toLowerCase().contains(charString.toLowerCase())) {
+                                filteredList.add(row);
+                            }
                         }
+                        catch (NullPointerException e){}
                     }
 
                     dataSetFilter = filteredList;
