@@ -42,6 +42,7 @@ import android.app.DialogFragment;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.FieldPosition;
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 
@@ -58,7 +59,7 @@ implements Filterable{
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
-    private static ArrayList<DataTracking> dataTrackings;
+    private static ArrayList<ArrayList<DataTracking>> dataTrackings = new ArrayList<>();
 //    private ArrayList<DataTrackingModel> dataTrackingSet;
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
@@ -114,14 +115,27 @@ implements Filterable{
 
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking, ArrayList<DataTracking> dataTrackings,Context ctx, Activity activity) {
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity) throws ParseException {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
 //        this.dataTrackingSet = dataTracking;
         this.dataTrackingModels = dataTracking;
-        this.dataTrackings = dataTrackings;
+//        this.dataTrackings = dataTrackings;
+        for(int i = 0; i < data.size(); i++)
+        {
+            dataTrackings.add(new ArrayList<DataTracking>());
+        }
+        for (int i = 0; i < data.size(); i++ ) {
+            if (dataTrackings.get(i).isEmpty()) {
+                this.dataTrackings.get(i).add(new DataTracking(i + 1, "No Tracking Data",
+                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
+                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
+                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
+                        , 0, 0, 0, 0));
+            }
+        }
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -166,21 +180,34 @@ implements Filterable{
 
 
 
+//        holder.removeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String itemLabel = dataTrackingModels.get(position).toString();
+//                dataTrackingModels.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position,dataTrackingModels.size());
+//                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+
+
 
     }
-    private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
-
-        trackingDate.setText(dataTrackingModels.get(position).getDate().toString());
-
-        trackableID.setText(Integer.toString(dataTrackingModels.get(position).getTrackableId()));
-        stopTime.setText(Integer.toString(dataTrackingModels.get(position).getStopTime()));
-
-        trackableID.setText(String.valueOf(dataTrackingModels.get(position).getTrackableId()));
-        stopTime.setText(String.valueOf(dataTrackingModels.get(position).getStopTime()));
-
-        latitude.setText(Double.toString(dataTrackingModels.get(position).getLatitude()));
-        longitude.setText(Double.toString(dataTrackingModels.get(position).getLongitude()));
-    }
+//    private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
+//
+//        trackingDate.setText(dataTrackingModels.get(position).getDate().toString());
+//
+//        trackableID.setText(Integer.toString(dataTrackingModels.get(position).getTrackableId()));
+//        stopTime.setText(Integer.toString(dataTrackingModels.get(position).getStopTime()));
+//
+//        trackableID.setText(String.valueOf(dataTrackingModels.get(position).getTrackableId()));
+//        stopTime.setText(String.valueOf(dataTrackingModels.get(position).getStopTime()));
+//
+//        latitude.setText(Double.toString(dataTrackingModels.get(position).getLatitude()));
+//        longitude.setText(Double.toString(dataTrackingModels.get(position).getLongitude()));
+//    }
 
     public View.OnClickListener onClickListener(final ShowFragment showFragment,final int position) {
         return new View.OnClickListener() {
@@ -196,10 +223,10 @@ implements Filterable{
                 }
                 ft.addToBackStack(null);
 //                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                showFragment.newInstance(position, dataTrackings);
+                showFragment.newInstance(position,dataTrackings.get(position));
 //                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
                 showFragment.show(manager,"dialog");
-                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
+
             }
         };
     }
@@ -252,10 +279,10 @@ implements Filterable{
         void onContactSelected(DataModel dataModel);
     }
 
-    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
+    public void addTrackingData(int position,int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
                                 double meetLat, double meetLong)
     {
-        this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
+        this.dataTrackings.get(position).add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
 
 

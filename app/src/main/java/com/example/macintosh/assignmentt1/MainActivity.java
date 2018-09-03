@@ -23,6 +23,7 @@ import android.support.v7.widget.SearchView;
 import android.app.Dialog;
 import android.widget.AdapterView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity  {
     private RecyclerView recyclerView;
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
-    private static ArrayList<DataTracking> dataTrackings;
     private SearchView searchView;
 
 
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity  {
 
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
-        dataTrackings = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -76,7 +75,10 @@ public class MainActivity extends AppCompatActivity  {
         }
         recyclerView = findViewById( R.id.recycler_view );
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-        adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData,this.dataTrackings, getApplicationContext(), this);
+        try {
+            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
+        }
+        catch (ParseException e){}
 
 
         layoutManager = new LinearLayoutManager( this );
@@ -85,14 +87,6 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView.addItemDecoration( new MyDividerItemDecoration( this, DividerItemDecoration.VERTICAL, 36 ) );
         recyclerView.setAdapter( adapter );
 
-
-
-
-        adapter = new MyRecyclerViewAdapter(dataa,trackingData,this.dataTrackings,getApplicationContext(),this);
-
-//        adapter.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
 
     }
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {
@@ -167,13 +161,6 @@ public class MainActivity extends AppCompatActivity  {
             getWindow().setStatusBarColor( Color.WHITE );
         }
     }
-    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
-                                double meetLat, double meetLong)
-    {
-        this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
-    }
-
-
     }
 
 

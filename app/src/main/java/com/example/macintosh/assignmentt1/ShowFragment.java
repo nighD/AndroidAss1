@@ -33,7 +33,12 @@ public class ShowFragment extends DialogFragment  {
     private Dialog dialog;
     private Trackable trackable;
     private TrackingService trackingService;
-    public ShowFragment newInstance(final int num, ArrayList<DataTracking> dataTrackings1) {
+    RecyclerView rv;
+    RecyclerViewDialogAdapter adapter;
+    private ArrayList<DataTrackingModel> trackingData;
+    private ArrayList<DataModel> dataa;
+    private static ArrayList<DataTracking> dataTrackings = new ArrayList<>();
+    public ShowFragment newInstance(final int num, ArrayList<DataTracking> dataTrackings) {
        ShowFragment f = new ShowFragment();
 
         // Supply num input as an argument.
@@ -42,14 +47,9 @@ public class ShowFragment extends DialogFragment  {
         f.setArguments(args);
         finalPosition = num;
         System.out.println("Num is: "+num);
-        this.dataTrackings = dataTrackings1;
+        this.dataTrackings = dataTrackings;
         return f;
     }
-    RecyclerView rv;
-    RecyclerViewDialogAdapter adapter;
-    private ArrayList<DataTrackingModel> trackingData;
-    private ArrayList<DataModel> dataa;
-    private static ArrayList<DataTracking> dataTrackings;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class ShowFragment extends DialogFragment  {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
-     dataTrackings = new ArrayList<>(  );
+//     dataTrackings = new ArrayList<>(  );
 
         addButton = (Button) rootView.findViewById(R.id.btn_add);
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
@@ -96,12 +96,11 @@ public class ShowFragment extends DialogFragment  {
         getDialog().setTitle("Tracking data: "+ "\r" + trackable.trackableList.get(finalPosition).name);
         //ADAPTER
         try {
-            adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition,dataTrackings);
+            adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition,this.dataTrackings);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         rv.setAdapter(adapter);
-        final Context ctx = this.getContext();
          addButton.setOnClickListener(onClickListener(finalPosition));
         getDialog().setCancelable(true);
         return rootView;
@@ -127,17 +126,18 @@ public class ShowFragment extends DialogFragment  {
                     @Override
                     public void onClick(View v) {
 
-                        dataTrackings.get( 0 ).title = Write.getText().toString();
+//                        dataTrackings.get( 0 ).title = Write.getText().toString();
 
                         Calendar calendar = Calendar.getInstance();
                         calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
                         Date date = calendar.getTime();
-                        dataTrackings.get( 0 ).meettime = date;
-                        addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
-                        adapter.addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
+//                        dataTrackings.get( 0 ).meettime = date;
+//                        addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
+                        adapter.addTrackingData(position,position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
                         adapter.notifyItemRangeChanged(position,dataTrackings.size());
                         adapter.notifyDataSetChanged();
                         adapter.notifyItemInserted(position);
+                        rv.setLayoutManager(new LinearLayoutManager(getContext()));
                         dialog.cancel();
                     }
                 });

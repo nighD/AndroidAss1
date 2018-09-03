@@ -37,6 +37,14 @@ import android.widget.Toast;
 
 public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerViewDialogAdapter.ViewHolder> {
 
+    Context c;
+    ArrayList<DataTrackingModel> trackingData;
+    ArrayList<DataTrackingModel> trackingData1;
+    static ArrayList<DataTracking> dataTrackings = new ArrayList<>();
+    ArrayList<DataModel> trackableData;
+    int position1;
+    Dialog dialog;
+    int no_of_trackable;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -73,41 +81,26 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
 
         }
     }
-    Context c;
-    ArrayList<DataTrackingModel> trackingData;
-    ArrayList<DataTrackingModel> trackingData1;
-     static ArrayList<DataTracking> dataTrackings;
-    ArrayList<DataModel> trackableData;
-    int position1;
-    Dialog dialog;
-    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position,ArrayList<DataTracking> dataTrackings1) throws ParseException {
+    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position,ArrayList<DataTracking> dataTrackings) throws ParseException {
         this.c = c;
         this.trackingData = trackingData;
-        //dataTrackings = new ArrayList<>(  );
         this.trackableData = trackableData;
-        this.dataTrackings = dataTrackings1;
+        this.dataTrackings = dataTrackings;
         this.position1 = position;
         this.trackingData1 = compartID( trackingData,position1 );
 //        addTrackingData(position, "lalala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
 
-        if (dataTrackings1.isEmpty()){
-            this.dataTrackings.add(new DataTracking(position1 +1,"No Tracking Data",
-                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
-                    , 0,0,0,0 ));
-        }
     }
-    public void AddTrackingData(DataTrackingModel dataTrackingModel)
-    {
-        trackingData1.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
-        trackingData.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
-        this.dataTrackings.add(new DataTracking(position1 +1,"No tracking data",
-                new Date(),
-                new Date(),
-                new Date()
-                , 0,0,0,0 ));
-    }
+//    public void AddTrackingData(DataTrackingModel dataTrackingModel)
+//    {
+//        trackingData1.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
+//        trackingData.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
+//        this.dataTrackings.add(new DataTracking(position1 +1,"No tracking data",
+//                new Date(),
+//                new Date(),
+//                new Date()
+//                , 0,0,0,0 ));
+//    }
     public void RemoveTrackingData(int position )
     {
         trackingData1.remove(position);
@@ -126,12 +119,12 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             holder.trackableID.setText("Trackable ID: "+ Integer.toString( dataTrackings.get(position).trackableId ));
             holder.title.setText("Title: "+ dataTrackings.get(position).title );
             holder.starttime.setText("Start Time: "+ dataTrackings.get(position).starttime.toString() );
-            holder.endtime.setText("End Time: " +dataTrackings.get( position ).endtime.toString());
+            holder.endtime.setText("End Time: " +dataTrackings.get(position).endtime.toString());
             holder.meettime.setText( "Meet Time: "+dataTrackings.get(position).meettime.toString() );
-            holder.currentlocation.setText("Current Location: "+ Double.toString(dataTrackings.get( position ).currentLocationlatitude )
-                    + Double.toString(dataTrackings.get( position ).currentLocationlongtitude ) );
-            holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get( position ).meetLocationlatitude )
-                    + Double.toString(dataTrackings.get( position ).meetLocationlongtitude ) );
+            holder.currentlocation.setText("Current Location: "+ Double.toString(dataTrackings.get(position).currentLocationlatitude )
+                    + Double.toString(dataTrackings.get(position).currentLocationlongtitude ) );
+            holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).meetLocationlatitude )
+                    + Double.toString(dataTrackings.get(position).meetLocationlongtitude ) );
 
 
 
@@ -172,13 +165,13 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     @Override
                     public void onClick(View v) {
 
-                        dataTrackings.get( 0 ).title = Write.getText().toString();
+//                        dataTrackings.get( 0 ).title = Write.getText().toString();
 
                         Calendar calendar = Calendar.getInstance();
                         calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
                         Date date = calendar.getTime();
-                        dataTrackings.get( 0 ).meettime = date;
-                        addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
+//                        dataTrackings.get( 0 ).meettime = date;
+                        addTrackingData(position,position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
                         notifyDataSetChanged();
                         dialog.cancel();
                     }
@@ -194,7 +187,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         prefEDIT.commit();
     }
 
-    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
+    public void addTrackingData(int position,int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
                                 double meetLat, double meetLong)
     {
         this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
