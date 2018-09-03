@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -30,9 +31,18 @@ import android.widget.Filterable;
 import android.widget.Toolbar;
 import android.app.Fragment;
 import org.w3c.dom.Text;
+
 import android.os.Bundle;
 import android.app.DialogFragment;
+
+
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
@@ -43,7 +53,8 @@ implements Filterable{
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
-    private ArrayList<DataTrackingModel> dataTrackingSet;
+//    private ArrayList<DataTrackingModel> dataTrackingSet;
+    public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
     private RecyclerViewAdapterListener listener;
     int id;
@@ -58,6 +69,11 @@ implements Filterable{
         private ImageView imageView;
         private View container;
         private CardView cardView;
+
+        private ImageButton removeButton;
+
+
+
         ItemClickListener itemClickListener;
 
         public MyViewHolder(final View itemView) {
@@ -67,7 +83,21 @@ implements Filterable{
             this.webURL = itemView.findViewById(R.id.webURL);
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
+
             container = itemView.findViewById(R.id.card_view);
+
+            removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
+            container = itemView.findViewById(R.id.card_view);
+
+            //this.cardView = itemView.findViewById( R.id.card_view );
+//            cardView.setOnClickListener( this );
+//            imageView.setOnClickListener( this );
+//            name.setOnClickListener( this );
+//            description.setOnClickListener( this );
+//            webURL.setOnClickListener( this );
+//            category.setOnClickListener( this );
+
+
 
         }
         public void setItemClickListener(ItemClickListener itemClickListener)
@@ -89,7 +119,7 @@ implements Filterable{
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
-        this.dataTrackingSet = dataTracking;
+//        this.dataTrackingSet = dataTracking;
         this.dataTrackingModels = dataTracking;
     }
     @Override
@@ -114,6 +144,9 @@ implements Filterable{
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
+
+
+
         try {
             String picImage = "pic" + Integer.parseInt(dataModel.image);
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
@@ -138,12 +171,41 @@ implements Filterable{
         } );
         imageView.setImageResource(id);
 
+        //imageView.setImageResource(R.drawable.pic1);
+//        holder.setItemClickListener( new ItemClickListener() {
+//            @Override
+//            public void onItemClick(View v,int pos) {
+//                Intent i=new Intent(ctx,Detailactivity.class);
+//                i.putExtra("Name",dataSet.get( position ).getName());
+//                i.putExtra("Position",position);
+//                //i.putExtra("Image",id);
+//                //START DETAIL ACTIVITY
+//                ctx.startActivity(i);
+//            }
+//        } );
+        holder.removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String itemLabel = dataTrackingModels.get(position).toString();
+                dataTrackingModels.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,dataTrackingModels.size());
+                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
     private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
 
         trackingDate.setText(dataTrackingModels.get(position).getDate().toString());
+
         trackableID.setText(Integer.toString(dataTrackingModels.get(position).getTrackableId()));
         stopTime.setText(Integer.toString(dataTrackingModels.get(position).getStopTime()));
+
+        trackableID.setText(String.valueOf(dataTrackingModels.get(position).getTrackableId()));
+        stopTime.setText(String.valueOf(dataTrackingModels.get(position).getStopTime()));
+
         latitude.setText(Double.toString(dataTrackingModels.get(position).getLatitude()));
         longitude.setText(Double.toString(dataTrackingModels.get(position).getLongitude()));
     }

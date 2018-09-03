@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.SearchView;
@@ -23,8 +24,6 @@ import android.support.v7.widget.SearchView;
 import android.app.Dialog;
 import android.widget.AdapterView;
 import java.lang.reflect.Field;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,8 +34,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import java.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -45,36 +46,27 @@ public class MainActivity extends AppCompatActivity  {
     MyRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
-    private FloatingActionButton fab;
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
     private SearchView searchView;
     private RecyclerView listener;
-
-//    private Activity activity;
-    //private FloatingActionButton fab;
-
-//    static View.OnClickListener myOnClickListener;
+    private Button addButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled( true );
         getSupportActionBar().setTitle( "Search" );
         Trackable trackable = new Trackable();
         trackable.parseFile( getApplicationContext() );
         TrackingService trackingService = new TrackingService();
         trackingService.parseFile(getApplicationContext());
-        //recyclerView.setHasFixedSize(true);
 
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
-        //fab = (FloatingActionButton) findViewById(R.id.fab);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -95,13 +87,11 @@ public class MainActivity extends AppCompatActivity  {
                                                     trackingService.trackingList.get(i).latitude,
                                                     trackingService.trackingList.get(i).longitude));
         }
+        addButton = (Button)findViewById(R.id.btn_add);
         recyclerView = findViewById( R.id.recycler_view );
-        //fab = (FloatingActionButton) findViewById(R.id.fab);
 
         adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
 
-        //fab = (FloatingActionButton) findViewById(R.id.fab);
-        //adapter = new MyRecyclerViewAdapter(dataa,getApplicationContext(),this);
 
         layoutManager = new LinearLayoutManager( this );
         recyclerView.setLayoutManager( layoutManager );
@@ -110,62 +100,26 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView.setAdapter( adapter );
 
 
-        //fab.setOnClickListener(onAddingListener());
-        //String pic0 = "pic2";
-        //int id = getApplicationContext().getResources().getIdentifier(pic0,"drawable",getPackageName());
-        //TextView textView = findViewById(R.id.name);
-        //TextView textView1 = findViewById(R.id.description);
-        //textView.setText(id);
-        //ImageView imageView = findViewById(R.id.thumbnail);
-//        textView1.setText("android:resource//"+getPackageName()+"/");
-        //imageView.setImageResource(R.drawable.pic2);
-
 
 
         adapter = new MyRecyclerViewAdapter(dataa,trackingData,getApplicationContext(),this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-
-//        fab.setOnClickListener(onAddingListener());
-
-    }
-
-    private View.OnClickListener onAddingListener() {
-        return new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final Dialog dialog = new Dialog( MainActivity.this );
-                dialog.setContentView( R.layout.dialog_add ); //layout for dialog
-                dialog.setTitle( "Add a new friend" );
-                dialog.setCancelable( false ); //none-dismiss when touching outside Dialog
-
-
-
-                // set the custom dialog components - texts and image
-                EditText name = (EditText) dialog.findViewById( R.id.name );
-                //EditText job = (EditText) dialog.findViewById( R.id.job );
-                Spinner spnGender = (Spinner) dialog.findViewById( R.id.gender );
-                View btnAdd = dialog.findViewById( R.id.btn_ok );
-                View btnCancel = dialog.findViewById( R.id.btn_cancel );
-
-                //set spinner adapter
-                ArrayList<String> gendersList = new ArrayList<>();
-                gendersList.add( "Male" );
-                gendersList.add( "Female" );
-                ArrayAdapter<String> spnAdapter = new ArrayAdapter<String>( MainActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, gendersList );
-                spnGender.setAdapter( spnAdapter );
-
-                //set handling event for 2 buttons and spinner
-                spnGender.setOnItemSelectedListener( onItemSelectedListener() );
-//                btnAdd.setOnClickListener(onConfirmListener(name, job, dialog));
-//                btnCancel.setOnClickListener(onCancelListener(dialog));
-
-                dialog.show();
+                Date date = new Date();
+                int position = 0;
+                String itemLabel = "New Trackable";
+                trackingData.add(0,new DataTrackingModel(date,trackingData.size(),0,0,0));
+                adapter.notifyItemInserted(position);
+                recyclerView.scrollToPosition(position);
+                Toast.makeText(getApplicationContext(),"Added : " + itemLabel,Toast.LENGTH_SHORT).show();
             }
-        };
+        });
+
     }
+
 
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {
         return new AdapterView.OnItemSelectedListener() {
