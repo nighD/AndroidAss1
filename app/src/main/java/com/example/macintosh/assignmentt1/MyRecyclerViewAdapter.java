@@ -4,8 +4,10 @@ import android.app.Application;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.Output;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +16,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,6 +39,7 @@ import android.os.Bundle;
 import android.app.DialogFragment;
 
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
@@ -43,7 +47,8 @@ import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.io.*;
+import java.util.Scanner;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
 implements Filterable{
@@ -83,8 +88,15 @@ implements Filterable{
             this.webURL = itemView.findViewById(R.id.webURL);
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
+
             container = itemView.findViewById(R.id.card_view);
             //removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
+
+
+//            container = itemView.findViewById(R.id.card_view);
+
+//            removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
+
             container = itemView.findViewById(R.id.card_view);
         }
         public void setItemClickListener(ItemClickListener itemClickListener)
@@ -118,7 +130,7 @@ implements Filterable{
         return holder;
     }
     @Override
-    public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder,final int position) {
 
         final DataModel dataModel = dataSetFilter.get(position);
         final DataTrackingModel dataTrackingModel = dataTrackingModels.get(position);
@@ -149,6 +161,20 @@ implements Filterable{
 
 
         imageView.setImageResource(id);
+
+
+
+//        holder.removeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String itemLabel = dataTrackingModels.get(position).toString();
+//                dataTrackingModels.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position,dataTrackingModels.size());
+//                Toast.makeText(ctx,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
 
 

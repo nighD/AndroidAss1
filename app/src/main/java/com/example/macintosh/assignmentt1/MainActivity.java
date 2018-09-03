@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.SearchView;
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity  {
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
     private SearchView searchView;
-    private RecyclerView listener;
 
 
     @Override
@@ -66,7 +64,6 @@ public class MainActivity extends AppCompatActivity  {
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
-        //addButton = (Button)findViewById(R.id.btn_add);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
