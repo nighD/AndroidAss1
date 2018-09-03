@@ -120,6 +120,19 @@ public class MainActivity extends AppCompatActivity  {
         });
 
     }
+    private AdapterView.OnItemSelectedListener onItemSelectedListener() {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView parent, View view, int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView parent) {
+
+            }
+        };
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate( R.menu.menu, menu );

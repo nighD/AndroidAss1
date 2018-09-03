@@ -1,13 +1,17 @@
 package com.example.macintosh.assignmentt1;
 import android.app.Activity;
 import android.app.Application;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.TextViewCompat;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -25,21 +29,25 @@ import android.app.Dialog;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toolbar;
-
+import android.app.Fragment;
 import org.w3c.dom.Text;
+
+import android.os.Bundle;
+import android.app.DialogFragment;
+
 
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by Parsania Hardik on 29-Jun-17.
- */
+
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
 implements Filterable{
+
 
     private Context ctx;
     private ArrayList<DataModel> dataSet;
@@ -50,7 +58,6 @@ implements Filterable{
     private Activity activity;
     private RecyclerViewAdapterListener listener;
     int id;
-    Dialog dialog;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -59,15 +66,12 @@ implements Filterable{
         private TextView description;
         private TextView webURL;
         private TextView category;
-        private TextView trackingDate;
-        private TextView trackableID;
-        private TextView stopTime;
-        private TextView latitude;
-        private TextView longitude;
         private ImageView imageView;
         private View container;
         private CardView cardView;
+
         private ImageButton removeButton;
+
 
 
         ItemClickListener itemClickListener;
@@ -79,11 +83,9 @@ implements Filterable{
             this.webURL = itemView.findViewById(R.id.webURL);
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
-            this.trackingDate = itemView.findViewById(R.id.trackingDate);
-            this.trackableID = itemView.findViewById(R.id.trackableID);
-            this.stopTime = itemView.findViewById(R.id.StopTime);
-            this.latitude = itemView.findViewById(R.id.Latitude);
-            this.longitude = itemView.findViewById(R.id.Longitude);
+
+            container = itemView.findViewById(R.id.card_view);
+
             removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
             container = itemView.findViewById(R.id.card_view);
 
@@ -96,6 +98,7 @@ implements Filterable{
 //            category.setOnClickListener( this );
 
 
+
         }
         public void setItemClickListener(ItemClickListener itemClickListener)
         {
@@ -104,7 +107,9 @@ implements Filterable{
 
         @Override
         public void onClick(View v) {
-            this.itemClickListener.onItemClick(v,getLayoutPosition());
+
+            this.itemClickListener.onItemClick(v,getLayoutPosition() );
+
         }
 
     }
@@ -123,8 +128,6 @@ implements Filterable{
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.cardview, parent, false);
         final MyViewHolder holder = new MyViewHolder(view);
-
-        holder.container.setOnClickListener(onClickListener(  holder.getAdapterPosition()));
         return holder;
     }
     @Override
@@ -136,37 +139,27 @@ implements Filterable{
         TextView textViewDescription = holder.description;
         TextView textViewWebURL = holder.webURL;
         TextView textViewCategory = holder.category;
-        TextView textViewDate = holder.trackingDate;
-        TextView textViewID = holder.trackableID;
-        TextView textViewStopTime = holder.stopTime;
-        TextView textViewLatitude = holder.latitude;
-        TextView textViewLongitude = holder.longitude;
         final ImageView imageView = holder.imageView;
         textViewName.setText(dataModel.getName());
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
-        try{
-            textViewDate.setText(dateFormat.format(dataTrackingModel.getDate()));
-            textViewID.setText(String.valueOf(dataTrackingModel.getTrackableId()));
-            textViewStopTime.setText(String.valueOf(dataTrackingModel.getStopTime()));
-            textViewLatitude.setText(Double.toString(dataTrackingModel.getLatitude()));
-            textViewLongitude.setText(Double.toString(dataTrackingModel.getLongitude()));
-        }
-        catch (NullPointerException e){}
+
+
+
         try {
             String picImage = "pic" + Integer.parseInt(dataModel.image);
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
         }
         catch(NumberFormatException e){}
-        textViewName.setOnClickListener(onClickListener(position));
-        textViewDescription.setOnClickListener(onClickListener(position));
-        textViewWebURL.setOnClickListener(onClickListener(position));
-        textViewCategory.setOnClickListener(onClickListener(position));
-        imageView.setOnClickListener(onClickListener(position));
+        final  ShowFragment tv=new ShowFragment();
+        textViewName.setOnClickListener(onClickListener(tv,position));
+        textViewDescription.setOnClickListener(onClickListener(tv,position));
+        textViewWebURL.setOnClickListener(onClickListener(tv,position));
+        textViewCategory.setOnClickListener(onClickListener(tv,position));
+        imageView.setOnClickListener(onClickListener(tv,position));
         imageView.setImageResource(id);
-        final Dialog dialog = new Dialog(activity);
-        dialog.setContentView(R.layout.dialog);
+
         holder.setItemClickListener( new ItemClickListener() {
             @Override
             public void onItemClick(View v,int pos) {
@@ -176,9 +169,8 @@ implements Filterable{
                 ctx.startActivity(i);
             }
         } );
-
-        holder.container.setOnClickListener(onClickListener(position));
         imageView.setImageResource(id);
+
         //imageView.setImageResource(R.drawable.pic1);
 //        holder.setItemClickListener( new ItemClickListener() {
 //            @Override
@@ -202,55 +194,38 @@ implements Filterable{
             }
         });
 
+
     }
     private void setDataToView(TextView trackingDate, TextView trackableID, TextView stopTime, TextView latitude, TextView longitude, int position) {
+
         trackingDate.setText(dataTrackingModels.get(position).getDate().toString());
+
+        trackableID.setText(Integer.toString(dataTrackingModels.get(position).getTrackableId()));
+        stopTime.setText(Integer.toString(dataTrackingModels.get(position).getStopTime()));
+
         trackableID.setText(String.valueOf(dataTrackingModels.get(position).getTrackableId()));
         stopTime.setText(String.valueOf(dataTrackingModels.get(position).getStopTime()));
+
         latitude.setText(Double.toString(dataTrackingModels.get(position).getLatitude()));
         longitude.setText(Double.toString(dataTrackingModels.get(position).getLongitude()));
     }
 
-    public View.OnClickListener onClickListener(final int position) {
+    public View.OnClickListener onClickListener(final ShowFragment showFragment,final int position) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                final Dialog dialog = new Dialog( activity );
-//
-//                dialog.setContentView(R.layout.activity_main);
-//                dialog.setTitle("Position " + position);
-//                dialog.setCancelable(true); // dismiss when touching outside Dialog
-//
-//                // set the custom dialog components - texts and image
+                // Create and show the dialog.
+                FragmentManager manager = activity.getFragmentManager();
+                FragmentTransaction ft = manager.beginTransaction();
+                Fragment prev = manager.findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                showFragment.newInstance(position);
 
-
-
-
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.dialog);
-                dialog.setTitle("Position " + position);
-                dialog.setCancelable(true); // dismiss when touching outside Dialog
-
-                // set the custom dialog components - texts and image
-                TextView trackingDate = (TextView) dialog.findViewById(R.id.trackingDate);
-                TextView trackableID = (TextView) dialog.findViewById(R.id.trackableID);
-                TextView stopTime = (TextView) dialog.findViewById(R.id.StopTime);
-                TextView latitude = (TextView) dialog.findViewById(R.id.Latitude);
-                TextView longitude = (TextView) dialog.findViewById(R.id.Longitude);
-
-//                if(activity!=null)
-//                {
-                    setDataToView(trackingDate, trackableID, stopTime, latitude, longitude,position);
-
-
-                    //setDataToView(name, desc, webURL, category,position);
-
-
-//                }
-
-                dialog.show();
-                Toast.makeText( ctx,"Test :"+ String.valueOf( position ), Toast.LENGTH_SHORT ).show();
+                showFragment.show(manager,"dialog");
             }
         };
     }
