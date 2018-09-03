@@ -93,7 +93,7 @@ public class ShowFragment extends DialogFragment  {
                 Date date = new Date();
                 int i = trackable.trackableList.size();
                 trackingData.add(0,new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
-                adapter.AddTrackingData();
+                adapter.AddTrackingData(new DataTrackingModel(date, finalPosition+1, 2, 954.3, 107.5));
                 adapter.notifyItemInserted(i);
                 rv.scrollToPosition(i);
 

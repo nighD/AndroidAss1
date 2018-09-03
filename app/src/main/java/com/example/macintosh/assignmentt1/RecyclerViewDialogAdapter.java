@@ -66,10 +66,15 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     , 0,0,0,0 ));
         }
     }
-    public void AddTrackingData()
+    public void AddTrackingData(DataTrackingModel dataTrackingModel)
     {
-        Date date = new Date();
-        trackingData1.add(0,new DataTrackingModel(date, position1, 2, 954.3, 107.5));
+        trackingData1.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
+        trackingData.add(0,new DataTrackingModel(dataTrackingModel.date,dataTrackingModel.trackableId,dataTrackingModel.stopTime,dataTrackingModel.latitude,dataTrackingModel.longitude) );
+    }
+    public void RemoveTrackingData(int position )
+    {
+        trackingData1.remove(position);
+        trackingData.remove(position);
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -87,9 +92,10 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         holder.Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackingData1.remove(position);
+                RemoveTrackingData(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, trackingData1.size());
+                notifyItemRangeChanged(position,trackingData.size());
                 Toast.makeText(c,"Removed",Toast.LENGTH_SHORT).show();
             }
         });
