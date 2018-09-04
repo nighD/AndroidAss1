@@ -101,11 +101,11 @@ public class ShowFragment extends DialogFragment  {
             e.printStackTrace();
         }
         rv.setAdapter(adapter);
-         addButton.setOnClickListener(onClickListener(finalPosition));
+         addButton.setOnClickListener(onAddClickListener(finalPosition));
         getDialog().setCancelable(true);
         return rootView;
     }
-   public View.OnClickListener onClickListener(final int position) {
+   public View.OnClickListener onAddClickListener(final int position) {
         final Context c = this.getContext();
         return new View.OnClickListener() {
             @Override
@@ -145,9 +145,5 @@ public class ShowFragment extends DialogFragment  {
             }
         };
     }
-    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
-                                double meetLat, double meetLong)
-    {
-        this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
-    }
+
 }
