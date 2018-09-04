@@ -104,9 +104,9 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             holder.endtime.setText("End Time: " +dataTrackings.get(position).endtime.toString());
             holder.meettime.setText( "Meet Time: "+dataTrackings.get(position).meettime.toString() );
             holder.currentlocation.setText("Current Location: "+ Double.toString(dataTrackings.get(position).currentLocationlatitude )
-                    + Double.toString(dataTrackings.get(position).currentLocationlongtitude ) );
+                    +" "+ Double.toString(dataTrackings.get(position).currentLocationlongtitude ) );
             holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).meetLocationlatitude )
-                    + Double.toString(dataTrackings.get(position).meetLocationlongtitude ) );
+                    +" "+ Double.toString(dataTrackings.get(position).meetLocationlongtitude ) );
 
             holder.Edit.setOnClickListener(onEditClickListener(position));
             holder.Delete.setOnClickListener(onDeleteClickListener(position));
@@ -157,8 +157,8 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                 final EditText Write = dialog.findViewById(R.id.writeTitle);
                 Button SaveMyName = dialog.findViewById(R.id.SaveNow);
                 final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
-                final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
-                final TimePicker endTimePicker = dialog.findViewById(R.id.end_time_picker);
+//                final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
+                final TimePicker meetTimePicker = dialog.findViewById(R.id.meet_time_picker);
 //                final EditText WriteCurrLoc = dialog.findViewById(R.id.writeCurrLoc);
 //                final EditText WriteMeetLoc = dialog.findViewById(R.id.writeMeetLoc);
                 Write.setEnabled(true);
@@ -169,17 +169,17 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     public void onClick(View v) {
 
                         Calendar calendar = Calendar.getInstance();
-                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),startTimePicker.getHour(),startTimePicker.getMinute(),0 );
-                        Date startTime = calendar.getTime();
-                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour(),endTimePicker.getMinute(),0 );
-                        Date endTime = calendar.getTime();
-                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
+//                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),startTimePicker.getHour(),startTimePicker.getMinute(),0 );
+//                        Date startTime = calendar.getTime();
+//                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour(),endTimePicker.getMinute(),0 );
+//                        Date endTime = calendar.getTime();
+                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),meetTimePicker.getHour(),meetTimePicker.getMinute(),0 );
                         Date meetTime = calendar.getTime();
                         removeTrackingData(position);
 //                        editTrackingData(position,position, Write.getText().toString(), startTime, endTime,meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
 //                                Double.parseDouble(WriteCurrLoc.getText().toString()),Double.parseDouble(WriteMeetLoc.getText().toString()),Double.parseDouble(WriteMeetLoc.getText().toString()));
-                        editTrackingData(position,position+1, Write.getText().toString(), startTime, endTime,meetTime, 0,
-                                0,0,0);
+                        editTrackingData(position,position1, Write.getText().toString(), new Date(), new Date(),meetTime, 0,
+                                0,trackingData.get(position1).latitude,trackingData.get(position1).longitude);
                         notifyItemRangeChanged(position,dataTrackings.size());
                         notifyDataSetChanged();
                         notifyItemInserted(position);

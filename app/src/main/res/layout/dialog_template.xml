@@ -16,16 +16,16 @@
         android:layout_weight="1"
         android:layout_height="0dp" />
 
+    <!--<TimePicker-->
+        <!--android:id="@+id/start_time_picker"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:scrollbarAlwaysDrawVerticalTrack="true"-->
+        <!--android:timePickerMode="spinner"-->
+      <!--/>-->
     <TimePicker
-        android:id="@+id/start_time_picker"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:timePickerMode="spinner"
-      />
-    <TimePicker
-        android:id="@+id/end_time_picker"
+        android:id="@+id/meet_time_picker"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"

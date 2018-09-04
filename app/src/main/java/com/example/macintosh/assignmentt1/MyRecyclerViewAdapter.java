@@ -133,7 +133,7 @@ implements Filterable{
                         DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
                         DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
                         DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
-                        , 0, 0, 0, 0));
+                        , 0, 0, dataTracking.get(i).latitude, dataTracking.get(i).longitude));
             }
         }
     }
