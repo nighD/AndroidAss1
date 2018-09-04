@@ -116,28 +116,32 @@ public class ShowFragment extends DialogFragment  {
                 final EditText Write = dialog.findViewById(R.id.writeTitle);
                 Button SaveMyName = dialog.findViewById(R.id.SaveNow);
                 final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
-                 final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
-                 final TimePicker endTimePicker = dialog.findViewById(R.id.end_time_picker);
-                final EditText WriteMeetLong = dialog.findViewById(R.id.writeMeetLong);
+                final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
+                final TimePicker endTimePicker = dialog.findViewById(R.id.end_time_picker);
+                final EditText WriteCurrLoc = dialog.findViewById(R.id.writeCurrLoc);
+                final EditText WriteMeetLoc = dialog.findViewById(R.id.writeMeetLoc);
                 Write.setEnabled(true);
                 SaveMyName.setEnabled(true);
 
                 SaveMyName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-//                        dataTrackings.get( 0 ).title = Write.getText().toString();
-
                         Calendar calendar = Calendar.getInstance();
+                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),startTimePicker.getHour(),startTimePicker.getMinute(),0 );
+                        Date startTime = calendar.getTime();
+                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour(),endTimePicker.getMinute(),0 );
+                        Date endTime = calendar.getTime();
                         calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
-                        Date date = calendar.getTime();
-//                        dataTrackings.get( 0 ).meettime = date;
-//                        addTrackingData(position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
-                        adapter.addTrackingData(position,position, Write.getText().toString(), date, date,date, 0.0,0.1,0.2,0.3);
-                        adapter.notifyItemRangeChanged(position,dataTrackings.size());
-                        adapter.notifyDataSetChanged();
-                        adapter.notifyItemInserted(position);
-                        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                        Date meetTime = calendar.getTime();
+                        try {
+                            adapter.addTrackingData(position, position, Write.getText().toString(), startTime, endTime, meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
+                                    Double.parseDouble(WriteCurrLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()));
+                            adapter.notifyItemRangeChanged(position, dataTrackings.size());
+                            adapter.notifyDataSetChanged();
+                            adapter.notifyItemInserted(position);
+                            rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                        }
+                        catch (NumberFormatException e){}
                         dialog.cancel();
                     }
                 });

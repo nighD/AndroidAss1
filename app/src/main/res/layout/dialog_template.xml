@@ -35,9 +35,15 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_margin="4dp"
-        android:hint="Write Meet Longitude"
-        android:id="@+id/writeMeetLong"
-        android:layout_height="100dp" />
+        android:hint="Write Current Location"
+        android:id="@+id/writeCurrLoc"
+        android:layout_height="40dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_margin="4dp"
+        android:hint="Write Meet Location"
+        android:id="@+id/writeMeetLoc"
+        android:layout_height="40dp" />
     <Button
         android:layout_width="match_parent"
         android:text="Save"
