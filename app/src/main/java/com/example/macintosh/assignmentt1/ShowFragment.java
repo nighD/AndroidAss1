@@ -90,7 +90,6 @@ public class ShowFragment extends DialogFragment  {
 //     dataTrackings = new ArrayList<>(  );
 
         addButton = (Button) rootView.findViewById(R.id.btn_add);
-//        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         rv= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         getDialog().setTitle("Tracking data: "+ "\r" + trackable.trackableList.get(finalPosition).name);
@@ -118,8 +117,8 @@ public class ShowFragment extends DialogFragment  {
                 final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
                 final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
                 final TimePicker endTimePicker = dialog.findViewById(R.id.end_time_picker);
-                final EditText WriteCurrLoc = dialog.findViewById(R.id.writeCurrLoc);
-                final EditText WriteMeetLoc = dialog.findViewById(R.id.writeMeetLoc);
+//                final EditText WriteCurrLoc = dialog.findViewById(R.id.writeCurrLoc);
+//                final EditText WriteMeetLoc = dialog.findViewById(R.id.writeMeetLoc);
                 Write.setEnabled(true);
                 SaveMyName.setEnabled(true);
 
@@ -134,8 +133,10 @@ public class ShowFragment extends DialogFragment  {
                         calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour() - startTimePicker.getHour(),endTimePicker.getMinute()-startTimePicker.getMinute(),0 );
                         Date meetTime = calendar.getTime();
                         try {
-                            adapter.addTrackingData(position, position, Write.getText().toString(), startTime, endTime, meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
-                                    Double.parseDouble(WriteCurrLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()));
+//                            adapter.addTrackingData(position, position, Write.getText().toString(), startTime, endTime, meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
+//                                    Double.parseDouble(WriteCurrLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()));
+                            adapter.addTrackingData(position,position+1, Write.getText().toString(), startTime, endTime,meetTime, 0,
+                                    0,0,0);
                             adapter.notifyItemRangeChanged(position, dataTrackings.size());
                             adapter.notifyDataSetChanged();
                             adapter.notifyItemInserted(position);
