@@ -1,4 +1,4 @@
-package com.example.macintosh.assignmentt1;
+package com.example.macintosh.assignmentt1.Interfaces;
 
 import android.view.View;
 

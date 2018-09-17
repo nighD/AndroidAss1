@@ -1,55 +1,34 @@
-package com.example.macintosh.assignmentt1;
+package com.example.macintosh.assignmentt1.ViewAdapter;
 import android.app.Activity;
-import android.app.Application;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.icu.util.Output;
-import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.TextViewCompat;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.app.Dialog;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.Toolbar;
 import android.app.Fragment;
-import org.w3c.dom.Text;
-
-import android.os.Bundle;
-import android.app.DialogFragment;
 
 
-import java.io.File;
+import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
+import com.example.macintosh.assignmentt1.Interfaces.ItemClickListener;
+import com.example.macintosh.assignmentt1.ModelClass.DataModel;
+import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
+import com.example.macintosh.assignmentt1.R;
+import com.example.macintosh.assignmentt1.Activities.ShowFragment;
+
 import java.text.DateFormat;
-import java.text.FieldPosition;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.io.*;
-import java.util.Scanner;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
 implements Filterable{
@@ -167,7 +146,7 @@ implements Filterable{
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
         }
         catch(NumberFormatException e){}
-        final  ShowFragment tv=new ShowFragment();
+        final ShowFragment tv=new ShowFragment();
         textViewName.setOnClickListener(onClickListener(tv,position));
         textViewDescription.setOnClickListener(onClickListener(tv,position));
         textViewWebURL.setOnClickListener(onClickListener(tv,position));

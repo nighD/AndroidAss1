@@ -1,10 +1,7 @@
-package com.example.macintosh.assignmentt1;
-import android.app.Activity;
+package com.example.macintosh.assignmentt1.Activities;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,20 +9,22 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.support.v7.widget.SearchView;
 
-import android.app.Dialog;
 import android.widget.AdapterView;
+
+import com.example.macintosh.assignmentt1.ModelClass.DataModel;
+import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
+import com.example.macintosh.assignmentt1.R;
+import com.example.macintosh.assignmentt1.ModelClass.Trackable;
+import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
+import com.example.macintosh.assignmentt1.ViewAdapter.MyRecyclerViewAdapter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity  {
 

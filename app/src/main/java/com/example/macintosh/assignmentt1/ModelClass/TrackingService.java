@@ -1,8 +1,10 @@
-package com.example.macintosh.assignmentt1;
+package com.example.macintosh.assignmentt1.ModelClass;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
+
+import com.example.macintosh.assignmentt1.R;
 
 import java.text.DateFormat;
 import java.text.ParseException;

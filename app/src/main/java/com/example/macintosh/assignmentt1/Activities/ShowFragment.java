@@ -1,11 +1,9 @@
-package com.example.macintosh.assignmentt1;
+package com.example.macintosh.assignmentt1.Activities;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,15 +15,19 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Date;
-import java.text.DateFormat;
 
 import android.widget.Button;
-import java.time.LocalDateTime;
-import android.widget.Toast;
+
+import com.example.macintosh.assignmentt1.ModelClass.DataModel;
+import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
+import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
+import com.example.macintosh.assignmentt1.R;
+import com.example.macintosh.assignmentt1.ModelClass.Trackable;
+import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
+import com.example.macintosh.assignmentt1.ViewAdapter.RecyclerViewDialogAdapter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ShowFragment extends DialogFragment  {
     int finalPosition;

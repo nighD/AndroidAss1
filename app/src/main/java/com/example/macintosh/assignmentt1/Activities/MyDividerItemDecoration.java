@@ -1,4 +1,4 @@
-package com.example.macintosh.assignmentt1;
+package com.example.macintosh.assignmentt1.Activities;
 
 
 

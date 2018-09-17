@@ -1,13 +1,8 @@
-package com.example.macintosh.assignmentt1;
+package com.example.macintosh.assignmentt1.ViewAdapter;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,21 +15,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Date;
-import org.w3c.dom.Text;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 
-import android.widget.Toast;
+import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
+import com.example.macintosh.assignmentt1.ModelClass.DataModel;
+import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
+import com.example.macintosh.assignmentt1.R;
 
 public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerViewDialogAdapter.ViewHolder> {
 
