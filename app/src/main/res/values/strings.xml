@@ -7,4 +7,5 @@
     <string name="male"></string>
     <string name="cancel"></string>
     <string name="ok"></string>
+    <string name="jdbc">JDBC Example</string>
 </resources>
