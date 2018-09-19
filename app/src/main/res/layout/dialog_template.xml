@@ -15,15 +15,6 @@
         android:spinnersShown="false"
         android:layout_weight="1"
         android:layout_height="0dp" />
-
-    <!--<TimePicker-->
-        <!--android:id="@+id/start_time_picker"-->
-        <!--android:layout_weight="1"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:scrollbarAlwaysDrawVerticalTrack="true"-->
-        <!--android:timePickerMode="spinner"-->
-      <!--/>-->
     <TimePicker
         android:id="@+id/meet_time_picker"
         android:layout_weight="1"
@@ -32,18 +23,6 @@
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:timePickerMode="spinner"
         />
-    <!--<EditText-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_margin="4dp"-->
-        <!--android:hint="Write Current Location"-->
-        <!--android:id="@+id/writeCurrLoc"-->
-        <!--android:layout_height="40dp" />-->
-    <!--<EditText-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_margin="4dp"-->
-        <!--android:hint="Write Meet Location"-->
-        <!--android:id="@+id/writeMeetLoc"-->
-        <!--android:layout_height="40dp" />-->
     <Button
         android:layout_width="match_parent"
         android:text="Save"
