@@ -6,16 +6,20 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.app.Fragment;
+import android.widget.Toast;
 
 
+import com.example.macintosh.assignmentt1.Activities.MainActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.Interfaces.ItemClickListener;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
@@ -55,6 +59,7 @@ implements Filterable{
         private ImageView imageView;
         private View container;
         private CardView cardView;
+        private ImageButton popMenu;
 
         private ImageButton removeButton;
 
@@ -69,16 +74,24 @@ implements Filterable{
             this.webURL = itemView.findViewById(R.id.webURL);
             this.category = itemView.findViewById(R.id.category);
             this.imageView = itemView.findViewById(R.id.thumbnail);
+            this.popMenu = itemView.findViewById(R.id.ic_pop_menu);
 
             container = itemView.findViewById(R.id.card_view);
-            //removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
-
-
-//            container = itemView.findViewById(R.id.card_view);
-
-//            removeButton = (ImageButton) itemView.findViewById(R.id.ib_remove);
-
-            container = itemView.findViewById(R.id.card_view);
+            popMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(ctx, popMenu);
+                    popupMenu.getMenuInflater().inflate(R.menu.pop_menu, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
+                }
+            });
         }
         public void setItemClickListener(ItemClickListener itemClickListener)
         {
@@ -118,7 +131,6 @@ implements Filterable{
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.cardview, parent, false);
         final MyViewHolder holder = new MyViewHolder(view);
@@ -209,7 +221,6 @@ implements Filterable{
             }
         };
     }
-
 
     @Override
     public int getItemCount() {
