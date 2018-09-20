@@ -3,10 +3,13 @@ package com.example.macintosh.assignmentt1.JDBC;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
 import com.example.macintosh.assignmentt1.R;
@@ -22,29 +25,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-public class JDBCActivity extends Activity
+public class JDBCActivity
 {
     private String LOG_TAG = this.getClass().getName();
 
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+    public JDBCActivity(){
 
+    }
+    public void trackingDataDatabase(final Context context, final String db){
         // DB operations should go in separate Thread
         new Thread(new Runnable()
         {
             @Override
             public void run()
             {
-                // create database /data/data/com.example.macintosh.assignmentt1/databases/test.db
-                String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
-
                 try
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
                     //st.executeUpdate("Drop table trackingdata");
@@ -57,17 +55,13 @@ public class JDBCActivity extends Activity
                             "latitude double , " +
                             "longtitude double )");
                     Log.i(LOG_TAG, "*** Created table: trackingdata");
-
-                    // Add records to employee
-
                     SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY hh:mm:ss");
-                    try (Scanner scanner = new Scanner(getApplicationContext().getResources().openRawResource( R.raw.tracking_data)))
+                    try (Scanner scanner = new Scanner(context.getResources().openRawResource( R.raw.tracking_data)))
                     {
                         // match comma and 0 or more whitespace OR trailing space and newline
                         scanner.useDelimiter(",\\s*|\\s*\\n+");
                         while (scanner.hasNext())
                         {
-
                             Date trackingDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse(scanner.next());
                            // Log.i(LOG_TAG, sdf.format( e ));
                             Scanner scanner0 = new Scanner(sdf.format(trackingDate));
@@ -86,20 +80,13 @@ public class JDBCActivity extends Activity
                             st.execute( "INSERT INTO trackingdata VALUES ('"+date+"', '"+time0+"', "+
                                                                                     trackableID+", "+stopTime+", "
                                                                                     +latitude +", " + longtitude+")");
-
                         }
                     }
                     catch (Resources.NotFoundException e)
                     {
                         Log.i(LOG_TAG, "File Not Found Exception Caught");
                     }
-//                    st.executeUpdate("INSERT INTO employee VALUES ('133','Joe')");
-//                    st.executeUpdate("INSERT INTO employee VALUES ('112233','John')");
-//                    st.executeUpdate("INSERT INTO employee VALUES ('445566','Mary')");
-//                    st.executeUpdate("INSERT INTO employee VALUES ('199','Jack')");
-//                    Log.i(LOG_TAG, "*** Inserted records");
-//
-//                    // Query and display results //Step 5
+                    // Query and display results //Step 5
                     ResultSet rs = st.executeQuery("SELECT * FROM trackingdata");
                     Log.i(LOG_TAG, "*** Query results:");
                     while (rs.next())
@@ -107,13 +94,12 @@ public class JDBCActivity extends Activity
                         Log.i(LOG_TAG, "Date " + rs.getString(1) + ", ");
                         Log.i(LOG_TAG, "TIME " + rs.getString(2));
                     }
-
                     // Delete table: employee //Step 6
                     st.executeUpdate("Drop table trackingdata");
                     Log.i(LOG_TAG, "*** Deleted table: trackingdata");
 
                     // Release resources //Step 7
-                    //rs.close();
+                    rs.close();
                     st.close();
                     con.close();
 
@@ -135,6 +121,260 @@ public class JDBCActivity extends Activity
             }
         }).start();
     }
+
+    public void createServiceDatabase(final String db){
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Class.forName("org.sqldroid.SQLDroidDriver");
+                    Log.i(LOG_TAG, String.format("opening: %s", db));
+                    Connection con = DriverManager.getConnection(db);
+                    Statement st = con.createStatement();
+                    st.executeUpdate("Drop table servicedata");
+                    // Create table:
+                    st.executeUpdate("create table servicedata( " +
+                            "ID int not null, " +
+                            "title char[100], " +
+                            "starttime date not null, " +
+                            "endtime date not null, " +
+                            "meettime date not null, " +
+                            "currentlatitude double, " +
+                            "currentlongtitude double, " +
+                            "meetlatitude double, " +
+                            "meetlongtitude double)");
+                    Log.i(LOG_TAG, "*** Created table: servicedata");
+                    st.close();
+                    con.close();
+
+                } catch (SQLException sqlEx)
+                {
+                    while (sqlEx != null)
+                    {
+                        Log.i(LOG_TAG,
+                                "[SQLException] " + "SQLState: " + sqlEx.getSQLState()
+                                        + ", Message: " + sqlEx.getMessage()
+                                        + ", Vendor: " + sqlEx.getErrorCode());
+                        sqlEx = sqlEx.getNextException();
+                    }
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public void createNew(final DataTracking dataTracking, final String db){
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Class.forName("org.sqldroid.SQLDroidDriver");
+                    Log.i(LOG_TAG, String.format("opening: %s", db));
+                    Connection con = DriverManager.getConnection(db);
+                    Statement st = con.createStatement();
+                    st.execute( "insert into servicedata values ("+ dataTracking.trackableId +", "
+                                                                       +dataTracking.title +"'"+dataTracking.starttime+"','"
+                                                                        +dataTracking.endtime+"', '"+dataTracking.meettime+"', "
+                                                                         +dataTracking.currentLocationlatitude+", " +dataTracking.currentLocationlongtitude
+                                                                          + ", "+dataTracking.meetLocationlatitude+", "
+                                                                           + dataTracking.currentLocationlongtitude+")");
+                    st.close();
+                    con.close();
+
+                } catch (SQLException sqlEx)
+                {
+                    while (sqlEx != null)
+                    {
+                        Log.i(LOG_TAG,
+                                "[SQLException] " + "SQLState: " + sqlEx.getSQLState()
+                                        + ", Message: " + sqlEx.getMessage()
+                                        + ", Vendor: " + sqlEx.getErrorCode());
+                        sqlEx = sqlEx.getNextException();
+                    }
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+
+            }
+        }).start();
+    }
+    public void changeMeetTime(final int ID,final Date date,final String db){
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Class.forName("org.sqldroid.SQLDroidDriver");
+                    Log.i(LOG_TAG, String.format("opening: %s", db));
+                    Connection con = DriverManager.getConnection(db);
+                    Statement st = con.createStatement();
+//                    SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY hh:mm:ss");
+//                    Scanner scanner0 = new Scanner(sdf.format(date));
+//                    scanner0.useDelimiter( "\\s" );
+//                    String date = scanner0.next();
+//                    String time0 = scanner0.next();
+                    st.execute("update servicedata set meettime = '"+date+"' where ID= "+Integer.toString(ID));
+                    Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
+                    st.close();
+                    con.close();
+
+                } catch (SQLException sqlEx)
+                {
+                    while (sqlEx != null)
+                    {
+                        Log.i(LOG_TAG,
+                                "[SQLException] " + "SQLState: " + sqlEx.getSQLState()
+                                        + ", Message: " + sqlEx.getMessage()
+                                        + ", Vendor: " + sqlEx.getErrorCode());
+                        sqlEx = sqlEx.getNextException();
+                    }
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public void changetitle(final int ID,final String title,final String db){
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Class.forName("org.sqldroid.SQLDroidDriver");
+                    Log.i(LOG_TAG, String.format("opening: %s", db));
+                    Connection con = DriverManager.getConnection(db);
+                    Statement st = con.createStatement();
+                    SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY hh:mm:ss");
+                    st.execute("update servicedata set title = '"+ title +"' where ID= "+Integer.toString(ID));
+                    Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
+                    st.close();
+                    con.close();
+
+                } catch (SQLException sqlEx)
+                {
+                    while (sqlEx != null)
+                    {
+                        Log.i(LOG_TAG,
+                                "[SQLException] " + "SQLState: " + sqlEx.getSQLState()
+                                        + ", Message: " + sqlEx.getMessage()
+                                        + ", Vendor: " + sqlEx.getErrorCode());
+                        sqlEx = sqlEx.getNextException();
+                    }
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public DataTracking getData(final int ID, final String db){
+        final DataTracking[] dataTracking = new DataTracking[1];
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Class.forName("org.sqldroid.SQLDroidDriver");
+                    Log.i(LOG_TAG, String.format("opening: %s", db));
+                    Connection con = DriverManager.getConnection(db);
+                    Statement st = con.createStatement();
+
+                    // Query and display results //Step 5
+                    ResultSet rs = st.executeQuery("SELECT ID ="+ Integer.toString(ID)+" FROM servicedata");
+                    Log.i(LOG_TAG, "*** Query results:");
+                    DataTracking dataTracking0 = null;
+                    while (rs.next())
+                    {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+                        Date dateStart = sdf.parse(rs.getString(3));
+                        Date dateEnd = sdf.parse(rs.getString(4));
+                        Date dateMeet = sdf.parse(rs.getString(5));
+                        dataTracking0 = new DataTracking(Integer.parseInt( rs.getString(1) ),rs.getString( 2 ),
+                                dateStart, dateEnd, dateMeet,
+                                Double.parseDouble(rs.getString(6)),Double.parseDouble(rs.getString(7)),
+                                Double.parseDouble(rs.getString(8)),Double.parseDouble(rs.getString(9)));
+                    }
+                    dataTracking[0] = dataTracking0;
+                    Log.i(LOG_TAG, "*** query result:ID "+ Integer.toString(ID));
+
+                    // Release resources //Step 7
+                    rs.close();
+                    st.close();
+                    con.close();
+
+                } catch (SQLException sqlEx)
+                {
+                    while (sqlEx != null)
+                    {
+                        Log.i(LOG_TAG,
+                                "[SQLException] " + "SQLState: " + sqlEx.getSQLState()
+                                        + ", Message: " + sqlEx.getMessage()
+                                        + ", Vendor: " + sqlEx.getErrorCode());
+                        sqlEx = sqlEx.getNextException();
+                    }
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+
+            }
+        }).start();
+        return dataTracking[0];
+    }
+
+    public void deleteCol ( final int ID, final String db){
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Class.forName("org.sqldroid.SQLDroidDriver");
+                    Log.i(LOG_TAG, String.format("opening: %s", db));
+                    Connection con = DriverManager.getConnection(db);
+                    Statement st = con.createStatement();
+                    st.execute("delete from servicedata from ID = "+Integer.toString(ID));
+                    Log.i(LOG_TAG, "*** Delete query : ID " +Integer.toString(ID));
+                    st.close();
+                    con.close();
+
+                } catch (SQLException sqlEx)
+                {
+                    while (sqlEx != null)
+                    {
+                        Log.i(LOG_TAG,
+                                "[SQLException] " + "SQLState: " + sqlEx.getSQLState()
+                                        + ", Message: " + sqlEx.getMessage()
+                                        + ", Vendor: " + sqlEx.getErrorCode());
+                        sqlEx = sqlEx.getNextException();
+                    }
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 
     // this is a workaround for SQLDroid cannot create in database path
     // no longer needed on API 27 AVD s2 2018
