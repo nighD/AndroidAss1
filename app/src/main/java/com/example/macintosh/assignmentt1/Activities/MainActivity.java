@@ -16,6 +16,7 @@ import android.support.v7.widget.SearchView;
 
 import android.widget.AdapterView;
 
+import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.R;
@@ -48,7 +49,9 @@ public class MainActivity extends AppCompatActivity  {
         trackable.parseFile( getApplicationContext() );
         TrackingService trackingService = new TrackingService();
         trackingService.parseFile(getApplicationContext());
-
+        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        JDBCActivity jdbcActivity = new JDBCActivity();
+        jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
