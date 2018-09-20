@@ -138,7 +138,7 @@ public class ShowFragment extends DialogFragment  {
 //                            adapter.addTrackingData(position, position, Write.getText().toString(), startTime, endTime, meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
 //                                    Double.parseDouble(WriteCurrLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()));
                             adapter.addTrackingData(position,finalPosition, Write.getText().toString(), new Date(), new Date(),meetTime, 0,
-                                    0,trackingData.get(finalPosition).latitude,trackingData.get(finalPosition).longitude);
+                                    0,trackingData.get(finalPosition).getLatitude(),trackingData.get(finalPosition).getLongitude());
                             adapter.notifyItemRangeChanged(position, dataTrackings.size());
                             adapter.notifyDataSetChanged();
                             adapter.notifyItemInserted(position);

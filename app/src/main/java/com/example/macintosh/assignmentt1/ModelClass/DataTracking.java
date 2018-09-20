@@ -4,15 +4,16 @@ import java.util.Date;
 
 public class DataTracking {
 
-    public int trackableId;
-    public String title;
-    public Date starttime;
-    public Date endtime;
-    public Date meettime;
-    public Double currentLocationlatitude;
-    public Double currentLocationlongtitude;
-    public Double meetLocationlatitude;
-    public Double meetLocationlongtitude;
+    private int trackableId;
+    private String title;
+    private Date starttime;
+    private Date endtime;
+    private Date meettime;
+    private Double currentLocationlatitude;
+    private Double currentLocationlongtitude;
+    private Double meetLocationlatitude;
+    private Double meetLocationlongtitude;
+
     public DataTracking(int trackableId,String title,Date starttime,Date endtime,Date meettime,
                         double currentLocationlatitude,double currentLocationlongtitude, double meetLocationlatitude, double meetLocationlongtitude){
         this.trackableId =trackableId;
@@ -25,5 +26,31 @@ public class DataTracking {
         this.meetLocationlatitude = meetLocationlatitude;
         this.meetLocationlongtitude = meetLocationlongtitude;
     }
-
+    public int getTrackableId() {
+        return this.trackableId;
+    }
+    public String getTitle() {
+        return this.title;
+    }
+    public Date getEndTime() {
+        return this.endtime;
+    }
+    public Date getStartTime() {
+        return this.starttime;
+    }
+    public Date getMeetTime() {
+        return this.meettime;
+    }
+    public Double getCurrentLocationlatitude() {
+        return this.currentLocationlatitude;
+    }
+    public Double getCurrentLocationlongtitude() {
+        return this.currentLocationlongtitude;
+    }
+    public Double getMeetLocationlatitude() {
+        return this.meetLocationlatitude;
+    }
+    public Double getMeetLocationlongtitude() {
+        return this.meetLocationlongtitude;
+    }
 }
