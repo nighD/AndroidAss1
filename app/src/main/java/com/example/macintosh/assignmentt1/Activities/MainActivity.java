@@ -14,8 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.SearchView;
 
+import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
+import com.example.macintosh.assignmentt1.HTTP.AbstractHttpAsyncTask;
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
@@ -37,7 +40,8 @@ public class MainActivity extends AppCompatActivity  {
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
     private SearchView searchView;
-
+    private ProgressBar bar = null;
+    private WebView webView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +166,20 @@ public class MainActivity extends AppCompatActivity  {
             view.setSystemUiVisibility( flags );
             getWindow().setStatusBarColor( Color.WHITE );
         }
+    }
+    public void updateProgress(int progress)
+    {
+        bar.setProgress(progress);
+    }
+
+    public void displayHTML(String htmlText)
+    {
+        // if you just wanted to display directly from URL without progress
+        // webView.loadUrl(AbstractHttpAsyncTask.TEST_URL);
+        //webView.loadData(htmlText,
+//              "text/html", null);
+        webView.loadDataWithBaseURL( AbstractHttpAsyncTask.TEST_URL, htmlText,
+                "text/html", null, null);
     }
     }
 
