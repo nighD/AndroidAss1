@@ -3,11 +3,11 @@ import com.example.macintosh.assignmentt1.R;
 
 public class DataModel {
 
-    public String name;
-    public String description;
-    public String webURL;
-    public String category;
-    public String image;
+    private String name;
+    private String description;
+    private String webURL;
+    private String category;
+    private String image;
 
     public DataModel(String name, String description, String webURL, String category,String image) {
         this.name = name;

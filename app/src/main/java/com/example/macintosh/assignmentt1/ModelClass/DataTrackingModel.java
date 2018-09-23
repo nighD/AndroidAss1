@@ -3,11 +3,11 @@ package com.example.macintosh.assignmentt1.ModelClass;
 import java.util.Date;
 
 public class DataTrackingModel {
-    public Date date;
-    public int trackableId;
-    public int stopTime;
-    public double latitude;
-    public double longitude;
+    private Date date;
+    private int trackableId;
+    private int stopTime;
+    private double latitude;
+    private double longitude;
 
     public DataTrackingModel(Date date, int trackableId, int stopTime, double latitude, double longitude){
         this.date = date;

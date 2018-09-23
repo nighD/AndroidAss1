@@ -180,12 +180,12 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    st.execute( "insert into servicedata values ("+ dataTracking.trackableId +", "
-                                                                       +dataTracking.title +"'"+dataTracking.starttime+"','"
-                                                                        +dataTracking.endtime+"', '"+dataTracking.meettime+"', "
-                                                                         +dataTracking.currentLocationlatitude+", " +dataTracking.currentLocationlongtitude
-                                                                          + ", "+dataTracking.meetLocationlatitude+", "
-                                                                           + dataTracking.currentLocationlongtitude+")");
+                    st.execute( "insert into servicedata values ("+ dataTracking.getTrackableId() +", "
+                                                                       +dataTracking.getTitle() +"'"+dataTracking.getStartTime()+"','"
+                                                                        +dataTracking.getEndTime()+"', '"+dataTracking.getMeetTime()+"', "
+                                                                         +dataTracking.getCurrentLocationlatitude()+", " +dataTracking.getCurrentLocationlongtitude()
+                                                                          + ", "+dataTracking.getMeetLocationlatitude()+", "
+                                                                           + dataTracking.getMeetLocationlongtitude()+")");
                     st.close();
                     con.close();
 

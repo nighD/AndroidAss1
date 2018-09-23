@@ -86,15 +86,15 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
 
     public void onBindViewHolder(ViewHolder holder, int position) {
 //            holder.Delete.setOnClickListener(onClickListener(position));
-            holder.trackableID.setText("Trackable ID: "+ Integer.toString( dataTrackings.get(position).trackableId ));
-            holder.title.setText("Title: "+ dataTrackings.get(position).title );
-            holder.starttime.setText("Start Time: "+ dataTrackings.get(position).starttime.toString() );
-            holder.endtime.setText("End Time: " +dataTrackings.get(position).endtime.toString());
-            holder.meettime.setText( "Meet Time: "+dataTrackings.get(position).meettime.toString() );
-            holder.currentlocation.setText("Current Location: "+ Double.toString(dataTrackings.get(position).currentLocationlatitude )
-                    +" "+ Double.toString(dataTrackings.get(position).currentLocationlongtitude ) );
-            holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).meetLocationlatitude )
-                    +" "+ Double.toString(dataTrackings.get(position).meetLocationlongtitude ) );
+            holder.trackableID.setText("Trackable ID: "+ Integer.toString( dataTrackings.get(position).getTrackableId() ));
+            holder.title.setText("Title: "+ dataTrackings.get(position).getTitle() );
+            holder.starttime.setText("Start Time: "+ dataTrackings.get(position).getStartTime().toString() );
+            holder.endtime.setText("End Time: " +dataTrackings.get(position).getEndTime().toString());
+            holder.meettime.setText( "Meet Time: "+dataTrackings.get(position).getMeetTime().toString() );
+            holder.currentlocation.setText("Current Location: "+ Double.toString(dataTrackings.get(position).getCurrentLocationlatitude() )
+                    +" "+ Double.toString(dataTrackings.get(position).getCurrentLocationlongtitude() ) );
+            holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).getMeetLocationlatitude() )
+                    +" "+ Double.toString(dataTrackings.get(position).getMeetLocationlongtitude()) );
 
             holder.Edit.setOnClickListener(onEditClickListener(position));
             holder.Delete.setOnClickListener(onDeleteClickListener(position));
@@ -167,7 +167,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
 //                        editTrackingData(position,position, Write.getText().toString(), startTime, endTime,meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
 //                                Double.parseDouble(WriteCurrLoc.getText().toString()),Double.parseDouble(WriteMeetLoc.getText().toString()),Double.parseDouble(WriteMeetLoc.getText().toString()));
                         editTrackingData(position,position1, Write.getText().toString(), new Date(), new Date(),meetTime, 0,
-                                0,trackingData.get(position1).latitude,trackingData.get(position1).longitude);
+                                0,trackingData.get(position1).getLatitude(),trackingData.get(position1).getLongitude());
                         notifyItemRangeChanged(position,dataTrackings.size());
                         notifyDataSetChanged();
                         notifyItemInserted(position);
