@@ -1,8 +1,10 @@
 package com.example.macintosh.assignmentt1.HTTP;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.example.macintosh.assignmentt1.Activities.MainActivity;
+import com.example.macintosh.assignmentt1.json.JSON;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -32,7 +34,7 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
    protected Void doInBackground(Void... unused)
    {
       HttpClient httpclient = new DefaultHttpClient();
-      HttpGet getRequest = new HttpGet(TEST_URL);
+      HttpGet getRequest = new HttpGet( DistanceURL);
 
       try
       {
@@ -72,11 +74,14 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
             {
                // log individual line
                //Log.i(LOG_TAG, line);
-               htmlStringBuilder.append(line);
+               json += line;
+               //htmlStringBuilder.append(line);
                doProgress(line.length(), length);
             }
             // finished
             publishProgress(100);
+            JSON.responseJSON( responseBody );
+
             // Log.i(LOG_TAG, htmlStringBuilder.toString());
             Log.i(LOG_TAG, "DONE");
 

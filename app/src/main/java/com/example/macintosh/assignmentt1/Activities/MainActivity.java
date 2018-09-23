@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import com.example.macintosh.assignmentt1.HTTP.AbstractHttpAsyncTask;
+import com.example.macintosh.assignmentt1.HTTP.HttpClientApacheAsyncTask;
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
@@ -54,13 +55,14 @@ public class MainActivity extends AppCompatActivity  {
         TrackingService trackingService = new TrackingService();
         trackingService.parseFile(getApplicationContext());
         final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
-        JDBCActivity jdbcActivity = new JDBCActivity();
-        jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
+//        JDBCActivity jdbcActivity = new JDBCActivity();
+//        jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        new HttpClientApacheAsyncTask(this).execute();
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
@@ -169,7 +171,7 @@ public class MainActivity extends AppCompatActivity  {
     }
     public void updateProgress(int progress)
     {
-        bar.setProgress(progress);
+        //bar.setProgress(progress);
     }
 
     public void displayHTML(String htmlText)
@@ -178,8 +180,8 @@ public class MainActivity extends AppCompatActivity  {
         // webView.loadUrl(AbstractHttpAsyncTask.TEST_URL);
         //webView.loadData(htmlText,
 //              "text/html", null);
-        webView.loadDataWithBaseURL( AbstractHttpAsyncTask.TEST_URL, htmlText,
-                "text/html", null, null);
+        //webView.loadDataWithBaseURL( AbstractHttpAsyncTask.DistanceURL, htmlText,
+              //  "text/html", null, null);
     }
     }
 

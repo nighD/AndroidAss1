@@ -8,5 +8,8 @@
     <string name="cancel"></string>
     <string name="ok"></string>
     <string name="jdbc">JDBC Example</string>
-
+    <string name="title_activity_maps">Map</string>
+    <string name="lat_long_snippet">Lat: %1$.5f, Long: %2$.5f</string>
+    <string name="dropped_pin">Dropped Pin</string>
+    <string name="poi">poi</string>
 </resources>

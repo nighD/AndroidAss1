@@ -15,8 +15,9 @@ public abstract class AbstractHttpAsyncTask extends AsyncTask<Void, Integer, Voi
    protected StringBuilder htmlStringBuilder = new StringBuilder();
 
    // this one has a valid CONTENT_LENGTH header
-   public static final String TEST_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.814644,144.955412&destinations=-37.810045,144.964220&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI";
-
+    public static String json;
+   public static String DistanceURL ="https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.814644,144.955412&destinations=-37.810045,144.964220&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI" ;
+   //"https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.814644,144.955412&destinations=-37.810045,144.964220&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI"
    // this one does not always set the content length so makes progress tracking
    // difficult
    // static final String TEST_URL = "http://www.wikipedia.org/";
@@ -50,6 +51,10 @@ public abstract class AbstractHttpAsyncTask extends AsyncTask<Void, Integer, Voi
       int progress = (int) ((double) this.charsRead / length * 100.0);
       Log.i(LOG_TAG, Integer.toString(progress) + "%");
       publishProgress(progress);
+   }
+
+   protected void updateURL(String URL){
+      this.DistanceURL = URL;
    }
 
    @Override
