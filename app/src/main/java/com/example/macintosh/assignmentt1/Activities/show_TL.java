@@ -1,5 +1,7 @@
 package com.example.macintosh.assignmentt1.Activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import com.example.macintosh.assignmentt1.ViewAdapter.ShowTrackingListAdapter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class show_TL extends AppCompatActivity {
     private Trackable trackable;
@@ -26,6 +29,8 @@ public class show_TL extends AppCompatActivity {
     ShowTrackingListAdapter adapter;
     private ArrayList<DataTrackingModel> trackingData;
     private ArrayList<DataModel> dataa;
+    private ArrayList<ArrayList<DataTrackingModel>> Big_Track_list;
+    private Activity activity;
     int finalPosition;
     //private LayoutInflater inflater;
     //private static ArrayList<DataTracking> dataTrackings = new ArrayList<>();
@@ -42,6 +47,8 @@ public class show_TL extends AppCompatActivity {
         dataa = new ArrayList<>( );
         trackingData = new ArrayList<>();
         trackable = new Trackable();
+        Big_Track_list = new ArrayList<>();
+        Intent mIntent = getIntent();
         trackable.parseFile(this.getApplicationContext());
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
@@ -63,11 +70,29 @@ public class show_TL extends AppCompatActivity {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
+        for(int i = 0; i < trackable.trackableList.size(); i++)
+        {
+            Big_Track_list.add(new ArrayList<DataTrackingModel>());
+        }
+        for (int i = 0; i < trackingService.trackingList.size(); i++ ) {
+            for(int j = 0; j < trackable.trackableList.size(); j++){
+                if(trackingService.trackingList.get(i).trackableId==j+1){
+                    Big_Track_list.get(j).add(trackingData.get(i));
+//                    dataTrackingModels2 = new ArrayList<>();
+                    // dataTrackingModels2.add(dataTracking.get(i));
+                }
+            }
+        }
+        for (int i = 0; i < trackable.trackableList.size(); i++){
+            if (Big_Track_list.get(i).isEmpty()) {
+                this.Big_Track_list.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
+            }
+        }
         rv= findViewById(R.id.tracking_list_RV);
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //ADAPTER
         try {
-            adapter=new ShowTrackingListAdapter(dataa,trackingData,finalPosition,getApplicationContext(),getParent());
+            adapter=new ShowTrackingListAdapter(dataa,Big_Track_list.get(mIntent.getIntExtra("CellPosition",0)),getApplicationContext(),this);
         } catch (ParseException e) {
             e.printStackTrace();
         }
