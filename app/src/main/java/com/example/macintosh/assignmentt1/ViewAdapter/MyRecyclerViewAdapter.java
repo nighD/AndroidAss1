@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.Activities.ShowFragment;
-
+import com.example.macintosh.assignmentt1.Activities.show_TL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +44,7 @@ implements Filterable{
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
     private static ArrayList<ArrayList<DataTracking>> dataTrackings = new ArrayList<>();
+    private static ArrayList<ArrayList<DataTrackingModel>> dataTrackings2 = new ArrayList<>();
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
     private RecyclerViewAdapterListener listener;
@@ -84,6 +86,10 @@ implements Filterable{
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getItemId()==R.id.show_tracking_list){
+                               Intent showTL = new Intent().setClass(ctx,show_TL.class);
+                                ctx.startActivity(showTL);
+                            }
                             Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
                             return false;
                         }
@@ -112,6 +118,20 @@ implements Filterable{
         this.activity = activity;
         this.dataSetFilter = data;
         this.dataTrackingModels = dataTracking;
+        for(int i = 0; i < dataTrackingModels.size(); i++)
+        {
+            dataTrackings2.add(new ArrayList<DataTrackingModel>());
+        }
+        for (int i = 0; i < dataTrackingModels.size(); i++ ) {
+            for(int j = 0; j < dataTracking.size(); j++){
+                if(dataTrackingModels.get(i).getTrackableId()==i+1){
+                    dataTrackings2.get(i).add(dataTracking.get(0));
+                }
+            }
+            if (dataTrackings2.get(i).isEmpty()) {
+                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
+            }
+        }
         for(int i = 0; i < data.size(); i++)
         {
             dataTrackings.add(new ArrayList<DataTracking>());
