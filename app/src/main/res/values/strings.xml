@@ -1,13 +1,5 @@
 <resources>
     <string name="app_name">Assignmentt1</string>
-    <string name="gender"></string>
-    <string name="name"></string>
-    <string name="job"></string>
-    <string name="female"></string>
-    <string name="male"></string>
-    <string name="cancel"></string>
-    <string name="ok"></string>
-    <string name="jdbc">JDBC Example</string>
     <string name="title_activity_maps">Map</string>
     <string name="lat_long_snippet">Lat: %1$.5f, Long: %2$.5f</string>
     <string name="dropped_pin">Dropped Pin</string>

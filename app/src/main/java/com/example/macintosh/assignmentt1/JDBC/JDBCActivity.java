@@ -13,6 +13,7 @@ import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
 import com.example.macintosh.assignmentt1.R;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -45,7 +46,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    //st.executeUpdate("Drop table trackingdata");
+                    st.executeUpdate("Drop table trackingdata");
                     // Create table:
                     st.executeUpdate("create table trackingdata( " +
                             "date0 date not null, " +
@@ -87,19 +88,19 @@ public class JDBCActivity
                         Log.i(LOG_TAG, "File Not Found Exception Caught");
                     }
                     // Query and display results //Step 5
-                    ResultSet rs = st.executeQuery("SELECT * FROM trackingdata");
-                    Log.i(LOG_TAG, "*** Query results:");
-                    while (rs.next())
-                    {
-                        Log.i(LOG_TAG, "Date " + rs.getString(1) + ", ");
-                        Log.i(LOG_TAG, "TIME " + rs.getString(2));
-                    }
+                    //ResultSet rs = st.executeQuery("SELECT * FROM trackingdata");
+//                    Log.i(LOG_TAG, "*** Query results:");
+//                    while (rs.next())
+//                    {
+//                        Log.i(LOG_TAG, "Date " + rs.getString(1) + ", ");
+//                        Log.i(LOG_TAG, "TIME " + rs.getString(2));
+//                    }
                     // Delete table: employee //Step 6
-                    st.executeUpdate("Drop table trackingdata");
-                    Log.i(LOG_TAG, "*** Deleted table: trackingdata");
+                    //st.executeUpdate("Drop table trackingdata");
+                    //Log.i(LOG_TAG, "*** Deleted table: trackingdata");
 
                     // Release resources //Step 7
-                    rs.close();
+                    //rs.close();
                     st.close();
                     con.close();
 
@@ -219,11 +220,6 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-//                    SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY hh:mm:ss");
-//                    Scanner scanner0 = new Scanner(sdf.format(date));
-//                    scanner0.useDelimiter( "\\s" );
-//                    String date = scanner0.next();
-//                    String time0 = scanner0.next();
                     st.execute("update servicedata set meettime = '"+date+"' where ID= "+Integer.toString(ID));
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
@@ -298,7 +294,7 @@ public class JDBCActivity
                     Statement st = con.createStatement();
 
                     // Query and display results //Step 5
-                    ResultSet rs = st.executeQuery("SELECT ID ="+ Integer.toString(ID)+" FROM servicedata");
+                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata WHERE ID =" + Integer.toString(ID));
                     Log.i(LOG_TAG, "*** Query results:");
                     DataTracking dataTracking0 = null;
                     while (rs.next())
@@ -340,6 +336,58 @@ public class JDBCActivity
         return dataTracking[0];
     }
 
+    public LatLng[] takeLatLng(final String db){
+        final LatLng[] latLng = new LatLng[6];
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Class.forName("org.sqldroid.SQLDroidDriver");
+                    Log.i(LOG_TAG, String.format("opening: %s", db));
+                    Connection con = DriverManager.getConnection(db);
+                    Statement st = con.createStatement();
+
+                    // Query and display results //Step 5
+                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata where stoptime > 0");
+                    Log.i(LOG_TAG, "*** Query results:");
+                    //DataTracking dataTracking0 = null;
+                    int begin = 0;
+                    while (rs.next())
+                    {
+                        latLng[begin] = new LatLng(Double.parseDouble( rs.getString("latitude"))
+                                                  ,Double.parseDouble( rs.getString("longtitude")));
+                        begin++;
+                    }
+                    Log.i(LOG_TAG, "*** query result:ID ");
+
+                    // Release resources //Step 7
+                    rs.close();
+                    st.close();
+                    con.close();
+
+                } catch (SQLException sqlEx)
+                {
+                    while (sqlEx != null)
+                    {
+                        Log.i(LOG_TAG,
+                                "[SQLException] " + "SQLState: " + sqlEx.getSQLState()
+                                        + ", Message: " + sqlEx.getMessage()
+                                        + ", Vendor: " + sqlEx.getErrorCode());
+                        sqlEx = sqlEx.getNextException();
+                    }
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+
+            }
+        }).start();
+        return latLng;
+    }
+
     public void deleteCol ( final int ID, final String db){
         new Thread(new Runnable()
         {
@@ -376,15 +424,5 @@ public class JDBCActivity
     }
 
 
-    // this is a workaround for SQLDroid cannot create in database path
-    // no longer needed on API 27 AVD s2 2018
-//   private void createEmptyDBWithAndroid()
-//   {
-//      File file = getDatabasePath("test.db");
-//      String db = "jdbc:sqldroid:" + file;
-//      if (!file.getParentFile().exists())
-//         file.getParentFile().mkdirs();
-//      SQLiteDatabase dbase = SQLiteDatabase.openOrCreateDatabase(file, null);
-//      dbase.close();
-//   }
+
 }

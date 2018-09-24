@@ -55,8 +55,9 @@ public class MainActivity extends AppCompatActivity  {
         TrackingService trackingService = new TrackingService();
         trackingService.parseFile(getApplicationContext());
         final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
-//        JDBCActivity jdbcActivity = new JDBCActivity();
-//        jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
+        JDBCActivity jdbcActivity = new JDBCActivity();
+        //jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
+        jdbcActivity.takeLatLng( db );
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
