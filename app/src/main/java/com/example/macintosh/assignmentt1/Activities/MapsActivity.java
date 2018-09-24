@@ -1,46 +1,47 @@
 package com.example.macintosh.assignmentt1.Activities;
 
+import android.content.DialogInterface;
+import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
+import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.R;
 import com.google.*;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.StreetViewPanoramaOptions;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Locale;
 
@@ -48,23 +49,28 @@ public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback {
     private String LOG_TAG = this.getClass().getName();
     private static final String TAG = MapsActivity.class.getSimpleName();
-    private LatLng[] latLNG;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private Location mLastKnownLocation;
+    private CameraPosition mCameraPosition;
+    private boolean mLocationPermissionGranted;
     public static final float INITIAL_ZOOM = 12f;
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+    private static final String KEY_LOCATION = "location";
     private GoogleMap mMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Retrieve location and camera position from saved instance state.
+        if (savedInstanceState != null) {
+            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         setContentView(R.layout.activity_maps);
-        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
-        JDBCActivity jdbcActivity = new JDBCActivity();
-        //jdbcActivity.trackingDataDatabase( getApplicationContext(),db );
-        latLNG = jdbcActivity.takeLatLng( db );
-        Log.i(LOG_TAG,String.format(Locale.getDefault(),
-                "Shit",
-                latLNG[0].latitude,
-                latLNG[1].longitude));
         // Obtain the SupportMapFragment and get notified when the map is ready
         // to be used.
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
@@ -72,7 +78,17 @@ public class MapsActivity extends AppCompatActivity implements
                 .add(R.id.map, mapFragment).commit();
         mapFragment.getMapAsync(this);
     }
-
+    /**
+     * Saves the state of the map when the activity is paused.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            super.onSaveInstanceState(outState);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -110,22 +126,9 @@ public class MapsActivity extends AppCompatActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Pan the camera to your home address (in this case, Google HQ).
-        LatLng home = new LatLng(-37.810045, 144.964220);
-        LatLng home0 = new LatLng(-37.810828, 144.947005);
-        LatLng home1 = new LatLng(-37.809548, 144.954993);
-        setMapmarker( mMap,latLNG[0] );
-        setMapmarker( mMap,latLNG[1] );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home, INITIAL_ZOOM));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home0, INITIAL_ZOOM));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home1, INITIAL_ZOOM));
-        // Add a ground overlay 100 meters in width to the home location.
-        GroundOverlayOptions homeOverlay = new GroundOverlayOptions()
-                .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_pop_menu))
-                .position(home, 100);
 
-        mMap.addGroundOverlay(homeOverlay);
 
+        getTrackablePos();
         setMapLongClick(mMap); // Set a long click listener for the map;
         setPoiClick(mMap); // Set a click listener for points of interest.
         setMapStyle(mMap); // Set the custom map style.
@@ -133,18 +136,37 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
+        getDeviceLocation();
+        //showCurrentPlace();
     }
     /**
      * Adds a red marker to the map of trackable ID.
+     *
+     */
+    private void getTrackablePos(){
+        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        JDBCActivity jdbcActivity = new JDBCActivity();
+        LatLng[] latLNG0 = jdbcActivity.takeLatLng( db );
+
+        for (int i =0 ;i < latLNG0.length;i++){
+            setMapmarker( mMap,latLNG0[i] );
+            moveCamera(latLNG0[i],INITIAL_ZOOM);
+            // Add a ground overlay 100 meters in width to the home location.
+            GroundOverlayOptions homeOverlay = new GroundOverlayOptions()
+                    .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_pop_menu))
+                    .position(latLNG0[i], 100);
+
+            mMap.addGroundOverlay(homeOverlay);
+        }
+    }
+    /**
+     * Adds a red marker to the chosen LatLng.
      *
      * @param map The GoogleMap to attach the listener to.
      */
     private void setMapmarker(final GoogleMap map,LatLng latLng) {
 
         // Add a blue marker to the map when the user performs a long click.
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
                 String snippet = String.format(Locale.getDefault(),
                         getString(R.string.lat_long_snippet),
                         latLng.latitude,
@@ -155,9 +177,9 @@ public class MapsActivity extends AppCompatActivity implements
                         .title(getString(R.string.dropped_pin))
                         .snippet(snippet)
                         .icon(BitmapDescriptorFactory.defaultMarker
-                                (BitmapDescriptorFactory.HUE_BLUE)));
-            }
-        });
+                                (BitmapDescriptorFactory.HUE_RED)));
+
+
     }
 
     /**
@@ -236,6 +258,7 @@ public class MapsActivity extends AppCompatActivity implements
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
+            mLocationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this, new String[]
                             {Manifest.permission.ACCESS_FINE_LOCATION},
@@ -274,5 +297,42 @@ public class MapsActivity extends AppCompatActivity implements
                         }
                     }
                 });
+    }
+    /**
+     * Gets the current location of the device, and positions the map's camera.
+     */
+    private void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        try{
+            if(mLocationPermissionGranted){
+
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    INITIAL_ZOOM);
+
+                        }else{
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        }
+    }
+    private void moveCamera(LatLng latLng, float zoom){
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 }

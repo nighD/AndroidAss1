@@ -338,11 +338,6 @@ public class JDBCActivity
 
     public LatLng[] takeLatLng(final String db){
         final LatLng[] latLng = new LatLng[6];
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
                 try
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
@@ -351,7 +346,7 @@ public class JDBCActivity
                     Statement st = con.createStatement();
 
                     // Query and display results //Step 5
-                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata where stoptime > 0");
+                    ResultSet rs = st.executeQuery("SELECT * FROM trackingdata where stoptime > 0");
                     Log.i(LOG_TAG, "*** Query results:");
                     //DataTracking dataTracking0 = null;
                     int begin = 0;
@@ -359,9 +354,10 @@ public class JDBCActivity
                     {
                         latLng[begin] = new LatLng(Double.parseDouble( rs.getString("latitude"))
                                                   ,Double.parseDouble( rs.getString("longtitude")));
+                        Log.i(LOG_TAG,Double.toString(latLng[begin].latitude  ) );
                         begin++;
                     }
-                    Log.i(LOG_TAG, "*** query result:ID ");
+                    Log.i(LOG_TAG, "*** query result: ");
 
                     // Release resources //Step 7
                     rs.close();
@@ -382,11 +378,10 @@ public class JDBCActivity
                 {
                     ex.printStackTrace();
                 }
-
-            }
-        }).start();
         return latLng;
     }
+
+
 
     public void deleteCol ( final int ID, final String db){
         new Thread(new Runnable()

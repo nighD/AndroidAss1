@@ -38,7 +38,7 @@ public class show_TL extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_tracking_list);
+        setContentView(R.layout.activity_show__tl);
         dataa = new ArrayList<>( );
         trackingData = new ArrayList<>();
         trackable = new Trackable();
@@ -63,7 +63,7 @@ public class show_TL extends AppCompatActivity {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
-        rv= findViewById(R.id.tracking_list_RV);
+        rv= findViewById(R.id.recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //ADAPTER
         try {
