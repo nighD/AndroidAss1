@@ -3,8 +3,10 @@ package com.example.macintosh.assignmentt1.Activities;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,47 +33,27 @@ import com.example.macintosh.assignmentt1.ViewAdapter.RecyclerViewDialogAdapter;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class ShowFragment extends DialogFragment  {
-    int finalPosition;
-    private Button addButton;
-    private Dialog dialog;
+public class ShowFragment extends AppCompatActivity {
     private Trackable trackable;
     private TrackingService trackingService;
+    private Button addButton;
+    Dialog dialog;
     RecyclerView rv;
+    public Intent mIntent;
     RecyclerViewDialogAdapter adapter;
-    private ArrayList<DataTrackingModel> trackingData;
     private ArrayList<DataModel> dataa;
-    private static ArrayList<DataTracking> dataTrackings = new ArrayList<>();
-    public ShowFragment newInstance(final int num, ArrayList<DataTracking> dataTrackings) {
-       ShowFragment f = new ShowFragment();
-
-        // Supply num input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("num", num);
-        f.setArguments(args);
-        finalPosition = num;
-        System.out.println("Num is: "+num);
-        this.dataTrackings = dataTrackings;
-        return f;
-    }
-    @Nullable
+    private ArrayList<DataTrackingModel> trackingData;
+    private static ArrayList<ArrayList<DataTracking>> dataTrackings;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //String strtext=getArguments().getString("ID");
-
-        Bundle aa = this.getArguments();
-        if (aa != null) {
-
-
-        finalPosition = aa.getInt("num");}
-        System.out.println("finalPosition is: "+finalPosition);
-        final View rootView=inflater.inflate(R.layout.fraglayout,container);
-
-        //RECYCER
-        dataa = new ArrayList<>( );
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fraglayout);
+        mIntent = getIntent();
+        dataa = new ArrayList<>();
+        dataTrackings = new ArrayList<>();
         trackingData = new ArrayList<>();
         trackable = new Trackable();
-        trackable.parseFile( this.getContext() );
+        trackable.parseFile( this.getApplicationContext() );
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
                     trackable.trackableList.get( i ).name,
@@ -81,7 +65,7 @@ public class ShowFragment extends DialogFragment  {
             ) );
         }
         trackingService = new TrackingService();
-        trackingService.parseFile(this.getContext());
+        trackingService.parseFile(this.getApplicationContext());
         for (int i = 0; i < trackingService.trackingList.size(); i++){
             trackingData.add(new DataTrackingModel(trackingService.trackingList.get(i).date,
                     trackingService.trackingList.get(i).date.getTime(),
@@ -90,25 +74,36 @@ public class ShowFragment extends DialogFragment  {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
-//     dataTrackings = new ArrayList<>(  );
-
-        addButton = (Button) rootView.findViewById(R.id.btn_add);
-        rv= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
-        rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        getDialog().setTitle("Tracking data: "+ "\r" + trackable.trackableList.get(finalPosition).name);
+        for(int i = 0; i < dataa.size(); i++)
+        {
+            dataTrackings.add(new ArrayList<DataTracking>());
+        }
+        try {
+            for (int i = 0; i < dataa.size(); i++) {
+                if (dataTrackings.get(i).isEmpty()) {
+                    this.dataTrackings.get(i).add(new DataTracking(i + 1, "No Tracking Data",
+                            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
+                            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
+                            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
+                            , 0, 0, 0, 0));
+                }
+            }
+        }
+        catch (ParseException e){}
+        addButton = findViewById(R.id.btn_add);
+        rv=findViewById(R.id.mRecyerID);
+        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //ADAPTER
         try {
-            adapter=new RecyclerViewDialogAdapter(this.getActivity(),trackingData,dataa,finalPosition,this.dataTrackings);
+            adapter=new RecyclerViewDialogAdapter(this,trackingData,dataa,mIntent.getIntExtra("CellPosition",0),this.dataTrackings.get(mIntent.getIntExtra("CellPosition",0)));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         rv.setAdapter(adapter);
-         addButton.setOnClickListener(onAddClickListener(finalPosition));
-        getDialog().setCancelable(true);
-        return rootView;
+         addButton.setOnClickListener(onAddClickListener(mIntent.getIntExtra("CellPosition",0)));
     }
    public View.OnClickListener onAddClickListener(final int position) {
-        final Context c = this.getContext();
+        final Context c = this.getApplicationContext();
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,12 +133,12 @@ public class ShowFragment extends DialogFragment  {
                         try {
 //                            adapter.addTrackingData(position, position, Write.getText().toString(), startTime, endTime, meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
 //                                    Double.parseDouble(WriteCurrLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()));
-                            adapter.addTrackingData(position,finalPosition, Write.getText().toString(), new Date(), new Date(),meetTime, 0,
-                                    0,trackingData.get(finalPosition).getLatitude(),trackingData.get(finalPosition).getLongitude());
+                            adapter.addTrackingData(position,mIntent.getIntExtra("CellPosition",0), Write.getText().toString(), new Date(), new Date(),meetTime, 0,
+                                    0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
                             adapter.notifyItemRangeChanged(position, dataTrackings.size());
                             adapter.notifyDataSetChanged();
                             adapter.notifyItemInserted(position);
-                            rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                            rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         }
                         catch (NumberFormatException e){}
                         dialog.cancel();

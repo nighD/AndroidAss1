@@ -92,18 +92,9 @@ implements Filterable{
                                 ctx.startActivity(showTL);
                             }
                             else{
-                                ShowFragment showFragment = new ShowFragment();
-                                FragmentManager manager = activity.getFragmentManager();
-                                FragmentTransaction ft = manager.beginTransaction();
-                                Fragment prev = manager.findFragmentByTag("dialog");
-                                if (prev != null) {
-                                    ft.remove(prev);
-                                }
-                                ft.addToBackStack(null);
-//                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                                showFragment.newInstance(getAdapterPosition(),dataTrackings.get(getAdapterPosition()));
-//                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                                showFragment.show(manager,"dialog");
+                                Intent showFrag = new Intent().setClass(ctx,ShowFragment.class);
+                                showFrag.putExtra("CellPosition",getAdapterPosition());
+                                ctx.startActivity(showFrag);
                             }
                             Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
                             return false;
@@ -212,9 +203,9 @@ implements Filterable{
                 }
                 ft.addToBackStack(null);
 //                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                showFragment.newInstance(position,dataTrackings.get(position));
+//                showFragment.newInstance(position,dataTrackings.get(position));
 //                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                showFragment.show(manager,"dialog");
+//                showFragment.show(manager,"dialog");
                 return false;
             }
         };
@@ -234,9 +225,9 @@ implements Filterable{
                 }
                 ft.addToBackStack(null);
 //                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                showFragment.newInstance(position,dataTrackings.get(position));
+//                showFragment.newInstance(position,dataTrackings.get(position));
 //                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-                showFragment.show(manager,"dialog");
+//                showFragment.show(manager,"dialog");
 
             }
         };

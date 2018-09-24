@@ -34,12 +34,12 @@ public class show_TL extends AppCompatActivity {
     int finalPosition;
     //private LayoutInflater inflater;
     //private static ArrayList<DataTracking> dataTrackings = new ArrayList<>();
-    public show_TL showTl(final int num, ArrayList<DataTrackingModel> dataTrackingModels){
-        show_TL show = new show_TL();
-        finalPosition = num;
-        this.trackingData = dataTrackingModels;
-        return show;
-    }
+//    public show_TL showTl(final int num, ArrayList<DataTrackingModel> dataTrackingModels){
+//        show_TL show = new show_TL();
+//        finalPosition = num;
+//        this.trackingData = dataTrackingModels;
+//        return show;
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
