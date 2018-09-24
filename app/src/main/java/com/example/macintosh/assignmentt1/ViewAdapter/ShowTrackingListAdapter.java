@@ -40,11 +40,11 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
+    private ArrayList<DataTrackingModel> dataTrackingModels2 = new ArrayList<>();
     private static ArrayList<ArrayList<DataTrackingModel>> dataTrackings = new ArrayList<>();
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
     private RecyclerViewAdapterListener listener;
-    int position;
     int id;
 
 
@@ -65,39 +65,36 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
 
         public MyViewHolder(final View itemView) {
             super(itemView);
-//            this.trackableID = itemView.findViewById(R.id.trackable_id);
-//            this.trackingDate = itemView.findViewById(R.id.tracking_date);
-//            this.startTime = itemView.findViewById(R.id.startTime);
-//            this.stopTime = itemView.findViewById(R.id.stopTimee);
-//            this.meetLocation = itemView.findViewById(R.id.meet_loc);
+            this.trackableID = itemView.findViewById(R.id.trackable_id);
+            this.trackingDate = itemView.findViewById(R.id.tracking_date);
+            this.startTime = itemView.findViewById(R.id.startTime);
+            this.stopTime = itemView.findViewById(R.id.stopTimee);
+            this.meetLocation = itemView.findViewById(R.id.meet_loc);
             container = itemView.findViewById(R.id.card_view);
         }
 
 
     }
 
-    public ShowTrackingListAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,int position, Context ctx, Activity activity) throws ParseException {
+    public ShowTrackingListAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity) throws ParseException {
         this.dataSet = data;
         this.ctx = ctx;
-        this.position = position;
         this.activity = activity;
-        this.dataSetFilter = data;
         this.dataTrackingModels = dataTracking;
-//        this.dataTrackings = dataTrackings;
-        for(int i = 0; i < dataTracking.size(); i++)
-        {
-            dataTrackings.add(new ArrayList<DataTrackingModel>());
-        }
-        for (int i = 0; i < dataTracking.size(); i++ ) {
-            for(int j = 0; j < dataTracking.size(); j++){
-                if(dataTracking.get(i).getTrackableId()==i+1){
-                    dataTrackings.get(i).add(dataTracking.get(i));
-                }
-            }
-            if (dataTrackings.get(i).isEmpty()) {
-                this.dataTrackings.get(i).add(new DataTrackingModel(new Date(),0,i,0,0,0));
-            }
-        }
+//        for(int i = 0; i < dataTracking.size(); i++)
+//        {
+//            dataTrackings.add(new ArrayList<DataTrackingModel>());
+//        }
+//        for (int i = 0; i < dataTrackingModels.size(); i++ ) {
+//            if(dataTracking.get(i).getTrackableId()==i+1){
+//                    dataTrackings.get(i).add(dataTracking.get(i));
+////                    dataTrackingModels2 = new ArrayList<>();
+//                    //dataTrackingModels2.add(dataTracking.get(i));
+//            }
+//            if (dataTrackings.get(i).isEmpty()) {
+//                this.dataTrackings.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
+//            }
+//        }
     }
     @Override
     public ShowTrackingListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -121,7 +118,7 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
 
     @Override
     public int getItemCount() {
-        return dataSetFilter.size();
+        return dataTrackingModels.size();
     }
     public interface RecyclerViewAdapterListener {
         void onContactSelected(DataModel dataModel);
