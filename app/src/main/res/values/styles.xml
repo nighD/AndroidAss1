@@ -8,7 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowNoTitle">false</item>
     </style>
-    <style name="CustomDialog" parent="@style/Theme.AppCompat.Light.Dialog">
-        <item name="android:windowNoTitle">false</item>
-    </style>
 </resources>

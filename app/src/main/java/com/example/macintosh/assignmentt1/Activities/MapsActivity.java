@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,9 +46,9 @@ import java.util.Locale;
 
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback {
-
+    private String LOG_TAG = this.getClass().getName();
     private static final String TAG = MapsActivity.class.getSimpleName();
-
+    private LatLng[] latLNG;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     public static final float INITIAL_ZOOM = 12f;
     private GoogleMap mMap;
@@ -56,7 +57,14 @@ public class MapsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        JDBCActivity jdbcActivity = new JDBCActivity();
+        //jdbcActivity.trackingDataDatabase( getApplicationContext(),db );
+        latLNG = jdbcActivity.takeLatLng( db );
+        Log.i(LOG_TAG,String.format(Locale.getDefault(),
+                "Shit",
+                latLNG[0].latitude,
+                latLNG[1].longitude));
         // Obtain the SupportMapFragment and get notified when the map is ready
         // to be used.
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
@@ -103,9 +111,14 @@ public class MapsActivity extends AppCompatActivity implements
         mMap = googleMap;
 
         // Pan the camera to your home address (in this case, Google HQ).
-        LatLng home = new LatLng(37.421982, -122.085109);
+        LatLng home = new LatLng(-37.810045, 144.964220);
+        LatLng home0 = new LatLng(-37.810828, 144.947005);
+        LatLng home1 = new LatLng(-37.809548, 144.954993);
+        setMapmarker( mMap,latLNG[0] );
+        setMapmarker( mMap,latLNG[1] );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home, INITIAL_ZOOM));
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home0, INITIAL_ZOOM));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home1, INITIAL_ZOOM));
         // Add a ground overlay 100 meters in width to the home location.
         GroundOverlayOptions homeOverlay = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_pop_menu))
@@ -120,6 +133,31 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
+    }
+    /**
+     * Adds a red marker to the map of trackable ID.
+     *
+     * @param map The GoogleMap to attach the listener to.
+     */
+    private void setMapmarker(final GoogleMap map,LatLng latLng) {
+
+        // Add a blue marker to the map when the user performs a long click.
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                String snippet = String.format(Locale.getDefault(),
+                        getString(R.string.lat_long_snippet),
+                        latLng.latitude,
+                        latLng.longitude);
+
+                map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(getString(R.string.dropped_pin))
+                        .snippet(snippet)
+                        .icon(BitmapDescriptorFactory.defaultMarker
+                                (BitmapDescriptorFactory.HUE_BLUE)));
+            }
+        });
     }
 
     /**

@@ -64,11 +64,11 @@ implements Filterable{
 
         public MyViewHolder(final View itemView) {
             super(itemView);
-            this.trackableID = itemView.findViewById(R.id.trackable_id);
-            this.trackingDate = itemView.findViewById(R.id.tracking_date);
-            this.startTime = itemView.findViewById(R.id.startTime);
-            this.stopTime = itemView.findViewById(R.id.stopTimee);
-            this.meetLocation = itemView.findViewById(R.id.meet_loc);
+//            this.trackableID = itemView.findViewById(R.id.trackable_id);
+//            this.trackingDate = itemView.findViewById(R.id.tracking_date);
+//            this.startTime = itemView.findViewById(R.id.startTime);
+//            this.stopTime = itemView.findViewById(R.id.stopTimee);
+//            this.meetLocation = itemView.findViewById(R.id.meet_loc);
             container = itemView.findViewById(R.id.card_view);
         }
 //        public void setItemClickListener(ItemClickListener itemClickListener)
