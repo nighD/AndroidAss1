@@ -84,6 +84,7 @@ public class ShowFragment extends DialogFragment  {
         trackingService.parseFile(this.getContext());
         for (int i = 0; i < trackingService.trackingList.size(); i++){
             trackingData.add(new DataTrackingModel(trackingService.trackingList.get(i).date,
+                    trackingService.trackingList.get(i).date.getTime(),
                     trackingService.trackingList.get(i).trackableId,
                     trackingService.trackingList.get(i).stopTime,
                     trackingService.trackingList.get(i).latitude,

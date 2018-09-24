@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Detailactivity" />
-        <activity android:name=".Activities.ShowTrackingListAdapter" />
+        <activity android:name=".Activities.show_TL"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
