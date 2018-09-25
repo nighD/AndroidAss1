@@ -1,7 +1,9 @@
 package com.example.macintosh.assignmentt1.Activities;
 
 import android.content.DialogInterface;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -44,7 +46,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import android.location.LocationListener;
+import android.location.Address;
+import android.location.LocationManager;
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 public class MapsActivity extends AppCompatActivity implements
@@ -61,7 +70,8 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
     private GoogleMap mMap;
-
+    LocationManager locationManager;
+    LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +148,7 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
-        getDeviceLocation();
+       // getDeviceLocation();
         //showCurrentPlace();
     }
     /**

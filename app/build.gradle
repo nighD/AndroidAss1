@@ -43,8 +43,6 @@ dependencies {
     implementation files('libs/ksoap2-android-assembly-3.6.2-jar-with-dependencies.jar')
     implementation 'org.sqldroid:sqldroid:1.0.3'
     //implementation 'com.google.android.gms:play-services:11.2.0'
-    implementation 'com.google.android.gms:play-services-maps:+'
-    compile 'com.google.android.gms:play-services-maps:+'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation "com.google.android.gms:play-services-location:15.0.1"
 }
