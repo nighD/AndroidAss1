@@ -43,7 +43,7 @@ public class show_TL extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show__tl);
+        setContentView(R.layout.show_tracking_list);
         dataa = new ArrayList<>( );
         trackingData = new ArrayList<>();
         trackable = new Trackable();
@@ -77,7 +77,7 @@ public class show_TL extends AppCompatActivity {
         }
         for (int i = 0; i < trackingService.trackingList.size(); i++ ) {
             for(int j = 0; j < trackable.trackableList.size(); j++){
-                if(trackingService.trackingList.get(i).trackableId==j+1){
+                if((trackingService.trackingList.get(i).trackableId==j+1)&&(trackingService.trackingList.get(i).stopTime!=0)){
                     Big_Track_list.get(j).add(trackingData.get(i));
 //                    dataTrackingModels2 = new ArrayList<>();
                     // dataTrackingModels2.add(dataTracking.get(i));
@@ -89,7 +89,7 @@ public class show_TL extends AppCompatActivity {
                 this.Big_Track_list.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
             }
         }
-        rv= findViewById(R.id.tracking_list_RV);
+        rv= (RecyclerView) findViewById(R.id.tracking_list_RV);
 
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //ADAPTER
