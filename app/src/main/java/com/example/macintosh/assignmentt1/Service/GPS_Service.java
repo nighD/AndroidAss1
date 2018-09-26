@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.example.macintosh.assignmentt1.Activities.MapsActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,11 +27,9 @@ import java.util.List;
 
 
 public class GPS_Service extends Service {
-
+    private String LOG_TAG = this.getClass().getName();
     private LocationListener listener;
     private LocationManager locationManager;
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
-    MapsActivity mapsActivity;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -39,7 +38,7 @@ public class GPS_Service extends Service {
 
     @Override
     public void onCreate() {
-
+        Log.i(LOG_TAG,"HERE");
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -53,13 +52,13 @@ public class GPS_Service extends Service {
                     String result = addresses.get( 0 ).getLocality() + ":";
                     result += addresses.get( 0 ).getCountryName();
                     LatLng latLng = new LatLng( latitude, longitude );
-
+                    Intent i = new Intent( "location_update" );
+                    i.putExtra( "coordinates", location.getLongitude() + " " + location.getLatitude()+ " " + result );
+                    sendBroadcast( i );
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Intent i = new Intent( "location_update" );
-                i.putExtra( "coordinates", location.getLongitude() + " " + location.getLatitude() );
-                sendBroadcast( i );
+
             }
 
             @Override
@@ -83,22 +82,8 @@ public class GPS_Service extends Service {
         locationManager = (LocationManager) getApplicationContext().getSystemService( Context.LOCATION_SERVICE );
 
         //noinspection MissingPermission
-        if (ActivityCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission( this, Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            ActivityCompat.requestPermissions(mapsActivity, new String[]
-                            {Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        //locationManager.requestSing
-        locationManager.requestLocationUpdates( LocationManager.NETWORK_PROVIDER, 0, 0, listener);
-        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, listener );
+        locationManager.requestLocationUpdates( LocationManager.NETWORK_PROVIDER, 3000, 0, listener);
+        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 3000, 0, listener );
 
     }
 

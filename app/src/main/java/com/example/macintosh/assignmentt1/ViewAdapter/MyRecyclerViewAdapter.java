@@ -190,7 +190,6 @@ implements Filterable{
         imageView.setImageResource(id);
 
 
-        imageView.setImageResource(id);
 
     }
     public MenuItem.OnMenuItemClickListener onMenuItemClickListener(final ShowFragment showFragment,final int position){
