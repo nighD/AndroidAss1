@@ -1,6 +1,10 @@
 package com.example.macintosh.assignmentt1.Activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,6 +21,7 @@ import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.R;
 
+import com.example.macintosh.assignmentt1.Service.GPS_Service;
 import com.google.*;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -70,6 +75,7 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
     private GoogleMap mMap;
+    private BroadcastReceiver broadcastReceiver;
     LocationManager locationManager;
     LocationListener locationListener;
 
@@ -77,10 +83,9 @@ public class MapsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Retrieve location and camera position from saved instance state.
-        if (savedInstanceState != null) {
-            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-        }
+
+//        Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+//        startService(intent);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready
@@ -89,6 +94,7 @@ public class MapsActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.map, mapFragment).commit();
         mapFragment.getMapAsync(this);
+
     }
     /**
      * Saves the state of the map when the activity is paused.
@@ -148,7 +154,7 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
-       // getDeviceLocation();
+        //getDeviceLocation();
         //showCurrentPlace();
     }
     /**
@@ -346,5 +352,20 @@ public class MapsActivity extends AppCompatActivity implements
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(broadcastReceiver == null){
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    Log.i(LOG_TAG,"HERE");
+                    Log.i(LOG_TAG,"\n" +intent.getExtras().get("coordinates"));
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
     }
 }

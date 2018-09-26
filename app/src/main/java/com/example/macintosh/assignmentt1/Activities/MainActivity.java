@@ -1,14 +1,22 @@
 package com.example.macintosh.assignmentt1.Activities;
+import android.Manifest;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,14 +26,17 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
+import com.example.macintosh.assignmentt1.AlarmReceiver.AlarmReceiver;
 import com.example.macintosh.assignmentt1.HTTP.AbstractHttpAsyncTask;
 import com.example.macintosh.assignmentt1.HTTP.HttpClientApacheAsyncTask;
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
+import com.example.macintosh.assignmentt1.NotificationScheduler.NotificationScheduler;
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.ModelClass.Trackable;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
+import com.example.macintosh.assignmentt1.Service.GPS_Service;
 import com.example.macintosh.assignmentt1.ViewAdapter.MyRecyclerViewAdapter;
 
 import java.text.ParseException;
@@ -43,7 +54,8 @@ public class MainActivity extends AppCompatActivity  {
     private SearchView searchView;
     private ProgressBar bar = null;
     private WebView webView = null;
-
+    private BroadcastReceiver broadcastReceiver;
+    private String LOG_TAG = this.getClass().getName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -63,8 +75,24 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        new HttpClientApacheAsyncTask(this).execute();
-//        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
+        //new HttpClientApacheAsyncTask(this).execute();
+
+        if(!runtime_permissions()) {
+            Log.i(LOG_TAG,"HERE1");
+            Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+            startService(intent);
+            Log.i(LOG_TAG,"HERE0");
+        }
+
+
+
+
+        NotificationScheduler.setReminder(MainActivity.this, 10);
+
+
+
+
+
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
                     trackable.trackableList.get( i ).name,
@@ -89,8 +117,6 @@ public class MainActivity extends AppCompatActivity  {
             adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
         }
         catch (ParseException e){}
-
-
         layoutManager = new LinearLayoutManager( this );
         recyclerView.setLayoutManager( layoutManager );
         recyclerView.setItemAnimator( new DefaultItemAnimator() );
@@ -163,12 +189,50 @@ public class MainActivity extends AppCompatActivity  {
         super.onBackPressed();
     }
 
-    private void whiteNotificationBar(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int flags = view.getSystemUiVisibility();
-            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            view.setSystemUiVisibility( flags );
-            getWindow().setStatusBarColor( Color.WHITE );
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(broadcastReceiver == null){
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    Log.i(LOG_TAG,"\n" +intent.getExtras().get("coordinates"));
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(broadcastReceiver != null){
+            unregisterReceiver(broadcastReceiver);
+        }
+    }
+
+    private boolean runtime_permissions() {
+        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
+
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 100){
+            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+                startService(intent);
+            }else {
+                runtime_permissions();
+            }
         }
     }
     public void updateProgress(int progress)

@@ -179,7 +179,6 @@ implements Filterable{
         imageView.setImageResource(id);
 
 
-        imageView.setImageResource(id);
 
     }
 
