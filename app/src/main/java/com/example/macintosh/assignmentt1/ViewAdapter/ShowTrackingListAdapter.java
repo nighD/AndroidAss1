@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingListAdapter.MyViewHolder> {
 
@@ -46,7 +47,10 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
     private Activity activity;
     private RecyclerViewAdapterListener listener;
     int id;
-
+    String DATE_FORMAT = "MM/dd/yyyy";
+    String TIME_FORMAT = "hh:mm";
+    SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
+    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
@@ -110,10 +114,10 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
         TextView textViewStopTime = holder.stopTime;
         TextView textViewMeetLoc = holder.meetLocation;
             textViewID.setText("ID: "+dataTrackingModels.get(position).getTrackableId());
-            textViewDate.setText(dataTrackingModels.get(position).getDate().toString());
-            textViewStartTime.setText(Long.toString(dataTrackingModels.get(position).getStartTime()));
-            textViewStopTime.setText(Integer.toString(dataTrackingModels.get(position).getStopTime()));
-            textViewMeetLoc.setText(dataTrackingModels.get(position).getLatitude() + ", " + dataTrackingModels.get(position).getLongitude());
+            textViewDate.setText("Date: "+sdf.format(dataTrackingModels.get(position).getDate()));
+            textViewStartTime.setText("Start time: "+stf.format(dataTrackingModels.get(position).getDate()));
+            textViewStopTime.setText("Stop time: "+Integer.toString(dataTrackingModels.get(position).getStopTime())+" mins");
+            textViewMeetLoc.setText("Meet Location: "+dataTrackingModels.get(position).getLatitude() + ", " + dataTrackingModels.get(position).getLongitude());
     }
 
     @Override

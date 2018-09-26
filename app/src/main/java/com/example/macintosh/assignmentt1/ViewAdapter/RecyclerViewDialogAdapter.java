@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -33,7 +34,10 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     ArrayList<DataModel> trackableData;
     int position1;
     Dialog dialog;
-
+    String DATE_FORMAT = "MM/dd/yyyy";
+    String TIME_FORMAT = "hh:mm";
+    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+    SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
@@ -88,9 +92,9 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
 //            holder.Delete.setOnClickListener(onClickListener(position));
             holder.trackableID.setText("Trackable ID: "+ Integer.toString( dataTrackings.get(position).getTrackableId() ));
             holder.title.setText("Title: "+ dataTrackings.get(position).getTitle() );
-            holder.starttime.setText("Start Time: "+ dataTrackings.get(position).getStartTime().toString() );
-            holder.endtime.setText("End Time: " +dataTrackings.get(position).getEndTime().toString());
-            holder.meettime.setText( "Meet Time: "+dataTrackings.get(position).getMeetTime().toString() );
+            holder.starttime.setText("Start Time: "+ stf.format(dataTrackings.get(position).getStartTime()));
+            holder.endtime.setText("End Time: " +stf.format(dataTrackings.get(position).getEndTime()));
+            holder.meettime.setText( "Meet Time: "+stf.format(dataTrackings.get(position).getMeetTime()));
             holder.currentlocation.setText("Current Location: "+ Double.toString(dataTrackings.get(position).getCurrentLocationlatitude() )
                     +" "+ Double.toString(dataTrackings.get(position).getCurrentLocationlongtitude() ) );
             holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).getMeetLocationlatitude() )
