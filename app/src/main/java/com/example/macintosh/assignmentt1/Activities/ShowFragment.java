@@ -1,7 +1,12 @@
 package com.example.macintosh.assignmentt1.Activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
@@ -37,9 +43,11 @@ public class ShowFragment extends AppCompatActivity {
     private Trackable trackable;
     private TrackingService trackingService;
     private Button addButton;
-    Dialog dialog;
+    public AlertDialog.Builder mBuilder;
+    public AlertDialog dialog;
     RecyclerView rv;
     public Intent mIntent;
+    Context ctx;
     RecyclerViewDialogAdapter adapter;
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
@@ -47,6 +55,7 @@ public class ShowFragment extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        ctx = getApplicationContext();
         setContentView(R.layout.fraglayout);
         mIntent = getIntent();
         dataa = new ArrayList<>();
@@ -100,51 +109,60 @@ public class ShowFragment extends AppCompatActivity {
             e.printStackTrace();
         }
         rv.setAdapter(adapter);
-         addButton.setOnClickListener(onAddClickListener(mIntent.getIntExtra("CellPosition",0)));
+
+        addButton.setOnClickListener(onAddClickListener(mIntent.getIntExtra("CellPosition",0)));
     }
    public View.OnClickListener onAddClickListener(final int position) {
         final Context c = this.getApplicationContext();
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(c);
-                dialog.setTitle( "Add" );
-                dialog.setContentView(R.layout.dialog_template);
-                final EditText Write = dialog.findViewById(R.id.writeTitle);
-                Button SaveMyName = dialog.findViewById(R.id.SaveNow);
-                final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!isFinishing()){
+                            mBuilder = new AlertDialog.Builder(ShowFragment.this);
+                            final View mView = getLayoutInflater().inflate(R.layout.dialog_template,null);
+                            final EditText Write = mView.findViewById(R.id.writeTitle);
+                            Button SaveMyName = mView.findViewById(R.id.SaveNow);
+                            final DatePicker datePicker =  mView.findViewById(R.id.date_picker);
 //                final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
-                final TimePicker meetTimePicker = dialog.findViewById(R.id.meet_time_picker);
+                            final TimePicker meetTimePicker = mView.findViewById(R.id.meet_time_picker);
 //                final EditText WriteCurrLoc = dialog.findViewById(R.id.writeCurrLoc);
 //                final EditText WriteMeetLoc = dialog.findViewById(R.id.writeMeetLoc);
-                Write.setEnabled(true);
-                SaveMyName.setEnabled(true);
+                            Write.setEnabled(true);
+                            SaveMyName.setEnabled(true);
+                            mBuilder.setView(mView);
+                            dialog = mBuilder.create();
 
-                SaveMyName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar calendar = Calendar.getInstance();
+                            SaveMyName.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Calendar calendar = Calendar.getInstance();
 //                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),startTimePicker.getHour(),startTimePicker.getMinute(),0 );
 //                        Date startTime = calendar.getTime();
 //                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour(),endTimePicker.getMinute(),0 );
 //                        Date endTime = calendar.getTime();
-                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),meetTimePicker.getHour(),meetTimePicker.getMinute(),0 );
-                        Date meetTime = calendar.getTime();
-                        try {
+                                    calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),meetTimePicker.getHour(),meetTimePicker.getMinute(),0 );
+                                    Date meetTime = calendar.getTime();
+                                    try {
 //                            adapter.addTrackingData(position, position, Write.getText().toString(), startTime, endTime, meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
 //                                    Double.parseDouble(WriteCurrLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()));
-                            adapter.addTrackingData(position,mIntent.getIntExtra("CellPosition",0), Write.getText().toString(), new Date(), new Date(),meetTime, 0,
-                                    0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
-                            adapter.notifyItemRangeChanged(position, dataTrackings.size());
-                            adapter.notifyDataSetChanged();
-                            adapter.notifyItemInserted(position);
-                            rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                        adapter.addTrackingData(position,mIntent.getIntExtra("CellPosition",0), Write.getText().toString(), new Date(), new Date(),meetTime, 0,
+                                                0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
+                                        adapter.notifyItemRangeChanged(position, dataTrackings.size());
+                                        adapter.notifyDataSetChanged();
+                                        adapter.notifyItemInserted(position);
+                                        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                    }
+                                    catch (NumberFormatException e){}
+                                    dialog.cancel();
+                                }
+                            });
+                            dialog.show();
                         }
-                        catch (NumberFormatException e){}
-                        dialog.cancel();
                     }
                 });
-                dialog.show();
             }
         };
     }

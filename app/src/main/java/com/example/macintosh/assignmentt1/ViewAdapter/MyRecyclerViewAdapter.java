@@ -131,11 +131,6 @@ implements Filterable{
             dataTrackings2.add(new ArrayList<DataTrackingModel>());
         }
         for (int i = 0; i < dataTrackingModels.size(); i++ ) {
-//            for(int j = 0; j < dataTracking.size(); j++){
-//                if(dataTrackingModels.get(i).getTrackableId()==i+1){
-//                    dataTrackings2.get(i).add(dataTracking.get(0));
-//                }
-//            }
             if (dataTrackings2.get(i).isEmpty()) {
                 this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
             }
@@ -181,58 +176,11 @@ implements Filterable{
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
         }
         catch(NumberFormatException e){}
-//        final ShowFragment tv=new ShowFragment();
-//        textViewName.setOnClickListener(onClickListener(tv,position));
-//        textViewDescription.setOnClickListener(onClickListener(tv,position));
-//        textViewWebURL.setOnClickListener(onClickListener(tv,position));
-//        textViewCategory.setOnClickListener(onClickListener(tv,position));
-//        imageView.setOnClickListener(onClickListener(tv,position));
         imageView.setImageResource(id);
 
 
         imageView.setImageResource(id);
 
-    }
-    public MenuItem.OnMenuItemClickListener onMenuItemClickListener(final ShowFragment showFragment,final int position){
-        return new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                FragmentManager manager = activity.getFragmentManager();
-                FragmentTransaction ft = manager.beginTransaction();
-                Fragment prev = manager.findFragmentByTag("dialog");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-//                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.newInstance(position,dataTrackings.get(position));
-//                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.show(manager,"dialog");
-                return false;
-            }
-        };
-    }
-
-    public View.OnClickListener onClickListener(final ShowFragment showFragment,final int position) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Create and show the dialog.
-                FragmentManager manager = activity.getFragmentManager();
-                FragmentTransaction ft = manager.beginTransaction();
-                Fragment prev = manager.findFragmentByTag("dialog");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-//                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.newInstance(position,dataTrackings.get(position));
-//                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.show(manager,"dialog");
-
-            }
-        };
     }
 
     @Override
