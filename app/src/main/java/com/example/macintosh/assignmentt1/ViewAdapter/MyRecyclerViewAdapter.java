@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -91,11 +92,17 @@ implements Filterable{
                             if(item.getItemId()==R.id.show_tracking_list){
                                 Intent showTL = new Intent().setClass(ctx,show_TL.class);
                                 showTL.putExtra("CellPosition", getAdapterPosition());
+                                showTL.putExtra("dataModels",dataSetFilter);
+                                showTL.putExtra("dataTrackingModels",dataTrackings2);
                                 ctx.startActivity(showTL);
                             }
                             else{
                                 Intent showFrag = new Intent().setClass(ctx,ShowFragment.class);
                                 showFrag.putExtra("CellPosition",getAdapterPosition());
+                                showFrag.putExtra("dataTrackings",dataTrackings);
+                                showFrag.putExtra("dataModels",dataSetFilter );
+                                showFrag.putExtra("dataTrackingM",dataTrackingModels);
+                                showFrag.putExtra("dataTrackingModels",dataTrackings2);
                                 ctx.startActivity(showFrag);
                             }
                             Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
@@ -131,8 +138,17 @@ implements Filterable{
             dataTrackings2.add(new ArrayList<DataTrackingModel>());
         }
         for (int i = 0; i < dataTrackingModels.size(); i++ ) {
+            for(int j = 0; j < dataSetFilter.size(); j++){
+                if((dataTrackingModels.get(i).getTrackableId()==j+1)&&(dataTrackingModels.get(i).getStopTime()!=0)){
+                    dataTrackings2.get(j).add(dataTrackingModels.get(i));
+//                    dataTrackingModels2 = new ArrayList<>();
+                    // dataTrackingModels2.add(dataTracking.get(i));
+                }
+            }
+        }
+        for (int i = 0; i < dataTrackingModels.size(); i++ ) {
             if (dataTrackings2.get(i).isEmpty()) {
-                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
+                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
             }
         }
         for(int i = 0; i < data.size(); i++)
@@ -143,7 +159,7 @@ implements Filterable{
             if (dataTrackings.get(i).isEmpty()) {
                 this.dataTrackings.get(i).add(new DataTracking(i + 1, "No Tracking Data",
                         DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
+                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:08:00 AM"),
                         DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
                         , 0, 0, dataTracking.get(i).getLatitude(), dataTracking.get(i).getLongitude()));
             }

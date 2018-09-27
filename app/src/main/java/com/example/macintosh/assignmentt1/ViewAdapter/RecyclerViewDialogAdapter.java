@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import java.util.Calendar;
@@ -88,7 +90,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     }
     @Override
 
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 //            holder.Delete.setOnClickListener(onClickListener(position));
             holder.trackableID.setText("Trackable ID: "+ Integer.toString( dataTrackings.get(position).getTrackableId() ));
             holder.title.setText("Title: "+ dataTrackings.get(position).getTitle() );
@@ -100,7 +102,29 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).getMeetLocationlatitude() )
                     +" "+ Double.toString(dataTrackings.get(position).getMeetLocationlongtitude()) );
 
-            holder.Edit.setOnClickListener(onEditClickListener(position));
+            holder.Edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu editTime = new PopupMenu(c,holder.Edit);
+                    editTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu, editTime.getMenu());
+                    editTime.getMenu().clear();
+                    for (int i = 1; i < (dataTrackings.get(position).getEndTime().getMinutes()-dataTrackings.get(position).getStartTime().getMinutes()); i++){
+                        editTime.getMenu().add(1,R.id.timeSlot1,i,dataTrackings.get(position).getStartTime().getHours()+":"+dataTrackings.get(position).getStartTime().getMinutes()+i);
+                    }
+                    editTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            dataTrackings.get(position).getMeetTime().setMinutes((dataTrackings.get(position).getMeetTime().getMinutes()+menuItem.getItemId()+1));
+                            holder.meettime.setText("Meet Time: "+stf.format(dataTrackings.get(position).getMeetTime()));
+                            notifyItemRangeChanged(position,dataTrackings.size());
+//                        notifyDataSetChanged();
+//                        notifyItemInserted(position);
+                            return true;
+                        }
+                    });
+                    editTime.show();
+                }
+            });
             holder.Delete.setOnClickListener(onDeleteClickListener(position));
 
     }
@@ -139,62 +163,13 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             }
         };
     }
-    public View.OnClickListener onEditClickListener(final int position) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog = new Dialog(c);
-                dialog.setTitle( "Edit" );
-                dialog.setContentView(R.layout.dialog_template);
-                final EditText Write = dialog.findViewById(R.id.writeTitle);
-                Button SaveMyName = dialog.findViewById(R.id.SaveNow);
-                final DatePicker datePicker =  dialog.findViewById(R.id.date_picker);
-//                final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
-                final TimePicker meetTimePicker = dialog.findViewById(R.id.meet_time_picker);
-//                final EditText WriteCurrLoc = dialog.findViewById(R.id.writeCurrLoc);
-//                final EditText WriteMeetLoc = dialog.findViewById(R.id.writeMeetLoc);
-                Write.setEnabled(true);
-                SaveMyName.setEnabled(true);
-
-                SaveMyName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Calendar calendar = Calendar.getInstance();
-//                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),startTimePicker.getHour(),startTimePicker.getMinute(),0 );
-//                        Date startTime = calendar.getTime();
-//                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour(),endTimePicker.getMinute(),0 );
-//                        Date endTime = calendar.getTime();
-                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),meetTimePicker.getHour(),meetTimePicker.getMinute(),0 );
-                        Date meetTime = calendar.getTime();
-                        removeTrackingData(position);
-//                        editTrackingData(position,position, Write.getText().toString(), startTime, endTime,meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
-//                                Double.parseDouble(WriteCurrLoc.getText().toString()),Double.parseDouble(WriteMeetLoc.getText().toString()),Double.parseDouble(WriteMeetLoc.getText().toString()));
-                        editTrackingData(position,position1, Write.getText().toString(), new Date(), new Date(),meetTime, 0,
-                                0,trackingData.get(position1).getLatitude(),trackingData.get(position1).getLongitude());
-                        notifyItemRangeChanged(position,dataTrackings.size());
-                        notifyDataSetChanged();
-                        notifyItemInserted(position);
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
-            }
-        };
-    }
     public void addTrackingData(int position,int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
                                 double meetLat, double meetLong)
     {
         this.dataTrackings.add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
-    public void editTrackingData(int position,int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
-                                double meetLat, double meetLong)
-    {
-        this.dataTrackings.add(position,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
-    }
     public void removeTrackingData(int position)
     {
         this.dataTrackings.remove(position);
     }
-
 }

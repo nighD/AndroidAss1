@@ -15,13 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -36,12 +41,12 @@ import com.example.macintosh.assignmentt1.ModelClass.Trackable;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
 import com.example.macintosh.assignmentt1.ViewAdapter.RecyclerViewDialogAdapter;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ShowFragment extends AppCompatActivity {
-    private Trackable trackable;
-    private TrackingService trackingService;
     private Button addButton;
     public AlertDialog.Builder mBuilder;
     public AlertDialog dialog;
@@ -52,6 +57,10 @@ public class ShowFragment extends AppCompatActivity {
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
     private static ArrayList<ArrayList<DataTracking>> dataTrackings;
+    private static ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
+    private static ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels2;
+    String TIME_FORMAT = "hh:mm";
+    SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -61,44 +70,11 @@ public class ShowFragment extends AppCompatActivity {
         dataa = new ArrayList<>();
         dataTrackings = new ArrayList<>();
         trackingData = new ArrayList<>();
-        trackable = new Trackable();
-        trackable.parseFile( this.getApplicationContext() );
-        for (int i = 0; i < trackable.trackableList.size(); i++) {
-            dataa.add( new DataModel(
-                    trackable.trackableList.get( i ).name,
-                    trackable.trackableList.get( i ).description,
-                    trackable.trackableList.get( i ).webURL,
-                    trackable.trackableList.get( i ).Category,
-                    trackable.trackableList.get( i ).getID()
-
-            ) );
-        }
-        trackingService = new TrackingService();
-        trackingService.parseFile(this.getApplicationContext());
-        for (int i = 0; i < trackingService.trackingList.size(); i++){
-            trackingData.add(new DataTrackingModel(trackingService.trackingList.get(i).date,
-                    trackingService.trackingList.get(i).date.getTime(),
-                    trackingService.trackingList.get(i).trackableId,
-                    trackingService.trackingList.get(i).stopTime,
-                    trackingService.trackingList.get(i).latitude,
-                    trackingService.trackingList.get(i).longitude));
-        }
-        for(int i = 0; i < dataa.size(); i++)
-        {
-            dataTrackings.add(new ArrayList<DataTracking>());
-        }
-        try {
-            for (int i = 0; i < dataa.size(); i++) {
-                if (dataTrackings.get(i).isEmpty()) {
-                    this.dataTrackings.get(i).add(new DataTracking(i + 1, "No Tracking Data",
-                            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
-                            , 0, 0, 0, 0));
-                }
-            }
-        }
-        catch (ParseException e){}
+        dataa = (ArrayList<DataModel>)mIntent.getSerializableExtra("dataModels");
+        trackingData = (ArrayList<DataTrackingModel>)mIntent.getSerializableExtra("dataTrackingM");
+        dataTrackings = (ArrayList<ArrayList<DataTracking>>) mIntent.getSerializableExtra("dataTrackings");
+        dataTrackingModels = (ArrayList<ArrayList<DataTrackingModel>>) mIntent.getSerializableExtra("dataTrackingModels");
+        dataTrackingModels2 = dataTrackingModels;
         addButton = findViewById(R.id.btn_add);
         rv=findViewById(R.id.mRecyerID);
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -124,31 +100,77 @@ public class ShowFragment extends AppCompatActivity {
                             mBuilder = new AlertDialog.Builder(ShowFragment.this);
                             final View mView = getLayoutInflater().inflate(R.layout.dialog_template,null);
                             final EditText Write = mView.findViewById(R.id.writeTitle);
+                            final TextView startTime = mView.findViewById(R.id.startTimeTS);
+                            final TextView endTime = mView.findViewById(R.id.endTimeTS);
+                            TextView meetTime = mView.findViewById(R.id.meetTimeTS);
+                            TextView currLoc = mView.findViewById(R.id.currLocTS);
+                            startTime.setText(stf.format(dataTrackings.get(position).get(0).getStartTime()));
+                            endTime.setText(stf.format(dataTrackings.get(position).get(0).getEndTime()));
+                            meetTime.setText(stf.format(dataTrackings.get(position).get(0).getMeetTime()));
+                            currLoc.setText("No Data");
+                            final ImageButton chooseStartTime = mView.findViewById(R.id.browseStartTime);
+                            final ImageButton chooseMeetTime = mView.findViewById(R.id.browseMeetTime);
                             Button SaveMyName = mView.findViewById(R.id.SaveNow);
-                            final DatePicker datePicker =  mView.findViewById(R.id.date_picker);
-//                final TimePicker startTimePicker =  dialog.findViewById(R.id.start_time_picker);
-                            final TimePicker meetTimePicker = mView.findViewById(R.id.meet_time_picker);
-//                final EditText WriteCurrLoc = dialog.findViewById(R.id.writeCurrLoc);
-//                final EditText WriteMeetLoc = dialog.findViewById(R.id.writeMeetLoc);
                             Write.setEnabled(true);
                             SaveMyName.setEnabled(true);
                             mBuilder.setView(mView);
                             dialog = mBuilder.create();
+                            chooseMeetTime.setEnabled(false);
+                            int startTimeMinutes1;
+                            chooseStartTime.setOnClickListener(new View.OnClickListener() {
+                                int startTimeMinutes2 = 0;
+                                @Override
+                                public void onClick(View view) {
+                                    final PopupMenu editStartTime = new PopupMenu(ShowFragment.this,chooseStartTime);
+                                    editStartTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu,editStartTime.getMenu());
+                                    editStartTime.getMenu().clear();
+                                    for(int i = 0; i < dataTrackingModels.get(position).size();i++){
+                                        editStartTime.getMenu().add(1,R.id.timeSlot1,i,stf.format(dataTrackingModels2.get(position).get(i).getDate()));
+                                    }
+                                    editStartTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem menuItem) {
+                                            int index = menuItem.getOrder();
+                                            if (index>=dataTrackingModels.get(position).size()-1){index=0;}
+                                            startTimeMinutes2 = (dataTrackingModels.get(position).get(index).getDate().getMinutes()+index);
+                                            //dataTrackingModels.get(position).get(menuItem.getOrder()).getDate().setMinutes(startTimeMinutes);
+                                            startTime.setText(stf.format(dataTrackingModels.get(position).get(index).getDate()));
+                                            dataTrackings.get(position).get(index).setEndtime(dataTrackingModels.get(position).get(index).getDate());
+                                            dataTrackings.get(position).get(index).getEndTime().setMinutes((dataTrackingModels.get(position).get(index).getDate().getMinutes()+dataTrackingModels.get(position).get(index).getStopTime()));
+                                            endTime.setText(stf.format(dataTrackings.get(position).get(index).getEndTime()));
+                                            chooseMeetTime.setEnabled(true);
+                                            return false;
+                                        }
+                                    });
+                                    editStartTime.show();
+                                }
+                            });
+                            chooseMeetTime.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    PopupMenu editMeetTime = new PopupMenu(ShowFragment.this,chooseMeetTime);
+                                    editMeetTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu,editMeetTime.getMenu());
+                                    editMeetTime.getMenu().clear();
+                                    for(int i = 0; i < dataTrackingModels.get(position).size();i++){
+                                        for(int j = 1; j < dataTrackingModels.get(position).get(i).getStopTime(); j++){
+                                            //if(dataTrackingModels.get(position).get(i).getDate().getMinutes()<s)
+                                            editMeetTime.getMenu().add(1,R.id.timeSlot1,i,dataTrackingModels.get(position).get(i).getDate().getHours()+":"+(dataTrackingModels.get(position).get(i).getDate().getMinutes()+j));
 
+                                        }
+                                    }
+                                    editMeetTime.show();
+                                }
+                            });
                             SaveMyName.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Calendar calendar = Calendar.getInstance();
-//                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),startTimePicker.getHour(),startTimePicker.getMinute(),0 );
-//                        Date startTime = calendar.getTime();
-//                        calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),endTimePicker.getHour(),endTimePicker.getMinute(),0 );
-//                        Date endTime = calendar.getTime();
-                                    calendar.set( datePicker.getMonth(),datePicker.getDayOfMonth(),meetTimePicker.getHour(),meetTimePicker.getMinute(),0 );
-                                    Date meetTime = calendar.getTime();
+                                    Date startTime = dataTrackings.get(position).get(0).getStartTime();
+                                    Date EndTime = dataTrackings.get(position).get(0).getEndTime();
+                                    Date MeetTime= dataTrackings.get(position).get(0).getMeetTime();
                                     try {
-//                            adapter.addTrackingData(position, position, Write.getText().toString(), startTime, endTime, meetTime, Double.parseDouble(WriteCurrLoc.getText().toString()),
-//                                    Double.parseDouble(WriteCurrLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()), Double.parseDouble(WriteMeetLoc.getText().toString()));
-                                        adapter.addTrackingData(position,mIntent.getIntExtra("CellPosition",0), Write.getText().toString(), new Date(), new Date(),meetTime, 0,
+                                        addTrackingData(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime, EndTime,MeetTime, 0,
+                                            0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
+                                        adapter.addTrackingData(position,mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime, EndTime,MeetTime, 0,
                                                 0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
                                         adapter.notifyItemRangeChanged(position, dataTrackings.size());
                                         adapter.notifyDataSetChanged();
@@ -165,6 +187,10 @@ public class ShowFragment extends AppCompatActivity {
                 });
             }
         };
+    }
+    public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
+                                double meetLat, double meetLong){
+        this.dataTrackings.get(ID).add(new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
 
 }

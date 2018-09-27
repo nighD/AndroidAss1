@@ -22,7 +22,6 @@ import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.R;
 
 import com.example.macintosh.assignmentt1.Service.GPS_Service;
-import com.google.*;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 

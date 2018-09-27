@@ -2,9 +2,44 @@
 <menu xmlns:android = "http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/edit_meetTime_RV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        ></android.support.v7.widget.RecyclerView>
+    <item
+        android:id = "@+id/timeSlot1"
+        android:title= "Time Slot 1">
+    </item>
+    <item
+        android:id = "@+id/timeSlot2"
+        android:title= "Time Slot 2">
+    </item>
+    <item
+        android:id = "@+id/timeSlot3"
+        android:title= "Time Slot 3">
+    </item>
+    <item
+        android:id = "@+id/timeSlot4"
+        android:title= "Time Slot 4">
+    </item>
+    <item
+        android:id = "@+id/timeSlot5"
+        android:title= "Time Slot 5">
+    </item>
+    <item
+        android:id = "@+id/timeSlot6"
+        android:title= "Time Slot 6">
+    </item>
+    <item
+        android:id = "@+id/timeSlot7"
+        android:title= "Time Slot 7">
+    </item>
+    <item
+        android:id = "@+id/timeSlot8"
+        android:title= "Time Slot 8">
+    </item>
+    <item
+        android:id = "@+id/timeSlot9"
+        android:title= "Time Slot 9">
+    </item>
+    <item
+        android:id = "@+id/timeSlot10"
+        android:title= "Time Slot 10">
+    </item>
 </menu>
