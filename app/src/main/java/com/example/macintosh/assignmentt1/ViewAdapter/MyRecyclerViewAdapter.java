@@ -155,13 +155,17 @@ implements Filterable{
         }
         for (int i = 0; i < data.size(); i++ ) {
                 for (int j = 0; j < dataTrackings2.get(i).size(); j++){
+                    Date StartTime = new Date();
                     Date Endtime = new Date();
+                    Date MeetTime = new Date();
+                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
                     Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
                     Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
                     this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-                            dataTrackings2.get(i).get(j).getDate(),
+                            StartTime,
                             Endtime,
-                            dataTrackings2.get(i).get(j).getDate()
+                            MeetTime
                             , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
                 }
         }

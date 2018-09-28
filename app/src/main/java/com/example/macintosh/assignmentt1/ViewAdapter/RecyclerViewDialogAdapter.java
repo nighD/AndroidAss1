@@ -101,6 +101,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     +" "+ Double.toString(dataTrackings.get(position).getCurrentLocationlongtitude() ) );
             holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).getMeetLocationlatitude() )
                     +" "+ Double.toString(dataTrackings.get(position).getMeetLocationlongtitude()) );
+            final Date meetTime2 = new Date();
 
             holder.Edit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,14 +110,18 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     editTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu, editTime.getMenu());
                     editTime.getMenu().clear();
                     for (int i = 1; i < (dataTrackings.get(position).getEndTime().getMinutes()-dataTrackings.get(position).getStartTime().getMinutes()); i++){
-                        editTime.getMenu().add(1,R.id.timeSlot1,i,dataTrackings.get(position).getStartTime().getHours()+":"+(dataTrackings.get(position).getStartTime().getMinutes()+i));
+                        editTime.getMenu().add(1,R.id.timeSlot1+i-1,i,dataTrackings.get(position).getStartTime().getHours()+":"+(dataTrackings.get(position).getStartTime().getMinutes()+i));
                     }
                     editTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
-                            dataTrackings.get(position).getMeetTime().setMinutes((dataTrackings.get(position).getMeetTime().getMinutes()+menuItem.getItemId()+1));
-                            holder.meettime.setText("Meet Time: "+stf.format(dataTrackings.get(position).getMeetTime()));
+                            int index = menuItem.getOrder();
+                            meetTime2.setTime(dataTrackings.get(position).getStartTime().getTime());
+                            meetTime2.setMinutes((meetTime2.getMinutes()+index));
+                            dataTrackings.get(position).getMeetTime().setTime(meetTime2.getTime());
+                            holder.meettime.setText("Meet Time: "+stf.format(meetTime2));
                             notifyItemRangeChanged(position,dataTrackings.size());
+                            //holder.Edit.setEnabled(false);
 //                        notifyDataSetChanged();
 //                        notifyItemInserted(position);
                             return true;

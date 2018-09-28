@@ -107,6 +107,8 @@ public class ShowFragment extends AppCompatActivity {
                             meetTime.setText("Meet time: "+stf.format(dataTrackings.get(position).get(0).getMeetTime()));
                             currLoc.setText("No Data");
                             final Date startTime2 = new Date();
+                            final Date meetTime2 = new Date();
+                            final Date endTime2 = new Date();
                             final ImageButton chooseStartTime = mView.findViewById(R.id.browseStartTime);
                             final ImageButton chooseMeetTime = mView.findViewById(R.id.browseMeetTime);
                             Button SaveMyName = mView.findViewById(R.id.SaveNow);
@@ -132,10 +134,12 @@ public class ShowFragment extends AppCompatActivity {
                                             startTimeMinutes2 = (dataTrackingModels.get(position).get(index).getDate().getMinutes()+index);
                                             //dataTrackingModels.get(position).get(menuItem.getOrder()).getDate().setMinutes(startTimeMinutes);
                                             startTime2.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
+                                            meetTime2.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
                                             //startTime2.setMinutes(startTimeMinutes2);
                                             startTime.setText("Start Time: "+stf.format(dataTrackingModels.get(position).get(index).getDate()));
                                             endTime.setText("End Time: "+stf.format(dataTrackings.get(position).get(index).getEndTime()));
-                                            chooseStartTime.setEnabled(false);
+                                            endTime2.setTime(dataTrackings.get(position).get(index).getEndTime().getTime());
+                                            //chooseStartTime.setEnabled(false);
                                             chooseMeetTime.setEnabled(true);
                                             return false;
                                         }
@@ -144,33 +148,49 @@ public class ShowFragment extends AppCompatActivity {
                                 }
                             });
                             chooseMeetTime.setOnClickListener(new View.OnClickListener() {
+                                int meetTimeMinutes2 = 0;
                                 @Override
                                 public void onClick(View view) {
                                     PopupMenu editMeetTime = new PopupMenu(ShowFragment.this,chooseMeetTime);
                                     editMeetTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu,editMeetTime.getMenu());
                                     editMeetTime.getMenu().clear();
+                                    int e = 0;
                                     for(int i = 0; i < dataTrackingModels.get(position).size();i++){
-                                        for(int j = 1; j < dataTrackingModels.get(position).get(i).getStopTime(); j++){
-                                            if((dataTrackingModels.get(position).get(i).getDate().getTime()<startTime2.getTime())||(dataTrackingModels.get(position).get(i).getDate().getMinutes()-startTime2.getMinutes()>=10)){
-                                                continue;
+//                                        for(int j = 1; j < dataTrackingModels.get(position).get(i).getStopTime(); j++){
+//                                            if((dataTrackingModels.get(position).get(i).getDate().getTime()<startTime2.getTime())||(dataTrackingModels.get(position).get(i).getDate().getMinutes()-startTime2.getMinutes()>=dataTrackingModels.get(position).get(i).getStopTime())){
+//                                                continue;
+//                                            }
+//                                            editMeetTime.getMenu().add(1,R.id.timeSlot1+e,i,dataTrackingModels.get(position).get(i).getDate().getHours()+":"+(dataTrackingModels.get(position).get(i).getDate().getMinutes()+j));
+//                                            e++;
+//                                        }
+                                        if(dataTrackingModels.get(position).get(i).getDate().getTime()==startTime2.getTime()){
+                                            for(int j = 1; j < dataTrackingModels.get(position).get(i).getStopTime(); j++){
+                                                editMeetTime.getMenu().add(1,R.id.timeSlot1+j-1,j,dataTrackingModels.get(position).get(i).getDate().getHours()+":"+(dataTrackingModels.get(position).get(i).getDate().getMinutes()+j));
                                             }
-                                            editMeetTime.getMenu().add(1,R.id.timeSlot1+i,i,dataTrackingModels.get(position).get(i).getDate().getHours()+":"+(dataTrackingModels.get(position).get(i).getDate().getMinutes()+j));
-
                                         }
                                     }
+                                    editMeetTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem menuItem) {
+                                            int index = menuItem.getOrder();
+                                            meetTimeMinutes2 = (startTime2.getMinutes()+menuItem.getOrder());
+//                                            meetTime2.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
+                                            meetTime2.setMinutes((meetTimeMinutes2));
+                                            meetTime.setText("Meet time: "+stf.format(meetTime2));
+                                            //chooseMeetTime.setEnabled(false);
+                                            return false;
+                                        }
+                                    });
                                     editMeetTime.show();
                                 }
                             });
                             SaveMyName.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Date startTime = dataTrackings.get(position).get(0).getStartTime();
-                                    Date EndTime = dataTrackings.get(position).get(0).getEndTime();
-                                    Date MeetTime= dataTrackings.get(position).get(0).getMeetTime();
                                     try {
-                                        addTrackingData(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime, EndTime,MeetTime, 0,
+                                        addTrackingData(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
                                             0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
-                                        adapter.addTrackingData(position,mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime, EndTime,MeetTime, 0,
+                                        adapter.addTrackingData(position,mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
                                                 0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
                                         adapter.notifyItemRangeChanged(position, dataTrackings.size());
                                         adapter.notifyDataSetChanged();
