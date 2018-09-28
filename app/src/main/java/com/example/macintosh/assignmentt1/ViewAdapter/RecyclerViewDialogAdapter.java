@@ -109,7 +109,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     editTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu, editTime.getMenu());
                     editTime.getMenu().clear();
                     for (int i = 1; i < (dataTrackings.get(position).getEndTime().getMinutes()-dataTrackings.get(position).getStartTime().getMinutes()); i++){
-                        editTime.getMenu().add(1,R.id.timeSlot1,i,dataTrackings.get(position).getStartTime().getHours()+":"+dataTrackings.get(position).getStartTime().getMinutes()+i);
+                        editTime.getMenu().add(1,R.id.timeSlot1,i,dataTrackings.get(position).getStartTime().getHours()+":"+(dataTrackings.get(position).getStartTime().getMinutes()+i));
                     }
                     editTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override

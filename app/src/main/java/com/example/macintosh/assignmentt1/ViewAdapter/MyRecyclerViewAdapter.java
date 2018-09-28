@@ -133,20 +133,18 @@ implements Filterable{
         this.activity = activity;
         this.dataSetFilter = data;
         this.dataTrackingModels = dataTracking;
-        for(int i = 0; i < dataTrackingModels.size(); i++)
+        for(int i = 0; i < data.size(); i++)
         {
             dataTrackings2.add(new ArrayList<DataTrackingModel>());
         }
-        for (int i = 0; i < dataTrackingModels.size(); i++ ) {
-            for(int j = 0; j < dataSetFilter.size(); j++){
-                if((dataTrackingModels.get(i).getTrackableId()==j+1)&&(dataTrackingModels.get(i).getStopTime()!=0)){
-                    dataTrackings2.get(j).add(dataTrackingModels.get(i));
-//                    dataTrackingModels2 = new ArrayList<>();
-                    // dataTrackingModels2.add(dataTracking.get(i));
+        for (int i = 0; i < data.size(); i++ ) {
+            for(int j = 0; j < dataTrackingModels.size(); j++){
+                if((dataTrackingModels.get(j).getTrackableId()==i+1)&&(dataTrackingModels.get(j).getStopTime()!=0)){
+                    dataTrackings2.get(i).add(dataTrackingModels.get(j));
                 }
             }
         }
-        for (int i = 0; i < dataTrackingModels.size(); i++ ) {
+        for (int i = 0; i < data.size(); i++ ) {
             if (dataTrackings2.get(i).isEmpty()) {
                 this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
             }
@@ -156,13 +154,16 @@ implements Filterable{
             dataTrackings.add(new ArrayList<DataTracking>());
         }
         for (int i = 0; i < data.size(); i++ ) {
-            if (dataTrackings.get(i).isEmpty()) {
-                this.dataTrackings.get(i).add(new DataTracking(i + 1, "No Tracking Data",
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:08:00 AM"),
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
-                        , 0, 0, dataTracking.get(i).getLatitude(), dataTracking.get(i).getLongitude()));
-            }
+                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
+                    Date Endtime = new Date();
+                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
+                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                            dataTrackings2.get(i).get(j).getDate(),
+                            Endtime,
+                            dataTrackings2.get(i).get(j).getDate()
+                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+                }
         }
     }
     @Override
