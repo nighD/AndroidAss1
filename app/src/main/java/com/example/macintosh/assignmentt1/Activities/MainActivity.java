@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
+        Intent myIntent = new Intent();
+        myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
+        this.startActivity(myIntent);
         setContentView( R.layout.activity_main );
         getSupportActionBar().setDisplayHomeAsUpEnabled( true );
         getSupportActionBar().setTitle( "Search" );

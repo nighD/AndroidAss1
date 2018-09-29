@@ -1,5 +1,6 @@
 package com.example.macintosh.assignmentt1.ViewAdapter;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
@@ -35,7 +37,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     static ArrayList<DataTracking> dataTrackings = new ArrayList<>();
     ArrayList<DataModel> trackableData;
     int position1;
-    Dialog dialog;
+    AlertDialog.Builder mBuilder;
     String DATE_FORMAT = "MM/dd/yyyy";
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -106,13 +108,28 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             holder.Edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PopupMenu editTime = new PopupMenu(c,holder.Edit);
-                    editTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu, editTime.getMenu());
-                    editTime.getMenu().clear();
-                    for (int i = 1; i < (dataTrackings.get(position).getEndTime().getMinutes()-dataTrackings.get(position).getStartTime().getMinutes()); i++){
-                        editTime.getMenu().add(1,R.id.timeSlot1+i-1,i,dataTrackings.get(position).getStartTime().getHours()+":"+(dataTrackings.get(position).getStartTime().getMinutes()+i));
-                    }
-                    editTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    mBuilder = new AlertDialog.Builder(c);
+                    final View mView = LayoutInflater.from(c).inflate(R.layout.edit_dialog, null);
+                    final EditText editTitle = mView.findViewById(R.id.edit_title);
+                    final TextView showMeetTime = mView.findViewById(R.id.show_meet_time);
+                    final ImageButton editMeetTime = mView.findViewById(R.id.browseMeetT);
+                    final Button Save = mView.findViewById(R.id.SaveEdit);
+                    mBuilder.setView(mView);
+                    Dialog dialog = mBuilder.create();
+                    dialog.setTitle("Edit Tracking Service");
+                    dialog.setCancelable(true);
+                    editTitle.setEnabled(true);
+                    showMeetTime.setText("Meet time: "+stf.format(dataTrackings.get(position).getMeetTime()));
+                    editMeetTime.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            PopupMenu editTime = new PopupMenu(c,editMeetTime);
+                            editTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu, editTime.getMenu());
+                            editTime.getMenu().clear();
+                                for (int i = 1; i < (dataTrackings.get(position).getEndTime().getMinutes()-dataTrackings.get(position).getStartTime().getMinutes()); i++){
+                                    editTime.getMenu().add(1,R.id.timeSlot1+i-1,i,dataTrackings.get(position).getStartTime().getHours()+":"+(dataTrackings.get(position).getStartTime().getMinutes()+i));
+                                }
+                            editTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             int index = menuItem.getOrder();
@@ -120,6 +137,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                             meetTime2.setMinutes((meetTime2.getMinutes()+index));
                             dataTrackings.get(position).getMeetTime().setTime(meetTime2.getTime());
                             holder.meettime.setText("Meet Time: "+stf.format(meetTime2));
+                            showMeetTime.setText("Meet Time: "+stf.format(meetTime2));
                             notifyItemRangeChanged(position,dataTrackings.size());
                             //holder.Edit.setEnabled(false);
 //                        notifyDataSetChanged();
@@ -128,6 +146,16 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                         }
                     });
                     editTime.show();
+                        }
+                    });
+                    Save.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            holder.title.setText(editTitle.getText());
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.show();
                 }
             });
             holder.Delete.setOnClickListener(onDeleteClickListener(position));
