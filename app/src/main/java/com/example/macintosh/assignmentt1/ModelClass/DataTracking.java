@@ -14,6 +14,17 @@ public class DataTracking implements Serializable {
     private Double currentLocationlongtitude;
     private Double meetLocationlatitude;
     private Double meetLocationlongtitude;
+    public DataTracking(){
+        this.trackableId = 0;
+        this.title = "No Data";
+        this.starttime = new Date();
+        this.endtime = new Date();
+        this.meettime = new Date();
+        this.currentLocationlatitude = 0.0;
+        this.currentLocationlongtitude = 0.0;
+        this.meetLocationlatitude = 0.0;
+        this.meetLocationlongtitude = 0.0;
+    }
 
     public DataTracking(int trackableId,String title,Date starttime,Date endtime,Date meettime,
                         double currentLocationlatitude,double currentLocationlongtitude, double meetLocationlatitude, double meetLocationlongtitude){
@@ -58,4 +69,5 @@ public class DataTracking implements Serializable {
         return this.meetLocationlongtitude;
     }
     public void setEndtime(Date newEndTime){this.endtime = newEndTime;}
+    public void setTitle(String title){this.title = title;}
 }

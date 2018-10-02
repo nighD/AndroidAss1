@@ -24,6 +24,7 @@ import android.support.v7.widget.SearchView;
 
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.example.macintosh.assignmentt1.AlarmReceiver.AlarmReceiver;
@@ -31,6 +32,7 @@ import com.example.macintosh.assignmentt1.HTTP.AbstractHttpAsyncTask;
 import com.example.macintosh.assignmentt1.HTTP.HttpClientApacheAsyncTask;
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
+import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.NotificationScheduler.NotificationScheduler;
 import com.example.macintosh.assignmentt1.R;
@@ -41,6 +43,7 @@ import com.example.macintosh.assignmentt1.ViewAdapter.MyRecyclerViewAdapter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -51,11 +54,13 @@ public class MainActivity extends AppCompatActivity  {
     private RecyclerView recyclerView;
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
+    private ArrayList<ArrayList<DataTracking>> dataTrackings;
     private SearchView searchView;
     private ProgressBar bar = null;
     private WebView webView = null;
     private BroadcastReceiver broadcastReceiver;
     private String LOG_TAG = this.getClass().getName();
+    private ImageButton locationBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity  {
         myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
         this.startActivity(myIntent);
         setContentView( R.layout.activity_main );
+        locationBtn = findViewById(R.id.browseLocation);
         getSupportActionBar().setDisplayHomeAsUpEnabled( true );
         getSupportActionBar().setTitle( "Search" );
         Trackable trackable = new Trackable();
@@ -71,10 +77,12 @@ public class MainActivity extends AppCompatActivity  {
         trackingService.parseFile(getApplicationContext());
         final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
         JDBCActivity jdbcActivity = new JDBCActivity();
-        //jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
+        jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
         //jdbcActivity.takeLatLng( db );
+        jdbcActivity.createServiceDatabase(db);
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
+        dataTrackings = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -92,7 +100,14 @@ public class MainActivity extends AppCompatActivity  {
 
         NotificationScheduler.setReminder(MainActivity.this, 10);
 
-
+        locationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent locationIntent = new Intent();
+                locationIntent.setClass(MainActivity.this,MapsActivity.class);
+                MainActivity.this.startActivity(locationIntent);
+            }
+        });
 
 
 
@@ -114,10 +129,38 @@ public class MainActivity extends AppCompatActivity  {
                                                     trackingService.trackingList.get(i).latitude,
                                                     trackingService.trackingList.get(i).longitude));
         }
+        for (int i = 0; i < trackingService.trackingList.size(); i++){
+            jdbcActivity.createNew(new DataTracking(0,
+                                    "No Data",
+                                    trackingService.trackingList.get(i).date,
+                    trackingService.trackingList.get(i).date,
+                    trackingService.trackingList.get(i).date,
+                                    0.0,0.0,
+                    trackingService.trackingList.get(i).latitude,
+                    trackingService.trackingList.get(i).longitude),db);
+        }
+
         recyclerView = findViewById( R.id.recycler_view );
+        for (int i = 0; i < trackable.trackableList.size(); i++){
+            this.dataTrackings.add(new ArrayList<DataTracking>());
+        }
+//        jdbcActivity.getData(0,db);
+        for(int i = 0; i < trackingService.trackingList.size(); i++){
+            for (int j = 0; j < trackable.trackableList.size(); j++){
+                if (trackingService.trackingList.get(i).trackableId==j+1){
+                    this.dataTrackings.get(j).add(jdbcActivity.getData(j,db));
+                }
+            }
+        }
+        for (int i = 0; i < dataTrackings.size(); i++){
+            if (dataTrackings.get(i).isEmpty()){
+                dataTrackings.get(i).add(new DataTracking());
+            }
+        }
+        this.dataTrackings.get(0);
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         try {
-            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
+            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData,this.dataTrackings, getApplicationContext(), this);
         }
         catch (ParseException e){}
         layoutManager = new LinearLayoutManager( this );

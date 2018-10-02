@@ -15,6 +15,5 @@
     <item
         android:id = "@+id/show_settings"
         android:title= "Other Settings">
-
     </item>
 </menu>

@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
+import com.example.macintosh.assignmentt1.HTTP.UpdateURL;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
@@ -42,6 +43,8 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
+    private String url;
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
@@ -151,8 +154,11 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                     Save.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            dataTrackings.get(position).setTitle(editTitle.getText().toString());
                             holder.title.setText(editTitle.getText());
                             dialog.cancel();
+                            notifyItemRangeChanged(position,dataTrackings.size());
+                            RecyclerViewDialogAdapter.super.notifyItemChanged(position,dataTrackings.size());
                         }
                     });
                     dialog.show();

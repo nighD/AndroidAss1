@@ -4,6 +4,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.example.macintosh.assignmentt1.Activities.MainActivity;
+import com.example.macintosh.assignmentt1.ModelClass.ResponseJSON;
 import com.example.macintosh.assignmentt1.json.JSON;
 
 import org.apache.http.Header;
@@ -23,7 +24,7 @@ import java.io.InputStreamReader;
 public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
 {
    private String LOG_TAG = HttpClientApacheAsyncTask.class.getName();
-
+   public ResponseJSON response;
    public HttpClientApacheAsyncTask(MainActivity activity)
    {
       super(activity);
@@ -80,7 +81,7 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
             }
             // finished
             publishProgress(100);
-            JSON.responseJSON( responseBody );
+            this.response = JSON.responseJSON( responseBody );
 
             // Log.i(LOG_TAG, htmlStringBuilder.toString());
             Log.i(LOG_TAG, "DONE");

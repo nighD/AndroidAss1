@@ -294,7 +294,7 @@ public class JDBCActivity
                     Statement st = con.createStatement();
 
                     // Query and display results //Step 5
-                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata WHERE ID =" + Integer.toString(ID));
+                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata ") ;
                     Log.i(LOG_TAG, "*** Query results:");
                     DataTracking dataTracking0 = null;
                     while (rs.next())
@@ -307,6 +307,7 @@ public class JDBCActivity
                                 dateStart, dateEnd, dateMeet,
                                 Double.parseDouble(rs.getString(6)),Double.parseDouble(rs.getString(7)),
                                 Double.parseDouble(rs.getString(8)),Double.parseDouble(rs.getString(9)));
+                        Log.i(LOG_TAG,"Result found");
                     }
                     dataTracking[0] = dataTracking0;
                     Log.i(LOG_TAG, "*** query result:ID "+ Integer.toString(ID));
