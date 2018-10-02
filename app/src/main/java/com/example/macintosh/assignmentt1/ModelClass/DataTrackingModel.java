@@ -1,9 +1,10 @@
 package com.example.macintosh.assignmentt1.ModelClass;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
 
-public class DataTrackingModel {
+public class DataTrackingModel implements Serializable{
     private Date date;
     private int trackableId;
     private int stopTime;

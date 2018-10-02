@@ -1,8 +1,9 @@
 package com.example.macintosh.assignmentt1.ModelClass;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class DataTracking {
+public class DataTracking implements Serializable {
 
     private int trackableId;
     private String title;
@@ -18,9 +19,12 @@ public class DataTracking {
                         double currentLocationlatitude,double currentLocationlongtitude, double meetLocationlatitude, double meetLocationlongtitude){
         this.trackableId =trackableId;
         this.title = title;
-        this.starttime = starttime;
-        this.endtime = endtime;
-        this.meettime = meettime;
+        this.starttime = new Date();
+        this.starttime.setTime(starttime.getTime());
+        this.endtime = new Date();
+        this.endtime.setTime(endtime.getTime());
+        this.meettime = new Date();
+        this.meettime.setTime(meettime.getTime());
         this.currentLocationlatitude = currentLocationlatitude;
         this.currentLocationlongtitude = currentLocationlongtitude;
         this.meetLocationlatitude = meetLocationlatitude;
@@ -53,4 +57,5 @@ public class DataTracking {
     public Double getMeetLocationlongtitude() {
         return this.meetLocationlongtitude;
     }
+    public void setEndtime(Date newEndTime){this.endtime = newEndTime;}
 }

@@ -1,7 +1,9 @@
 package com.example.macintosh.assignmentt1.ModelClass;
 import com.example.macintosh.assignmentt1.R;
 
-public class DataModel {
+import java.io.Serializable;
+
+public class DataModel implements Serializable {
 
     private String name;
     private String description;

@@ -8,21 +8,42 @@
         android:hint="Write Title Here"
         android:id="@+id/writeTitle"
         android:layout_height="100dp" />
-    <DatePicker
-        android:id="@+id/date_picker"
-        android:layout_width="match_parent"
-        android:calendarViewShown="true"
-        android:spinnersShown="false"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
-    <TimePicker
-        android:id="@+id/meet_time_picker"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:timePickerMode="spinner"
-        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/startTimeTS"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/browseStartTime"
+            android:src="@mipmap/browsearrow"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/endTimeTS"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/meetTimeTS"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/browseMeetTime"
+            android:src="@mipmap/browsearrow"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currLocTS"/>
     <Button
         android:layout_width="match_parent"
         android:text="Save"

@@ -32,21 +32,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingListAdapter.MyViewHolder> {
 
 
     private Context ctx;
     private ArrayList<DataModel> dataSet;
-    private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
-    private ArrayList<DataTrackingModel> dataTrackingModels2 = new ArrayList<>();
-    private static ArrayList<ArrayList<DataTrackingModel>> dataTrackings = new ArrayList<>();
-    public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
-    private RecyclerViewAdapterListener listener;
-    int id;
-
+    String DATE_FORMAT = "MM/dd/yyyy";
+    String TIME_FORMAT = "hh:mm";
+    SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
+    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
@@ -56,7 +54,6 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
         private TextView stopTime;
         private TextView meetLocation;
         private View container;
-        private CardView cardView;
 
 
 
@@ -81,20 +78,6 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
         this.ctx = ctx;
         this.activity = activity;
         this.dataTrackingModels = dataTracking;
-//        for(int i = 0; i < dataTracking.size(); i++)
-//        {
-//            dataTrackings.add(new ArrayList<DataTrackingModel>());
-//        }
-//        for (int i = 0; i < dataTrackingModels.size(); i++ ) {
-//            if(dataTracking.get(i).getTrackableId()==i+1){
-//                    dataTrackings.get(i).add(dataTracking.get(i));
-////                    dataTrackingModels2 = new ArrayList<>();
-//                    //dataTrackingModels2.add(dataTracking.get(i));
-//            }
-//            if (dataTrackings.get(i).isEmpty()) {
-//                this.dataTrackings.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
-//            }
-//        }
     }
     @Override
     public ShowTrackingListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -110,10 +93,10 @@ public class ShowTrackingListAdapter extends RecyclerView.Adapter<ShowTrackingLi
         TextView textViewStopTime = holder.stopTime;
         TextView textViewMeetLoc = holder.meetLocation;
             textViewID.setText("ID: "+dataTrackingModels.get(position).getTrackableId());
-            textViewDate.setText(dataTrackingModels.get(position).getDate().toString());
-            textViewStartTime.setText(Long.toString(dataTrackingModels.get(position).getStartTime()));
-            textViewStopTime.setText(Integer.toString(dataTrackingModels.get(position).getStopTime()));
-            textViewMeetLoc.setText(dataTrackingModels.get(position).getLatitude() + ", " + dataTrackingModels.get(position).getLongitude());
+            textViewDate.setText("Date: "+sdf.format(dataTrackingModels.get(position).getDate()));
+            textViewStartTime.setText("Start time: "+stf.format(dataTrackingModels.get(position).getDate()));
+            textViewStopTime.setText("Stop time: "+Integer.toString(dataTrackingModels.get(position).getStopTime())+" mins");
+            textViewMeetLoc.setText("Meet Location: "+dataTrackingModels.get(position).getLatitude() + ", " + dataTrackingModels.get(position).getLongitude());
     }
 
     @Override

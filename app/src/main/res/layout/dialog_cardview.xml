@@ -22,18 +22,18 @@
         android:orientation="horizontal"
         >
         <ImageButton
-            android:id="@+id/edit"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
-            android:src="@mipmap/edit"
-            android:layout_marginLeft="10dp"
-            />
-        <ImageButton
             android:id="@+id/deleteButton"
             android:layout_width="20dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:src="@mipmap/delete"
+            />
+        <ImageButton
+            android:id="@+id/edit"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/edit"
+            android:layout_marginLeft="10dp"
             />
     </LinearLayout>
 
@@ -70,14 +70,19 @@
             android:id="@+id/endtime"
             android:layout_alignParentLeft="true"
             />
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="No Tracking Data"
-            android:id="@+id/meettime"
-            android:layout_alignParentLeft="true"
-            />
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="No Tracking Data"
+                android:id="@+id/meettime"
+                android:layout_alignParentLeft="true"
+                />
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,9 +99,5 @@
             android:id="@+id/meetLocation"
             android:layout_alignParentLeft="true"
             />
-
-
-
-
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -91,11 +92,17 @@ implements Filterable{
                             if(item.getItemId()==R.id.show_tracking_list){
                                 Intent showTL = new Intent().setClass(ctx,show_TL.class);
                                 showTL.putExtra("CellPosition", getAdapterPosition());
+                                showTL.putExtra("dataModels",dataSetFilter);
+                                showTL.putExtra("dataTrackingModels",dataTrackings2);
                                 ctx.startActivity(showTL);
                             }
                             else{
                                 Intent showFrag = new Intent().setClass(ctx,ShowFragment.class);
                                 showFrag.putExtra("CellPosition",getAdapterPosition());
+                                showFrag.putExtra("dataTrackings",dataTrackings);
+                                showFrag.putExtra("dataModels",dataSetFilter );
+                                showFrag.putExtra("dataTrackingM",dataTrackingModels);
+                                showFrag.putExtra("dataTrackingModels",dataTrackings2);
                                 ctx.startActivity(showFrag);
                             }
                             Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
@@ -126,18 +133,20 @@ implements Filterable{
         this.activity = activity;
         this.dataSetFilter = data;
         this.dataTrackingModels = dataTracking;
-        for(int i = 0; i < dataTrackingModels.size(); i++)
+        for(int i = 0; i < data.size(); i++)
         {
             dataTrackings2.add(new ArrayList<DataTrackingModel>());
         }
-        for (int i = 0; i < dataTrackingModels.size(); i++ ) {
-//            for(int j = 0; j < dataTracking.size(); j++){
-//                if(dataTrackingModels.get(i).getTrackableId()==i+1){
-//                    dataTrackings2.get(i).add(dataTracking.get(0));
-//                }
-//            }
+        for (int i = 0; i < data.size(); i++ ) {
+            for(int j = 0; j < dataTrackingModels.size(); j++){
+                if((dataTrackingModels.get(j).getTrackableId()==i+1)&&(dataTrackingModels.get(j).getStopTime()!=0)){
+                    dataTrackings2.get(i).add(dataTrackingModels.get(j));
+                }
+            }
+        }
+        for (int i = 0; i < data.size(); i++ ) {
             if (dataTrackings2.get(i).isEmpty()) {
-                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,0,0,0));
+                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
             }
         }
         for(int i = 0; i < data.size(); i++)
@@ -145,13 +154,20 @@ implements Filterable{
             dataTrackings.add(new ArrayList<DataTracking>());
         }
         for (int i = 0; i < data.size(); i++ ) {
-            if (dataTrackings.get(i).isEmpty()) {
-                this.dataTrackings.get(i).add(new DataTracking(i + 1, "No Tracking Data",
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM"),
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse("00/00/0000 0:00:00 AM")
-                        , 0, 0, dataTracking.get(i).getLatitude(), dataTracking.get(i).getLongitude()));
-            }
+                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
+                    Date StartTime = new Date();
+                    Date Endtime = new Date();
+                    Date MeetTime = new Date();
+                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
+                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                            StartTime,
+                            Endtime,
+                            MeetTime
+                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+                }
         }
     }
     @Override
@@ -181,57 +197,10 @@ implements Filterable{
             id = ctx.getResources().getIdentifier(picImage, "mipmap", ctx.getPackageName());
         }
         catch(NumberFormatException e){}
-//        final ShowFragment tv=new ShowFragment();
-//        textViewName.setOnClickListener(onClickListener(tv,position));
-//        textViewDescription.setOnClickListener(onClickListener(tv,position));
-//        textViewWebURL.setOnClickListener(onClickListener(tv,position));
-//        textViewCategory.setOnClickListener(onClickListener(tv,position));
-//        imageView.setOnClickListener(onClickListener(tv,position));
         imageView.setImageResource(id);
 
 
 
-    }
-    public MenuItem.OnMenuItemClickListener onMenuItemClickListener(final ShowFragment showFragment,final int position){
-        return new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                FragmentManager manager = activity.getFragmentManager();
-                FragmentTransaction ft = manager.beginTransaction();
-                Fragment prev = manager.findFragmentByTag("dialog");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-//                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.newInstance(position,dataTrackings.get(position));
-//                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.show(manager,"dialog");
-                return false;
-            }
-        };
-    }
-
-    public View.OnClickListener onClickListener(final ShowFragment showFragment,final int position) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Create and show the dialog.
-                FragmentManager manager = activity.getFragmentManager();
-                FragmentTransaction ft = manager.beginTransaction();
-                Fragment prev = manager.findFragmentByTag("dialog");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-//                addTrackingData(position, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.newInstance(position,dataTrackings.get(position));
-//                showFragment.addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//                showFragment.show(manager,"dialog");
-
-            }
-        };
     }
 
     @Override

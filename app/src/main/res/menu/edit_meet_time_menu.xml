@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<menu xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id = "@+id/timeSlot1"
+        android:title= "0">
+    </item>
+    <item
+        android:id = "@+id/timeSlot2"
+        android:title= "1">
+    </item>
+    <item
+        android:id = "@+id/timeSlot3"
+        android:title= "2">
+    </item>
+    <item
+        android:id = "@+id/timeSlot4"
+        android:title= "3">
+    </item>
+    <item
+        android:id = "@+id/timeSlot5"
+        android:title= "4">
+    </item>
+    <item
+        android:id = "@+id/timeSlot6"
+        android:title= "5">
+    </item>
+    <item
+        android:id = "@+id/timeSlot7"
+        android:title= "6">
+    </item>
+    <item
+        android:id = "@+id/timeSlot8"
+        android:title= "7">
+    </item>
+    <item
+        android:id = "@+id/timeSlot9"
+        android:title= "8">
+    </item>
+</menu>
