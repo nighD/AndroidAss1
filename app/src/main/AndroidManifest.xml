@@ -44,6 +44,7 @@
         <activity android:name=".Activities.Detailactivity" />
         <activity android:name=".Activities.ShowFragment"/>
         <activity android:name=".Activities.TestPermissionsActivity"/>
+        <activity android:name=".Activities.AddTrackingServiceActivity"/>
         <activity android:name=".Activities.show_TL"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

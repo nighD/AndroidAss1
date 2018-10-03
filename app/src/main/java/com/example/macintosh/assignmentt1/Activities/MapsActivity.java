@@ -95,7 +95,9 @@ public class MapsActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.map, mapFragment).commit();
         mapFragment.getMapAsync(this);
-
+        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        JDBCActivity jdbcActivity = new JDBCActivity();
+        jdbcActivity.trackingDataDatabase(this,db);
     }
     /**
      * Saves the state of the map when the activity is paused.
@@ -166,10 +168,11 @@ public class MapsActivity extends AppCompatActivity implements
      */
     private void getTrackablePos(){
         final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+
         JDBCActivity jdbcActivity = new JDBCActivity();
-        jdbcActivity.createServiceDatabase(db);
-        jdbcActivity.trackingDataDatabase(this,db);
+        //jdbcActivity.trackingDataDatabase(this,db);
         LatLng[] latLNG0 = jdbcActivity.takeLatLng( db );
+        Log.i(LOG_TAG,"LatLong = "+ latLNG0);
     try{
         for (int i =0 ;i < latLNG0.length;i++){
             setMapmarker( mMap,latLNG0[i] );

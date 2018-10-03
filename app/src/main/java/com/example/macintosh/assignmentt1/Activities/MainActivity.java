@@ -24,6 +24,7 @@ import android.support.v7.widget.SearchView;
 
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity  {
     private BroadcastReceiver broadcastReceiver;
     private String LOG_TAG = this.getClass().getName();
     private ImageButton locationBtn;
+    private Button testAct;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity  {
         this.startActivity(myIntent);
         setContentView( R.layout.activity_main );
         locationBtn = findViewById(R.id.browseLocation);
+        testAct = findViewById(R.id.testAddActivity);
         getSupportActionBar().setDisplayHomeAsUpEnabled( true );
         getSupportActionBar().setTitle( "Search" );
         Trackable trackable = new Trackable();
@@ -110,7 +113,6 @@ public class MainActivity extends AppCompatActivity  {
         });
 
 
-
         for (int i = 0; i < trackable.trackableList.size(); i++) {
             dataa.add( new DataModel(
                     trackable.trackableList.get( i ).name,
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity  {
                                                     trackingService.trackingList.get(i).longitude));
         }
         for (int i = 0; i < trackingService.trackingList.size(); i++){
-            jdbcActivity.createNew(new DataTracking(0,
+            jdbcActivity.createNew(new DataTracking(trackingService.trackingList.get(i).trackableId,
                                     "No Data",
                                     trackingService.trackingList.get(i).date,
                     trackingService.trackingList.get(i).date,
@@ -144,11 +146,25 @@ public class MainActivity extends AppCompatActivity  {
         for (int i = 0; i < trackable.trackableList.size(); i++){
             this.dataTrackings.add(new ArrayList<DataTracking>());
         }
-//        jdbcActivity.getData(0,db);
+        jdbcActivity.getData(0,db);
+        if(jdbcActivity.getData(0,db) == null){
+            Log.i(LOG_TAG,"Failed to get data !!!");
+        }
         for(int i = 0; i < trackingService.trackingList.size(); i++){
             for (int j = 0; j < trackable.trackableList.size(); j++){
                 if (trackingService.trackingList.get(i).trackableId==j+1){
                     this.dataTrackings.get(j).add(jdbcActivity.getData(j,db));
+                    if(jdbcActivity.getData(i,db) == null){
+                        Log.i(LOG_TAG,"Failed to get data !!!");
+                        jdbcActivity.createNew(new DataTracking(i,
+                                "No Data",
+                                trackingService.trackingList.get(0).date,
+                                trackingService.trackingList.get(0).date,
+                                trackingService.trackingList.get(0).date,
+                                0.0,0.0,
+                                0.0,
+                                0.0),db);
+                    }
                 }
             }
         }
@@ -159,6 +175,23 @@ public class MainActivity extends AppCompatActivity  {
         }
         this.dataTrackings.get(0);
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
+        dataTrackings.get(5).get(0).getTrackableId();
+        testAct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent testIntent = new Intent();
+                Date EndTime2 = new Date();
+                EndTime2.setTime(trackingData.get(2).getDate().getTime());
+                EndTime2.setMinutes((EndTime2.getMinutes()+trackingData.get(2).getStopTime()));
+                testIntent.setClass(MainActivity.this,AddTrackingServiceActivity.class);
+                testIntent.putExtra("dataTrackingModel1",trackingData.get(2));
+                testIntent.putExtra("dataTracking1", new DataTracking(trackingData.get(2).getTrackableId(),"No Data",
+                        trackingData.get(2).getDate(),EndTime2,trackingData.get(2).getDate(),0.0,0.0,
+                        trackingData.get(2).getLatitude(),trackingData.get(2).getLongitude()));
+
+                MainActivity.this.startActivity(testIntent);
+            }
+        });
         try {
             adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData,this.dataTrackings, getApplicationContext(), this);
         }
