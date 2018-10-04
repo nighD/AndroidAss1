@@ -51,8 +51,10 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity  {
 
-
     //    private Activity activity;
+    private static final String YES_ACTION = "com.example.macintosh.assignmentt1.Activities.YES_ACTION";
+    private static final String MAYBE_ACTION = "com.example.macintosh.assignmentt1.Activities.MAYBE_ACTION";
+    private static final String NO_ACTION = "com.example.macintosh.assignmentt1.Activities.NO_ACTION";
     MyRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
@@ -73,11 +75,10 @@ public class MainActivity extends AppCompatActivity  {
         myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
         this.startActivity(myIntent);
         ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();//Active network info
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             Toast.makeText(MainActivity.this, "Internet is connected",Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             Toast.makeText(MainActivity.this, "Internet is disconnected",Toast.LENGTH_SHORT).show();
         }
         setContentView( R.layout.activity_main );
@@ -101,13 +102,6 @@ public class MainActivity extends AppCompatActivity  {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         //new HttpClientApacheAsyncTask(this).execute();
-
-        if(!runtime_permissions()) {
-            Log.i(LOG_TAG,"HERE1");
-            Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
-            startService(intent);
-            Log.i(LOG_TAG,"HERE0");
-        }
 
 
 
@@ -136,19 +130,19 @@ public class MainActivity extends AppCompatActivity  {
         }
         for (int i = 0; i < trackingService.trackingList.size(); i++){
             trackingData.add(new DataTrackingModel(trackingService.trackingList.get(i).date,
-                                                    trackingService.trackingList.get(i).date.getTime(),
-                                                    trackingService.trackingList.get(i).trackableId,
-                                                    trackingService.trackingList.get(i).stopTime,
-                                                    trackingService.trackingList.get(i).latitude,
-                                                    trackingService.trackingList.get(i).longitude));
+                    trackingService.trackingList.get(i).date.getTime(),
+                    trackingService.trackingList.get(i).trackableId,
+                    trackingService.trackingList.get(i).stopTime,
+                    trackingService.trackingList.get(i).latitude,
+                    trackingService.trackingList.get(i).longitude));
         }
         for (int i = 0; i < trackingService.trackingList.size(); i++){
             jdbcActivity.createNew(new DataTracking(trackingService.trackingList.get(i).trackableId,
-                                    "No Data",
-                                    trackingService.trackingList.get(i).date,
+                    "No Data",
                     trackingService.trackingList.get(i).date,
                     trackingService.trackingList.get(i).date,
-                                    0.0,0.0,
+                    trackingService.trackingList.get(i).date,
+                    0.0,0.0,
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude),db);
         }
@@ -283,52 +277,26 @@ public class MainActivity extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         CheckAvailability.activityResumed();// On Resume notify the Application
-        if(broadcastReceiver == null){
-            broadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
+        //runtime_permissions();
 
-                    Log.i(LOG_TAG,"\n" +intent.getExtras().get("coordinates"));
+//        if(broadcastReceiver == null){
+//            broadcastReceiver = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//
+//                    Log.i(LOG_TAG,"\n" +intent.getExtras().get("coordinates"));
+//
+//                }
+//            };
+//        }
+//        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
 
-                }
-            };
-        }
-        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
+
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(broadcastReceiver != null){
-            unregisterReceiver(broadcastReceiver);
-        }
-    }
 
-    private boolean runtime_permissions() {
-        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
-
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 100){
-            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
-                startService(intent);
-            }else {
-                runtime_permissions();
-            }
-        }
-    }
-    public void updateProgress(int progress)
-    {
-        //bar.setProgress(progress);
     }
     @Override
     protected void onPause() {
@@ -339,9 +307,37 @@ public class MainActivity extends AppCompatActivity  {
 
 //    @Override
 //    protected void onResume() {
+//
 //        super.onResume();
 //        CheckAvailability.activityResumed();// On Resume notify the Application
 //    }
+    private boolean runtime_permissions() {
+        if(Build.VERSION.SDK_INT >= 25 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
+
+            return true;
+        }
+        return false;
+    }
+
+
+    //   @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if(requestCode == 100){
+//            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+//                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+//                startService(intent);
+//            }else {
+//                runtime_permissions();
+//            }
+//        }
+//    }
+    public void updateProgress(int progress)
+    {
+        //bar.setProgress(progress);
+    }
 
     public void displayHTML(String htmlText)
     {
@@ -350,10 +346,32 @@ public class MainActivity extends AppCompatActivity  {
         //webView.loadData(htmlText,
 //              "text/html", null);
         //webView.loadDataWithBaseURL( AbstractHttpAsyncTask.DistanceURL, htmlText,
-              //  "text/html", null, null);
+        //  "text/html", null, null);
     }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        processIntentAction(intent);
+        super.onNewIntent(intent);
     }
-
+    private void processIntentAction(Intent intent) {
+        if (intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case YES_ACTION:
+                    Log.i(LOG_TAG,"Yes");
+                    Toast.makeText(this, "Yes :)", Toast.LENGTH_SHORT).show();
+                    break;
+                case MAYBE_ACTION:
+                    Log.i(LOG_TAG,"Maybe");
+                    Toast.makeText(this, "Yes :)", Toast.LENGTH_SHORT).show();
+                    break;
+                case NO_ACTION:
+                    Log.i(LOG_TAG,"No");
+                    Toast.makeText(this, "Yes :)", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    }
+}
 
 
 
