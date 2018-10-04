@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.macintosh.assignmentt1.AlarmReceiver.AlarmReceiver;
 import com.example.macintosh.assignmentt1.HTTP.AbstractHttpAsyncTask;
@@ -69,6 +72,14 @@ public class MainActivity extends AppCompatActivity  {
         Intent myIntent = new Intent();
         myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
         this.startActivity(myIntent);
+        ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();//Active network info
+        if (networkInfo != null && networkInfo.isConnected()) {
+            Toast.makeText(MainActivity.this, "Internet is connected",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(MainActivity.this, "Internet is disconnected",Toast.LENGTH_SHORT).show();
+        }
         setContentView( R.layout.activity_main );
         locationBtn = findViewById(R.id.browseLocation);
         testAct = findViewById(R.id.testAddActivity);
@@ -271,6 +282,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
+        CheckAvailability.activityResumed();// On Resume notify the Application
         if(broadcastReceiver == null){
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
@@ -318,6 +330,18 @@ public class MainActivity extends AppCompatActivity  {
     {
         //bar.setProgress(progress);
     }
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        CheckAvailability.activityPaused();// On Pause notify the Application
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        CheckAvailability.activityResumed();// On Resume notify the Application
+//    }
 
     public void displayHTML(String htmlText)
     {
