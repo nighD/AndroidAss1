@@ -153,7 +153,7 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
-        //getDeviceLocation();
+        getDeviceLocation();
         //showCurrentPlace();
     }
     /**
@@ -318,22 +318,23 @@ public class MapsActivity extends AppCompatActivity implements
     /**
      * Gets the current location of the device, and positions the map's camera.
      */
-    private void getDeviceLocation(){
+    public Location getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
-
+        final Location[] location1 = new Location[1];
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try{
             if(mLocationPermissionGranted){
 
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
+                final Task[] location = {mFusedLocationProviderClient.getLastLocation()};
+                location[0].addOnCompleteListener( new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
+                            location1[0] = currentLocation;
+                            Log.i(TAG,currentLocation.toString());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     INITIAL_ZOOM);
 
@@ -344,9 +345,10 @@ public class MapsActivity extends AppCompatActivity implements
                     }
                 });
             }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        }catch (SecurityException e) {
+            Log.e( TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
+        return location1[0];
     }
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
