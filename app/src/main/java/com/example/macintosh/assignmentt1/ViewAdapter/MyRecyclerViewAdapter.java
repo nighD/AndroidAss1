@@ -127,7 +127,7 @@ implements Filterable{
 
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity) throws ParseException {
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,ArrayList<ArrayList<DataTracking>> dataTrackings,Context ctx, Activity activity) throws ParseException {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
@@ -149,26 +149,27 @@ implements Filterable{
                 this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
             }
         }
-        for(int i = 0; i < data.size(); i++)
-        {
-            dataTrackings.add(new ArrayList<DataTracking>());
-        }
-        for (int i = 0; i < data.size(); i++ ) {
-                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
-                    Date StartTime = new Date();
-                    Date Endtime = new Date();
-                    Date MeetTime = new Date();
-                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
-                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-                            StartTime,
-                            Endtime,
-                            MeetTime
-                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
-                }
-        }
+//        for(int i = 0; i < data.size(); i++)
+//        {
+//            dataTrackings.add(new ArrayList<DataTracking>());
+//        }
+//        for (int i = 0; i < data.size(); i++ ) {
+//                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
+//                    Date StartTime = new Date();
+//                    Date Endtime = new Date();
+//                    Date MeetTime = new Date();
+//                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+//                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+//                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+//                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
+//                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+//                            StartTime,
+//                            Endtime,
+//                            MeetTime
+//                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+//                }
+//        }
+        this.dataTrackings = dataTrackings;
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

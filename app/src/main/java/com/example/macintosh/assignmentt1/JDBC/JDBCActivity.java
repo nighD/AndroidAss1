@@ -46,7 +46,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    st.executeUpdate("Drop table trackingdata");
+                    //st.executeUpdate("Drop table trackingdata");
                     // Create table:
                     st.executeUpdate("create table trackingdata( " +
                             "date0 date not null, " +
@@ -135,7 +135,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    st.executeUpdate("Drop table servicedata");
+                    //st.executeUpdate("Drop table servicedata");
                     // Create table:
                     st.executeUpdate("create table servicedata( " +
                             "ID int not null, " +
@@ -187,6 +187,7 @@ public class JDBCActivity
                                                                          +dataTracking.getCurrentLocationlatitude()+", " +dataTracking.getCurrentLocationlongtitude()
                                                                           + ", "+dataTracking.getMeetLocationlatitude()+", "
                                                                            + dataTracking.getMeetLocationlongtitude()+")");
+                    Log.i(LOG_TAG,"Add new data successfully");
                     st.close();
                     con.close();
 
@@ -294,7 +295,7 @@ public class JDBCActivity
                     Statement st = con.createStatement();
 
                     // Query and display results //Step 5
-                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata WHERE ID =" + Integer.toString(ID));
+                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata") ;
                     Log.i(LOG_TAG, "*** Query results:");
                     DataTracking dataTracking0 = null;
                     while (rs.next())
@@ -307,6 +308,7 @@ public class JDBCActivity
                                 dateStart, dateEnd, dateMeet,
                                 Double.parseDouble(rs.getString(6)),Double.parseDouble(rs.getString(7)),
                                 Double.parseDouble(rs.getString(8)),Double.parseDouble(rs.getString(9)));
+                        Log.i(LOG_TAG,"Result found");
                     }
                     dataTracking[0] = dataTracking0;
                     Log.i(LOG_TAG, "*** query result:ID "+ Integer.toString(ID));

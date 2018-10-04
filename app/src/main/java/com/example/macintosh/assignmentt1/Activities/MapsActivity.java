@@ -11,8 +11,10 @@ import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.NumberKeyListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -83,8 +85,8 @@ public class MapsActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         // Retrieve location and camera position from saved instance state.
 
-//        Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
-//        startService(intent);
+        Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+        startService(intent);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready
@@ -93,7 +95,9 @@ public class MapsActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.map, mapFragment).commit();
         mapFragment.getMapAsync(this);
-
+        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        JDBCActivity jdbcActivity = new JDBCActivity();
+        jdbcActivity.trackingDataDatabase(this,db);
     }
     /**
      * Saves the state of the map when the activity is paused.
@@ -144,7 +148,7 @@ public class MapsActivity extends AppCompatActivity implements
         mMap = googleMap;
 
 
-
+    try {
         getTrackablePos();
         setMapLongClick(mMap); // Set a long click listener for the map;
         setPoiClick(mMap); // Set a click listener for points of interest.
@@ -154,7 +158,13 @@ public class MapsActivity extends AppCompatActivity implements
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
         getDeviceLocation();
+<<<<<<< HEAD
         //showCurrentPlace();
+=======
+//        showCurrentPlace();
+    }
+    catch (NullPointerException ex){}
+>>>>>>> 9f59cf8d21c97ca545119c7daf5a54e30c1300d8
     }
     /**
      * Adds a red marker to the map of trackable ID.
@@ -162,9 +172,12 @@ public class MapsActivity extends AppCompatActivity implements
      */
     private void getTrackablePos(){
         final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
-        JDBCActivity jdbcActivity = new JDBCActivity();
-        LatLng[] latLNG0 = jdbcActivity.takeLatLng( db );
 
+        JDBCActivity jdbcActivity = new JDBCActivity();
+        //jdbcActivity.trackingDataDatabase(this,db);
+        LatLng[] latLNG0 = jdbcActivity.takeLatLng( db );
+        Log.i(LOG_TAG,"LatLong = "+ latLNG0);
+    try{
         for (int i =0 ;i < latLNG0.length;i++){
             setMapmarker( mMap,latLNG0[i] );
             moveCamera(latLNG0[i],INITIAL_ZOOM);
@@ -176,6 +189,8 @@ public class MapsActivity extends AppCompatActivity implements
             mMap.addGroundOverlay(homeOverlay);
         }
     }
+    catch (NullPointerException ex){}
+    }
     /**
      * Adds a red marker to the chosen LatLng.
      *
@@ -184,6 +199,7 @@ public class MapsActivity extends AppCompatActivity implements
     private void setMapmarker(final GoogleMap map,LatLng latLng) {
 
         // Add a blue marker to the map when the user performs a long click.
+        try{
                 String snippet = String.format(Locale.getDefault(),
                         getString(R.string.lat_long_snippet),
                         latLng.latitude,
@@ -195,6 +211,9 @@ public class MapsActivity extends AppCompatActivity implements
                         .snippet(snippet)
                         .icon(BitmapDescriptorFactory.defaultMarker
                                 (BitmapDescriptorFactory.HUE_RED)));
+        }
+        catch (NullPointerException ex){}
+
 
 
     }
@@ -331,12 +350,24 @@ public class MapsActivity extends AppCompatActivity implements
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
+<<<<<<< HEAD
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
                             location1[0] = currentLocation;
                             Log.i(TAG,currentLocation.toString());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     INITIAL_ZOOM);
+=======
+//                            try {
+                                Log.d(TAG, "onComplete: found location!");
+                                Location currentLocation = (Location) task.getResult();
+                                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                        INITIAL_ZOOM);
+                                //return latLng;
+//                            }
+//                            catch (NullPointerException ex){}
+>>>>>>> 9f59cf8d21c97ca545119c7daf5a54e30c1300d8
 
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
@@ -348,7 +379,11 @@ public class MapsActivity extends AppCompatActivity implements
         }catch (SecurityException e) {
             Log.e( TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
+<<<<<<< HEAD
         return location1[0];
+=======
+        //return
+>>>>>>> 9f59cf8d21c97ca545119c7daf5a54e30c1300d8
     }
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
