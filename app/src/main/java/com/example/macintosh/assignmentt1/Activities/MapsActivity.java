@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
+import com.example.macintosh.assignmentt1.ModelClass.CurrentMeetLocationModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.R;
 
@@ -157,14 +158,14 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
-        getDeviceLocation();
-<<<<<<< HEAD
+       // getDeviceLocation();
+
         //showCurrentPlace();
-=======
+
 //        showCurrentPlace();
     }
     catch (NullPointerException ex){}
->>>>>>> 9f59cf8d21c97ca545119c7daf5a54e30c1300d8
+
     }
     /**
      * Adds a red marker to the map of trackable ID.
@@ -175,16 +176,18 @@ public class MapsActivity extends AppCompatActivity implements
 
         JDBCActivity jdbcActivity = new JDBCActivity();
         //jdbcActivity.trackingDataDatabase(this,db);
-        LatLng[] latLNG0 = jdbcActivity.takeLatLng( db );
-        Log.i(LOG_TAG,"LatLong = "+ latLNG0);
+        CurrentMeetLocationModel[] currentMeetLocationModels = jdbcActivity.takeLatLng( db );
+        //Log.i(LOG_TAG,"LatLong = "+ currentMeetLocationModels);
     try{
-        for (int i =0 ;i < latLNG0.length;i++){
-            setMapmarker( mMap,latLNG0[i] );
-            moveCamera(latLNG0[i],INITIAL_ZOOM);
+        for (int i =0 ;i < currentMeetLocationModels.length;i++){
+            LatLng latLng = new LatLng( currentMeetLocationModels[i].getMeetLocationLatitude()
+                                        ,currentMeetLocationModels[i].getMeetLocationLongtitude());
+            setMapmarker( mMap,latLng );
+            moveCamera(latLng,INITIAL_ZOOM);
             // Add a ground overlay 100 meters in width to the home location.
             GroundOverlayOptions homeOverlay = new GroundOverlayOptions()
                     .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_pop_menu))
-                    .position(latLNG0[i], 100);
+                    .position(latLng, 100);
 
             mMap.addGroundOverlay(homeOverlay);
         }
@@ -350,24 +353,13 @@ public class MapsActivity extends AppCompatActivity implements
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
-<<<<<<< HEAD
+
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
                             location1[0] = currentLocation;
                             Log.i(TAG,currentLocation.toString());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     INITIAL_ZOOM);
-=======
-//                            try {
-                                Log.d(TAG, "onComplete: found location!");
-                                Location currentLocation = (Location) task.getResult();
-                                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                        INITIAL_ZOOM);
-                                //return latLng;
-//                            }
-//                            catch (NullPointerException ex){}
->>>>>>> 9f59cf8d21c97ca545119c7daf5a54e30c1300d8
 
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
@@ -379,11 +371,11 @@ public class MapsActivity extends AppCompatActivity implements
         }catch (SecurityException e) {
             Log.e( TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
-<<<<<<< HEAD
+
         return location1[0];
-=======
+
         //return
->>>>>>> 9f59cf8d21c97ca545119c7daf5a54e30c1300d8
+
     }
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );

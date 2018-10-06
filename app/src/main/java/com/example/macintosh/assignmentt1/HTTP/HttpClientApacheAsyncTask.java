@@ -1,9 +1,12 @@
 package com.example.macintosh.assignmentt1.HTTP;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.example.macintosh.assignmentt1.Activities.MainActivity;
+import com.example.macintosh.assignmentt1.AlarmReceiver.AlarmReceiver;
 import com.example.macintosh.assignmentt1.ModelClass.ResponseJSON;
 import com.example.macintosh.assignmentt1.json.JSON;
 
@@ -20,14 +23,20 @@ import java.io.InputStreamReader;
 
 
 
-// example of HttpURLConnection by Caspar, updates sem 2, 2018
+
 public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
 {
    private String LOG_TAG = HttpClientApacheAsyncTask.class.getName();
    public ResponseJSON response;
-   public HttpClientApacheAsyncTask(MainActivity activity)
+   private String DistURL;
+   private AlarmReceiver alarmReceiver;
+   private Context context;
+   public HttpClientApacheAsyncTask(MainActivity activity, String URL, Context context)
    {
       super(activity);
+      Log.i(LOG_TAG,URL);
+      this.context = context;
+      DistURL = URL;
    }
 
    @Override
@@ -35,7 +44,7 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
    protected Void doInBackground(Void... unused)
    {
       HttpClient httpclient = new DefaultHttpClient();
-      HttpGet getRequest = new HttpGet( DistanceURL);
+      HttpGet getRequest = new HttpGet( DistURL);
 
       try
       {
@@ -82,7 +91,10 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
             // finished
             publishProgress(100);
             this.response = JSON.responseJSON( responseBody );
-
+            Intent i = new Intent("location_and_duration");
+            Log.i(LOG_TAG,this.response.getDistance());
+            i.putExtra("update",this.response.getDistance().toString() +" "+ this.response.getDuration().toString());
+            context.sendBroadcast(i);
             // Log.i(LOG_TAG, htmlStringBuilder.toString());
             Log.i(LOG_TAG, "DONE");
 
@@ -98,6 +110,8 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
       }
       return null;
    }
+
+   public ResponseJSON getResponse(){ return this.response;}
 
    private void logHeaders(Header[] headers)
    {

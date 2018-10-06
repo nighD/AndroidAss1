@@ -37,6 +37,7 @@ public class GPS_Service extends Service {
                 Log.i(LOG_TAG,"Current Location");
                 Intent i = new Intent("location_update");
                 i.putExtra("coordinates",location.getLongitude()+" "+location.getLatitude());
+                Log.i(LOG_TAG,location.getLongitude()+" "+location.getLatitude());
                 sendBroadcast(i);
             }
 
@@ -61,7 +62,7 @@ public class GPS_Service extends Service {
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         //noinspection MissingPermission
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3000,0,listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,listener);
 
     }
 
