@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity  {
     private String LOG_TAG = this.getClass().getName();
     private ImageButton locationBtn;
     private Button testAct;
+    private String string0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -95,18 +96,21 @@ public class MainActivity extends AppCompatActivity  {
         jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
         //jdbcActivity.takeLatLng( db );
         jdbcActivity.createServiceDatabase(db);
+        Date date = new Date(  );
+        Log.i(LOG_TAG,"Create NEW");
+        jdbcActivity.createNew(new DataTracking(0,"No data",date,date,date,0,0,0,0  ),db  );
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         dataTrackings = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        //new HttpClientApacheAsyncTask(this).execute();
+        //new HttpClientApacheAsyncTask(this,"https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.81289833333334,144.0&destinations=-37.8207,144.958&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI").execute();
 
 
 
 
-        NotificationScheduler.setReminder(MainActivity.this, 10);
+        NotificationScheduler.setReminder(MainActivity.this, 20);
 
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -328,7 +332,18 @@ public class MainActivity extends AppCompatActivity  {
         return false;
     }
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 1){
+            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+                startService(intent);
+            }else {
+                runtime_permissions();
+            }
+        }
+    }
     //   @Override
 //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -377,6 +392,9 @@ public class MainActivity extends AppCompatActivity  {
                     break;
             }
         }
+    }
+    public void sendBroadcast(String string0){
+        this.string0 = string0;
     }
 }
 

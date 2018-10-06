@@ -64,14 +64,15 @@ public class NotificationScheduler
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.cancel(pendingIntent);//cancel the alarm manager of the pending intent
         Toast.makeText(context, "Alarm Canceled/Stop by User.", Toast.LENGTH_SHORT).show();
-        //pendingIntent.cancel();
+        pendingIntent.cancel();
     }
 
     public static void showNotification(Context context,Class<?> cls,String title,String content)
     {
 
 
-
+        Intent intent0 =new Intent(context,GPS_Service.class);
+        context.stopService(intent0);
         String CHANNEL_ID = "my_channel_01";
         Intent acceptIntent = new Intent( context, MapsActivity.class );
         acceptIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
@@ -126,8 +127,8 @@ public class NotificationScheduler
 //        if(broadcastReceiver != null){
 //            context.getApplicationContext().unregisterReceiver(broadcastReceiver);
 //        }
-//        Intent i = new Intent(context,GPS_Service.class);
-//        context.stopService(i);
+        Intent i = new Intent(context,GPS_Service.class);
+        context.stopService(i);
         builder.setContentIntent(resultPendingIntent);
         notificationManager.notify(REMINDER_REQUEST_CODE, builder.build());
     }

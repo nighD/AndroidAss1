@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.example.macintosh.assignmentt1.ModelClass.CurrentMeetLocationModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
@@ -183,9 +184,9 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    st.execute( "insert into servicedata values ("+ dataTracking.getTrackableId() +", '"
+                    st.execute( "INSERT INTO servicedata VALUES("+ dataTracking.getTrackableId() +",' "
                                                                        +dataTracking.getTitle() +"','"+dataTracking.getStartTime()+"','"
-                                                                        +dataTracking.getEndTime()+"','"+dataTracking.getMeetTime()+"',"
+                                                                        +dataTracking.getEndTime()+"', '"+dataTracking.getMeetTime()+"', "
                                                                          +dataTracking.getCurrentLocationlatitude()+", " +dataTracking.getCurrentLocationlongtitude()
                                                                           + ", "+dataTracking.getMeetLocationlatitude()+", "
                                                                            + dataTracking.getMeetLocationlongtitude()+")");
@@ -341,8 +342,8 @@ public class JDBCActivity
         return dataTracking;
     }
 
-    public LatLng[] takeLatLng(final String db){
-        final LatLng[] latLng = new LatLng[6];
+    public CurrentMeetLocationModel[] takeLatLng(final String db){
+        final CurrentMeetLocationModel[] currentMeetLocationModels = new CurrentMeetLocationModel[6];
                 try
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
@@ -357,9 +358,10 @@ public class JDBCActivity
                     int begin = 0;
                     while (rs.next())
                     {
-                        latLng[begin] = new LatLng(Double.parseDouble( rs.getString("latitude"))
+                        currentMeetLocationModels[begin] = new CurrentMeetLocationModel(Integer.parseInt( rs.getString( "trackableID" ) )
+                                ,Double.parseDouble( rs.getString("latitude"))
                                                   ,Double.parseDouble( rs.getString("longtitude")));
-                        Log.i(LOG_TAG,Double.toString(latLng[begin].latitude  ) );
+                        //Log.i(LOG_TAG,Integer.toString( currentMeetLocationModels[begin].getTrackableId() ));
                         begin++;
                     }
                     Log.i(LOG_TAG, "*** query result: ");
@@ -383,7 +385,7 @@ public class JDBCActivity
                 {
                     ex.printStackTrace();
                 }
-        return latLng;
+        return currentMeetLocationModels;
     }
 
 
