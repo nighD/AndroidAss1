@@ -16,7 +16,7 @@ public class DataTracking implements Serializable {
     private Double meetLocationlongtitude;
     public DataTracking(){
         this.trackableId = 0;
-        this.title = "No Data";
+        this.title = "Fake Data";
         this.starttime = new Date();
         this.endtime = new Date();
         this.meettime = new Date();

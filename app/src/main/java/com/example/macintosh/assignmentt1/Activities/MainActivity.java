@@ -151,39 +151,46 @@ public class MainActivity extends AppCompatActivity  {
         for (int i = 0; i < trackable.trackableList.size(); i++){
             this.dataTrackings.add(new ArrayList<DataTracking>());
         }
-        jdbcActivity.getData(0,db);
-        if(jdbcActivity.getData(0,db) == null){
-            Log.i(LOG_TAG,"Failed to get data !!!");
-        }
-        for(int i = 0; i < trackingService.trackingList.size(); i++){
-            for (int j = 0; j < trackable.trackableList.size(); j++){
-                if (trackingService.trackingList.get(i).trackableId==j+1){
-                    this.dataTrackings.get(j).add(jdbcActivity.getData(j,db));
-                    if(jdbcActivity.getData(i,db) == null){
-                        Log.i(LOG_TAG,"Failed to get data !!!");
-                        jdbcActivity.createNew(new DataTracking(i,
-                                "No Data",
-                                trackingService.trackingList.get(0).date,
-                                trackingService.trackingList.get(0).date,
-                                trackingService.trackingList.get(0).date,
-                                0.0,0.0,
-                                0.0,
-                                0.0),db);
-                    }
-                }
+//        for(int i = 0; i < trackingService.trackingList.size(); i++){
+//            for (int j = 0; j < trackable.trackableList.size(); j++){
+//                if (trackingService.trackingList.get(i).trackableId==j+1){
+//                    jdbcActivity.getData(j+1,db);
+//                    for(int k = 0; k < jdbcActivity.getData(j+1,db).size(); k++){
+//                        this.dataTrackings.get(j).add(jdbcActivity.getData(j+1,db).get(k));
+//                    }
+//                    if(jdbcActivity.getData(i,db) == null){
+//                        Log.i(LOG_TAG,"Failed to get data !!!");
+//                        jdbcActivity.createNew(new DataTracking(i,
+//                                "No Data",
+//                                trackingService.trackingList.get(0).date,
+//                                trackingService.trackingList.get(0).date,
+//                                trackingService.trackingList.get(0).date,
+//                                0.0,0.0,
+//                                0.0,
+//                                0.0),db);
+//                    }
+//                }
+//            }
+//        }
+        for (int i = 0; i < trackable.trackableList.size(); i++){
+            ArrayList<DataTracking> newArray = jdbcActivity.getData(i,db);
+            for (int j = 0; j < newArray.size(); j++){
+                this.dataTrackings.get(i).add(newArray.get(j));
             }
         }
         for (int i = 0; i < dataTrackings.size(); i++){
             if (dataTrackings.get(i).isEmpty()){
-                dataTrackings.get(i).add(new DataTracking());
+                this.dataTrackings.get(i).add(new DataTracking());
             }
         }
+//        this.dataTrackings = dataTrackings;
         this.dataTrackings.get(0);
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
         dataTrackings.get(5).get(0).getTrackableId();
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(LOG_TAG,jdbcActivity.getData(0,db).toString());
                 Intent testIntent = new Intent();
                 Date EndTime2 = new Date();
                 EndTime2.setTime(trackingData.get(2).getDate().getTime());
