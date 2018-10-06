@@ -158,6 +158,7 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
+<<<<<<< HEAD
        // getDeviceLocation();
 
         //showCurrentPlace();
@@ -166,6 +167,12 @@ public class MapsActivity extends AppCompatActivity implements
     }
     catch (NullPointerException ex){}
 
+=======
+        getDeviceLocation();
+//        showCurrentPlace();
+    }
+    catch (NullPointerException ex){}
+>>>>>>> 2813457edc028a61cddc5a7a22348f4ea28ef455
     }
     /**
      * Adds a red marker to the map of trackable ID.
@@ -353,6 +360,7 @@ public class MapsActivity extends AppCompatActivity implements
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
+<<<<<<< HEAD
 
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
@@ -360,6 +368,17 @@ public class MapsActivity extends AppCompatActivity implements
                             Log.i(TAG,currentLocation.toString());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     INITIAL_ZOOM);
+=======
+//                            try {
+                                Log.d(TAG, "onComplete: found location!");
+                                Location currentLocation = (Location) task.getResult();
+                                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                        INITIAL_ZOOM);
+                                //return latLng;
+//                            }
+//                            catch (NullPointerException ex){}
+>>>>>>> 2813457edc028a61cddc5a7a22348f4ea28ef455
 
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
@@ -371,11 +390,15 @@ public class MapsActivity extends AppCompatActivity implements
         }catch (SecurityException e) {
             Log.e( TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
+<<<<<<< HEAD
 
         return location1[0];
 
         //return
 
+=======
+        return location1[0];
+>>>>>>> 2813457edc028a61cddc5a7a22348f4ea28ef455
     }
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );

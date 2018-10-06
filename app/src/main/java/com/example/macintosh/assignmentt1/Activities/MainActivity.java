@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -49,7 +51,6 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity  {
 
-
     //    private Activity activity;
     private static final String YES_ACTION = "com.example.macintosh.assignmentt1.Activities.YES_ACTION";
     private static final String MAYBE_ACTION = "com.example.macintosh.assignmentt1.Activities.MAYBE_ACTION";
@@ -74,6 +75,13 @@ public class MainActivity extends AppCompatActivity  {
         Intent myIntent = new Intent();
         myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
         this.startActivity(myIntent);
+        ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            Toast.makeText(MainActivity.this, "Internet is connected",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "Internet is disconnected",Toast.LENGTH_SHORT).show();
+        }
         setContentView( R.layout.activity_main );
         locationBtn = findViewById(R.id.browseLocation);
         testAct = findViewById(R.id.testAddActivity);
@@ -126,19 +134,19 @@ public class MainActivity extends AppCompatActivity  {
         }
         for (int i = 0; i < trackingService.trackingList.size(); i++){
             trackingData.add(new DataTrackingModel(trackingService.trackingList.get(i).date,
-                                                    trackingService.trackingList.get(i).date.getTime(),
-                                                    trackingService.trackingList.get(i).trackableId,
-                                                    trackingService.trackingList.get(i).stopTime,
-                                                    trackingService.trackingList.get(i).latitude,
-                                                    trackingService.trackingList.get(i).longitude));
+                    trackingService.trackingList.get(i).date.getTime(),
+                    trackingService.trackingList.get(i).trackableId,
+                    trackingService.trackingList.get(i).stopTime,
+                    trackingService.trackingList.get(i).latitude,
+                    trackingService.trackingList.get(i).longitude));
         }
         for (int i = 0; i < trackingService.trackingList.size(); i++){
             jdbcActivity.createNew(new DataTracking(trackingService.trackingList.get(i).trackableId,
-                                    "No Data",
-                                    trackingService.trackingList.get(i).date,
+                    "No Data",
                     trackingService.trackingList.get(i).date,
                     trackingService.trackingList.get(i).date,
-                                    0.0,0.0,
+                    trackingService.trackingList.get(i).date,
+                    0.0,0.0,
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude),db);
         }
@@ -272,6 +280,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
+        CheckAvailability.activityResumed();// On Resume notify the Application
         //runtime_permissions();
 
 //        if(broadcastReceiver == null){
@@ -293,7 +302,19 @@ public class MainActivity extends AppCompatActivity  {
         super.onDestroy();
 
     }
+    @Override
+    protected void onPause() {
 
+        super.onPause();
+        CheckAvailability.activityPaused();// On Pause notify the Application
+    }
+
+//    @Override
+//    protected void onResume() {
+//
+//        super.onResume();
+//        CheckAvailability.activityResumed();// On Resume notify the Application
+//    }
     private boolean runtime_permissions() {
         if(Build.VERSION.SDK_INT >= 25 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
 
@@ -305,6 +326,7 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+<<<<<<< HEAD
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -317,6 +339,20 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
     }
+=======
+    //   @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if(requestCode == 100){
+//            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+//                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+//                startService(intent);
+//            }else {
+//                runtime_permissions();
+//            }
+//        }
+//    }
+>>>>>>> 2813457edc028a61cddc5a7a22348f4ea28ef455
     public void updateProgress(int progress)
     {
         //bar.setProgress(progress);
@@ -329,7 +365,7 @@ public class MainActivity extends AppCompatActivity  {
         //webView.loadData(htmlText,
 //              "text/html", null);
         //webView.loadDataWithBaseURL( AbstractHttpAsyncTask.DistanceURL, htmlText,
-              //  "text/html", null, null);
+        //  "text/html", null, null);
     }
     @Override
     protected void onNewIntent(Intent intent) {
@@ -354,11 +390,15 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
     }
+<<<<<<< HEAD
     public void sendBroadcast(String string0){
         this.string0 = string0;
     }
 }
 
+=======
+}
+>>>>>>> 2813457edc028a61cddc5a7a22348f4ea28ef455
 
 
 
