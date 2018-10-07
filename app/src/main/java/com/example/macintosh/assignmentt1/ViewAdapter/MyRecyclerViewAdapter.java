@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 
 import com.example.macintosh.assignmentt1.Activities.MainActivity;
+import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.Interfaces.ItemClickListener;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
@@ -48,9 +49,11 @@ implements Filterable{
     private ArrayList<DataTrackingModel> dataTrackingModels;
     private static ArrayList<ArrayList<DataTracking>> dataTrackings = new ArrayList<>();
     private static ArrayList<ArrayList<DataTrackingModel>> dataTrackings2 = new ArrayList<>();
+    private String databasePath;
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
     private RecyclerViewAdapterListener listener;
+    JDBCActivity jdbcActivity = new JDBCActivity();
     int id;
 
 
@@ -127,12 +130,13 @@ implements Filterable{
 
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity) throws ParseException {
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity, String databasePath) throws ParseException {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
         this.dataTrackingModels = dataTracking;
+        this.databasePath = databasePath;
         for(int i = 0; i < data.size(); i++)
         {
             dataTrackings2.add(new ArrayList<DataTrackingModel>());
@@ -167,6 +171,11 @@ implements Filterable{
                             Endtime,
                             MeetTime
                             , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+                jdbcActivity.createNew(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                        StartTime,
+                        Endtime,
+                        MeetTime
+                        , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()),databasePath);
                 }
         }
     }

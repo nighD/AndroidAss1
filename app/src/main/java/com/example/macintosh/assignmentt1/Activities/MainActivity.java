@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
         try {
-            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
+            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this,db);
         }
         catch (ParseException e){}
         layoutManager = new LinearLayoutManager( this );

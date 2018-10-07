@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 import com.example.macintosh.assignmentt1.HTTP.UpdateURL;
+import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
@@ -45,6 +46,8 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
     private String url;
+    private String databasePath;
+    JDBCActivity jdbcActivity = new JDBCActivity();
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -79,13 +82,14 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
 
         }
     }
-    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position,ArrayList<DataTracking> dataTrackings) throws ParseException {
+    public RecyclerViewDialogAdapter(Context c, ArrayList<DataTrackingModel> trackingData, ArrayList<DataModel> trackableData,int position,ArrayList<DataTracking> dataTrackings, String databasePath) throws ParseException {
         this.c = c;
         this.trackingData = trackingData;
         this.trackableData = trackableData;
         this.dataTrackings = dataTrackings;
         this.position1 = position;
         this.trackingData1 = compartID( trackingData,position1 );
+        this.databasePath = databasePath;
 
     }
     @Override
@@ -150,6 +154,8 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                         }
                     });
                     editTime.show();
+                    jdbcActivity.changeMeetTime(dataTrackings.get(position).getTrackableId(),meetTime2,databasePath);
+                    jdbcActivity.changetitle(dataTrackings.get(position).getTrackableId(),editTitle.getText().toString(),databasePath);
                         }
                     });
                     Save.setOnClickListener(new View.OnClickListener() {
@@ -196,6 +202,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                jdbcActivity.deleteCol(dataTrackings.get(position).getTrackableId(),databasePath);
                 removeTrackingData(position);
                 notifyItemRangeChanged(position,dataTrackings.size());
                 notifyDataSetChanged();
