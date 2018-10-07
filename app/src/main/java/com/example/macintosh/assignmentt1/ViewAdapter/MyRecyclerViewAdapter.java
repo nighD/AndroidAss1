@@ -148,16 +148,16 @@ implements Filterable{
                     Date StartTime = new Date();
                     Date Endtime = new Date();
                     Date MeetTime = new Date();
-                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
+                    StartTime.setTime(dataTrackingModels.get(j).getDate().getTime());
+                    MeetTime.setTime(dataTrackingModels.get(j).getDate().getTime());
+                    Endtime.setTime(dataTrackingModels.get(j).getDate().getTime());
+                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackingModels.get(j).getStopTime()));
                     dataTrackings2.get(i).add(dataTrackingModels.get(j));
-                    jdbcActivity.createNew(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                    jdbcActivity.createNew(new DataTracking(dataTrackingModels.get(j).getTrackableId(), "No Tracking Data",
                             StartTime,
                             Endtime,
                             MeetTime
-                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()),databasePath);
+                            , 0, 0, dataTrackingModels.get(j).getLatitude(), dataTrackingModels.get(j).getLongitude()),databasePath);
                 }
             }
         }
