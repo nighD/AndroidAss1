@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -183,6 +184,15 @@ implements Filterable{
                             Endtime,
                             MeetTime
                             , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+<<<<<<< HEAD
+=======
+                Log.i("HEREE",Integer.toString( i ));
+                jdbcActivity.createNew(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                        StartTime,
+                        Endtime,
+                        MeetTime
+                        , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()),databasePath);
+>>>>>>> 5fed84b11ad076250598c6150604c1d6988fe12c
                 }
         }
     }
