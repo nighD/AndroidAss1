@@ -204,18 +204,18 @@ public class MainActivity extends AppCompatActivity  {
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Log.i(LOG_TAG,jdbcActivity.getData(db).toString());
-//                Intent testIntent = new Intent();
-//                Date EndTime2 = new Date();
-//                EndTime2.setTime(trackingData.get(2).getDate().getTime());
-//                EndTime2.setMinutes((EndTime2.getMinutes()+trackingData.get(2).getStopTime()));
-//                testIntent.setClass(MainActivity.this,AddTrackingServiceActivity.class);
-//                testIntent.putExtra("dataTrackingModel1",trackingData.get(2));
-//                testIntent.putExtra("dataTracking1", new DataTracking(trackingData.get(2).getTrackableId(),"No Data",
-//                        trackingData.get(2).getDate(),EndTime2,trackingData.get(2).getDate(),0.0,0.0,
-//                        trackingData.get(2).getLatitude(),trackingData.get(2).getLongitude()));
-//
-//                MainActivity.this.startActivity(testIntent);
+                Log.i(LOG_TAG,jdbcActivity.getData(db).toString());
+                Intent testIntent = new Intent();
+                Date EndTime2 = new Date();
+                EndTime2.setTime(trackingData.get(2).getDate().getTime());
+                EndTime2.setMinutes((EndTime2.getMinutes()+trackingData.get(2).getStopTime()));
+                testIntent.setClass(MainActivity.this,AddTrackingServiceActivity.class);
+                testIntent.putExtra("dataTrackingModel1",trackingData.get(2));
+                testIntent.putExtra("dataTracking1", new DataTracking(trackingData.get(2).getTrackableId(),"No Data",
+                        trackingData.get(2).getDate(),EndTime2,trackingData.get(2).getDate(),0.0,0.0,
+                        trackingData.get(2).getLatitude(),trackingData.get(2).getLongitude()));
+
+                MainActivity.this.startActivity(testIntent);
             }
         });
         try {
