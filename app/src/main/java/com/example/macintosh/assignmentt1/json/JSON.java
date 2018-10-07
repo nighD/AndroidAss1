@@ -28,10 +28,6 @@ public class JSON
           String duration = durationObj.getString("text");
           String origin = jsonArray1.get(0).toString();
           String destination = jsonArray2.get(0).toString();
-//          Log.i(LOG_TAG, "distance: " + distance);
-//          Log.i(LOG_TAG, "duration: " + duration);
-//          Log.i(LOG_TAG, "from : " + origin);
-//          Log.i(LOG_TAG, "to : " + destination);
           ResponseJSON responseJSON = new ResponseJSON( origin,destination,distance,duration );
           return responseJSON;
     }

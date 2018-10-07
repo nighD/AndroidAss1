@@ -39,8 +39,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         final String[] currentLocation = new String[1];
         final String[] longtitude = {""};
         final String[] latitude = {""};
-        //context.getApplicationContext().registerReceiver(broadcastReceiver1,new IntentFilter("location_and_duration"));
-        //NotificationModel[] notificationModel1 = new NotificationModel[currentMeetLocationModels.length];
         final LatLng[] latLng0 = new LatLng[1];
 
         if(broadcastReceiver == null){

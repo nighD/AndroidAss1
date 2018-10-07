@@ -26,12 +26,6 @@ public abstract class AbstractHttpAsyncTask0 extends AsyncTask<Void, Integer, Vo
     public static Context context;
     public static DataTracking dataTracking;
     public static LatLng latLng;
-
-    //"https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.814644,144.955412&destinations=-37.810045,144.964220&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI"
-    // this one does not always set the content length so makes progress tracking
-    // difficult
-    // static final String TEST_URL = "http://www.wikipedia.org/";
-
     protected MainActivity activity = null;
     private int charsRead;
 
@@ -55,17 +49,12 @@ public abstract class AbstractHttpAsyncTask0 extends AsyncTask<Void, Integer, Vo
     protected void doProgress(int charsRead, int length)
     {
         this.charsRead += charsRead;
-        // delay allows us to see progress on fast network!
-        //Thread.sleep(1);
-        // convert to percentage for progress update (standard 0..100 range)
+
         int progress = (int) ((double) this.charsRead / length * 100.0);
-        // Log.i(LOG_TAG, Integer.toString(progress) + "%");
         publishProgress(progress);
     }
 
-    // protected void updateURL(String URL){
-//      this.DistanceURL = URL;
-//   }
+
 
     @Override
     protected void onPostExecute(Void result)

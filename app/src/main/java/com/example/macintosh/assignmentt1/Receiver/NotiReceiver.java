@@ -54,8 +54,6 @@ public class NotiReceiver extends BroadcastReceiver {
             }
         }
         final int chosenClosest = closest;
-        //context.getApplicationContext().registerReceiver(broadcastReceiver1,new IntentFilter("location_and_duration"));
-        //NotificationModel[] notificationModel1 = new NotificationModel[currentMeetLocationModels.length];
         final LatLng[] latLng0 = new LatLng[1];
         if (broadcastReceiver == null) {
             broadcastReceiver = new BroadcastReceiver() {
@@ -76,14 +74,6 @@ public class NotiReceiver extends BroadcastReceiver {
                         new HttpClientApacheAsyncTask0( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )
                             , context, dataTrackings.get( chosenClosest ),latLng0[0]).execute();
                     }
-//                    Random rand = new Random();
-//                    int  n = rand.nextInt(3) + 0;
-//                    Log.i(TAG,"number "+ n);
-//                    LatLng latLng1 = new LatLng( currentMeetLocationModels[n].getMeetLocationLatitude()
-//                            , currentMeetLocationModels[n].getMeetLocationLongtitude() );
-//                    Log.i(TAG,"trackableID "+currentMeetLocationModels[n].getTrackableId());
-//                    new HttpClientApacheAsyncTask( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )
-//                            , context, currentMeetLocationModels[n]).execute();
                 }
             };
         }

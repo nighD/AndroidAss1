@@ -366,20 +366,6 @@ public class MapsActivity extends AppCompatActivity implements
                             Log.i(TAG,currentLocation.toString());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     INITIAL_ZOOM);
-
-
-//                            try {
-
-                                //return latLng;
-//                            }
-//                            catch (NullPointerException ex){}
-
-
-                                //return latLng;
-//                            }
-//                            catch (NullPointerException ex){}
-
-
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();

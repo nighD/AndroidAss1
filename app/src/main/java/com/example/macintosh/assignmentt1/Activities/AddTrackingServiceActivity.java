@@ -39,9 +39,6 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat( "mm" );
     SimpleDateFormat sdf1 = new SimpleDateFormat( "hh" );
     private String LOG_TAG = this.getClass().getName();
-//    private ArrayList<DataTrackingModel> trackingData;
-//    private ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
-//    private ArrayList<ArrayList<DataTracking>> dataTrackings;
     private DataTracking dataTracking1;
     private DataTrackingModel dataTrackingModel1;
     @Override
@@ -51,11 +48,7 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
         final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
         JDBCActivity jdbcActivity = new JDBCActivity();
         jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
-        //jdbcActivity.takeLatLng( db );
         jdbcActivity.createServiceDatabase(db);
-//        this.dataTrackingModels = new ArrayList<>();
-//        this.dataTrackings = new ArrayList<>();
-//        this.trackingData = new ArrayList<>();
         setContentView(R.layout.add_tracking_service_acti);
         this.browseMeetTime = findViewById(R.id.browseMeetTime2);
         this.editTitle = findViewById(R.id.writeTitle2);
@@ -71,10 +64,6 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
         int endTIME = Integer.parseInt(sdf.format( dataTracking1.getEndTime() ));
         int endTIMEMinute = startMinute +endTIME;
         String convert = String.format("%02d:%02d", startHours, endTIMEMinute );
-        //this.dataTrackingModel1 = (DataTrackingModel) mIntent.getSerializableExtra("dataTrackingModel1");
-//        trackingData = (ArrayList<DataTrackingModel>)mIntent.getSerializableExtra("dataTrackingM");
-//        dataTrackings = (ArrayList<ArrayList<DataTracking>>) mIntent.getSerializableExtra("dataTrackings");
-//        dataTrackingModels = (ArrayList<ArrayList<DataTrackingModel>>) mIntent.getSerializableExtra("dataTrackingModels");
         startTime.setText("Start time: "+stf.format(dataTracking1.getStartTime()));
         endTime.setText("End time: "+convert);
         meetTime.setText("Meet time: "+stf.format(dataTracking1.getMeetTime()));
@@ -87,36 +76,6 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
         meetTime2.setTime(startTime2.getTime());
         editTitle.setEnabled(true);
         Save.setEnabled(true);
-//        browseStartTime.setOnClickListener(new View.OnClickListener() {
-//            int startTimeMinutes2 = 0;
-//            @Override
-//            public void onClick(View view) {
-//                final PopupMenu editStartTime = new PopupMenu(AddTrackingServiceActivity.this,browseStartTime);
-//                editStartTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu,editStartTime.getMenu());
-//                editStartTime.getMenu().clear();
-//                for(int i = 0; i < dataTrackingModels.get(position).size();i++){
-//                    editStartTime.getMenu().add(1,R.id.timeSlot1+i,i,stf.format(dataTrackingModels.get(position).get(i).getDate()));
-//                }
-//                editStartTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                        int index = menuItem.getOrder();
-//                        startTimeMinutes2 = (dataTrackingModels.get(position).get(index).getDate().getMinutes()+index);
-//                        //dataTrackingModels.get(position).get(menuItem.getOrder()).getDate().setMinutes(startTimeMinutes);
-//                        startTime2.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
-//                        meetTime2.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
-//                        //startTime2.setMinutes(startTimeMinutes2);
-//                        startTime.setText("Start Time: "+stf.format(dataTrackingModels.get(position).get(index).getDate()));
-//                        endTime.setText("End Time: "+stf.format(dataTrackings.get(position).get(index).getEndTime()));
-//                        endTime2.setTime(dataTrackings.get(position).get(index).getEndTime().getTime());
-//                        //chooseStartTime.setEnabled(false);
-//                        browseMeetTime.setEnabled(true);
-//                        return false;
-//                    }
-//                });
-//                editStartTime.show();
-//            }
-//        });
         browseMeetTime.setOnClickListener(new View.OnClickListener() {
             int meetTimeMinutes2 = 0;
             @Override
@@ -157,6 +116,5 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //unregisterReceiver(mMessageReceiver);
     }
 }

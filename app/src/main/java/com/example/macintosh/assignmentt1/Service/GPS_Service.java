@@ -14,9 +14,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-/**
- * Created by filipp on 6/16/2016.
- */
+
 public class GPS_Service extends Service {
 
     private LocationListener listener;

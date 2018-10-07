@@ -54,15 +54,11 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
         try
         {
             Log.i(LOG_TAG, "starting");
-            // the easy way using BasicResponseHandler
             String responseBody = httpclient.execute(getRequest,
                     new BasicResponseHandler());
-            // log the full HTML
-            //Log.i(LOG_TAG, responseBody);
 
             Log.i(LOG_TAG, "MANUAL with progress:");
 
-            // the manual way retrieving a content entity
             HttpResponse response = httpclient.execute(getRequest);
             HttpEntity entity = response.getEntity();
             //logHeaders(response.getAllHeaders());
@@ -74,23 +70,12 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
 
                 // for progress updates
                 int length = (int) entity.getContentLength();
-
-                // some sites don't always set the length so we guess!
-                // OPTION: could switch to indeterminate progress widget and display
-                // ongoing data volume downloaded
                 if (length == -1)
                     length = 11000;
-
-                //Log.i(LOG_TAG, "getContentLength()=" + length);
-
                 String line;
-                // read chunk at a time so we can publish progress
                 while ((line = br.readLine()) != null)
                 {
-                    // log individual line
-                    //Log.i(LOG_TAG, line);
                     json += line;
-                    //htmlStringBuilder.append(line);
                     doProgress(line.length(), length);
                 }
                 // finished
@@ -100,20 +85,6 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
                 String destination = this.response.getDestination();
                 String duration = this.response.getDuration();
                 notificationModel = new NotificationModel( ID,destination,duration );
-//            Intent i = new Intent("location_and_duration");
-//            Log.i(LOG_TAG,this.response.getDistance());
-//            //this.response.setID( trackableID );
-//            i.putExtra("destination",this.response.getDestination().toString());
-//            i.putExtra("duration",this.response.getDuration().toString() );
-//            i.putExtra( "trackableID",this.response.getID().toString());
-//            context.sendBroadcast(i);
-                // Log.i(LOG_TAG, htmlStringBuilder.toString());
-                Log.i(LOG_TAG, "DONE");
-
-                // UNCOMMENT following if you want to display the responseBody which holds the Entity
-                // content instead
-                // htmlStringBuilder=new StringBuilder();
-                // htmlStringBuilder.append(responseBody);
             }
         }
         catch (Exception e)
@@ -128,7 +99,6 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
     private void logHeaders(Header[] headers)
     {
         StringBuffer sb = new StringBuffer();
-        // since already using a StringBuffer will not use String.format() here
         for (Header header : headers)
             sb.append("Header: ").append(header.getName()).append(", Value: ").append(header.getValue())
                     .append('\n');

@@ -21,15 +21,10 @@ public class DirectionReceiver extends BroadcastReceiver {
         Toast.makeText(context,"Go",Toast.LENGTH_SHORT).show();
         Log.i(TAG,"Direction " + location);
         Log.i(TAG,"current " + current);
-//        Intent i = new Intent("location_direction");
-//        i.putExtra("directionLocation",location);
-//        context.sendBroadcast(i);
         Intent map = new Intent( context, DirectionActivity.class );
         map.putExtra( "direction_location",location );
         map.putExtra( "direction_current",current );
         context.startActivity( map );
-
-        //NotificationScheduler.setReminder( context,0 );
     }
 
 

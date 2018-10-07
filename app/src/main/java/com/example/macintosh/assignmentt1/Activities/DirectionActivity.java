@@ -73,17 +73,7 @@ public class DirectionActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Location location = getDeviceLocation();
         String destination;
-//        if(broadcastReceiver == null){
-//            broadcastReceiver = new BroadcastReceiver() {
-//                @Override
-//                public void onReceive(Context context, Intent intent) {
-//                    destination[0] = intent.getExtras().get( "directionLocation" ).toString();
-//
-//                }
-//            };
-//        }
         Intent intent = getIntent();
         destination = intent.getExtras().getString("direction_location");
         String current = intent.getExtras().getString( "direction_current" );
@@ -106,20 +96,9 @@ public class DirectionActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        LatLng hcmus = new LatLng(10.762963, 106.682394);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
-//        originMarkers.add(mMap.addMarker(new MarkerOptions()
-//                .title("Origin")
-//                .position(currentLocation)));
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            mMap.setMyLocationEnabled(true);
+            mLocationPermissionGranted = true;
             return;
         }
         mMap.setMyLocationEnabled(true);

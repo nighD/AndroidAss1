@@ -50,9 +50,6 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity  {
 
     //    private Activity activity;
-    private static final String YES_ACTION = "com.example.macintosh.assignmentt1.Activities.YES_ACTION";
-    private static final String MAYBE_ACTION = "com.example.macintosh.assignmentt1.Activities.MAYBE_ACTION";
-    private static final String NO_ACTION = "com.example.macintosh.assignmentt1.Activities.NO_ACTION";
     MyRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
@@ -107,12 +104,6 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        //new HttpClientApacheAsyncTask(this,"https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.81289833333334,144.0&destinations=-37.8207,144.958&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI").execute();
-
-
-//        Intent intent0 =new Intent(MainActivity.this,GPS_Service.class);
-//        MainActivity.this.startService(intent0);
-
         NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
         NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
         locationBtn.setOnClickListener(new View.OnClickListener() {
@@ -315,37 +306,6 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-//    private boolean runtime_permissions() {
-//        if(Build.VERSION.SDK_INT >= 25 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-//
-//            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
-//
-//            return true;
-//        }
-//        return false;
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if(requestCode == 1){
-//            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-//                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
-//                startService(intent);
-//            }else {
-//                runtime_permissions();
-//            }
-//        }
-//    }
-
-
-    public void updateProgress(int progress)
-    {
-        //bar.setProgress(progress);
-    }
-
-
-
     public void displayNotification(NotificationModel notificationModel, Context context, CurrentMeetLocationModel currentMeetLocationModel)
     {
         ArrayList<DataModel> dataa1 = new ArrayList<DataModel>(  );
@@ -361,7 +321,6 @@ public class MainActivity extends AppCompatActivity  {
 
             ) );
         }
-       // int position = notificationModel.getID();
         int id  = currentMeetLocationModel.getTrackableId() - 1;
         String truckName = dataa1.get(id).getName();
         Log.i(LOG_TAG,"Position " + id);

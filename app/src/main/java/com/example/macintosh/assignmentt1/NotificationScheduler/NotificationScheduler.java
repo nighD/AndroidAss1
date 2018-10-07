@@ -39,11 +39,9 @@ public class NotificationScheduler
     public static final int NOTI_ID=1;
     public static final int NOTI_ID0=2;
     public static final String TAG="NotificationScheduler";
-    private static final String YES_ACTION = "com.example.macintosh.assignmentt1.NotificationScheduler.YES_ACTION";
-    private static final String MAYBE_ACTION = "com.example.macintosh.assignmentt1.NotificationScheduler.MAYBE_ACTION";
-    private static final String NO_ACTION = "com.example.macintosh.assignmentt1.NotificationScheduler.NO_ACTION";
-    private static ArrayList<NotificationModel> notificationModels;
-    private static MainActivity activity;
+
+
+
     public static void setReminder(Context context,int alarmTriggerTime)
     {
        // Calendar calendar = Calendar.getInstance();
@@ -62,6 +60,10 @@ public class NotificationScheduler
         Toast.makeText(context, "Alarm Set for " + alarmTriggerTime + " seconds.", Toast.LENGTH_SHORT).show();
 
     }
+
+
+
+
     public static void setReminderNoti(Context context,int alarmTriggerTime)
     {
         // Calendar calendar = Calendar.getInstance();
@@ -80,6 +82,10 @@ public class NotificationScheduler
         Toast.makeText(context, "Alarm Set for " + alarmTriggerTime + " seconds.", Toast.LENGTH_SHORT).show();
 
     }
+
+
+
+
     public static void cancelReminder(Context context)
     {
         // Disable a receiver
@@ -90,6 +96,9 @@ public class NotificationScheduler
         Toast.makeText(context, "Alarm Canceled/Stop by User.", Toast.LENGTH_SHORT).show();
         pendingIntent.cancel();
     }
+
+
+
 
     public static void showNotification(Context context, CurrentMeetLocationModel currentMeetLocationModel
                                             , String truckName,int ID,NotificationModel notificationModel)
@@ -134,6 +143,11 @@ public class NotificationScheduler
         builder.setContentIntent(resultPendingIntent);
         notificationManager.notify(NOTI_ID, builder.build());
     }
+
+
+
+
+
     public static void showNoti(Context context, DataTracking dataTracking, NotificationModel notificationModel, LatLng latLng)
     {
         String CHANNEL_ID = "my_channel_02";
@@ -175,6 +189,11 @@ public class NotificationScheduler
         builder.setContentIntent(resultPendingIntent);
         notificationManager.notify(NOTI_ID, builder.build());
     }
+
+
+
+
+
     private static PendingIntent createGoIntent(Context context,DataTracking dataTracking,LatLng latLng) {
         Intent goIntent = new Intent(context, DirectionReceiver.class );
         goIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
@@ -185,6 +204,10 @@ public class NotificationScheduler
         PendingIntent pendingIntent = PendingIntent.getBroadcast( context,3, goIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
+
+
+
+
     private static PendingIntent createCancelIntent(Context context) {
         Intent skipIntent = new Intent(context, CancelReceiver.class );
         skipIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
@@ -192,6 +215,10 @@ public class NotificationScheduler
         PendingIntent pendingIntent = PendingIntent.getBroadcast( context,1, skipIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
+
+
+
+
     private static PendingIntent createAcceptIntent(Context context,CurrentMeetLocationModel currentMeetLocationModel){
         Intent acceptIntent = new Intent();
 
@@ -205,12 +232,21 @@ public class NotificationScheduler
         PendingIntent pendingIntent = PendingIntent.getActivity( context,0, acceptIntent,PendingIntent.FLAG_ONE_SHOT );
         return pendingIntent;
     }
+
+
+
+
+
     private static PendingIntent createSkipIntent(Context context){
         Intent skipIntent = new Intent(context, SkipReceiver.class );
         skipIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
         PendingIntent pendingIntent = PendingIntent.getBroadcast( context,1, skipIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
+
+
+
+
     private static void createChannel(Context context,String CHANNEL_ID){
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
