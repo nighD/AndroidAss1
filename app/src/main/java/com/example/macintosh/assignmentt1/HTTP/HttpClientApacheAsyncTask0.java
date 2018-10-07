@@ -10,6 +10,7 @@ import com.example.macintosh.assignmentt1.ModelClass.CurrentMeetLocationModel;
 import com.example.macintosh.assignmentt1.ModelClass.NotificationModel;
 import com.example.macintosh.assignmentt1.ModelClass.ResponseJSON;
 import com.example.macintosh.assignmentt1.json.JSON;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -32,13 +33,14 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
     //private Context context;
 
 
-    public HttpClientApacheAsyncTask0(MainActivity activity, String URL, Context context, DataTracking dataTracking0)
+    public HttpClientApacheAsyncTask0(MainActivity activity, String URL, Context context, DataTracking dataTracking0, LatLng latLng0)
     {
         super(activity);
         Log.i(LOG_TAG,URL);
         this.context = context;
         DistURL = URL;
         this.dataTracking = dataTracking0;
+        this.latLng = latLng0;
 
     }
 

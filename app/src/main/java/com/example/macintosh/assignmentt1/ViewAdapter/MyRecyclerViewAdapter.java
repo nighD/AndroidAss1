@@ -153,6 +153,7 @@ implements Filterable{
                     Endtime.setTime(dataTrackingModels.get(j).getDate().getTime());
                     Endtime.setMinutes((Endtime.getMinutes()+dataTrackingModels.get(j).getStopTime()));
                     dataTrackings2.get(i).add(dataTrackingModels.get(j));
+                    Log.i("HEREE",Integer.toString( j ));
                     jdbcActivity.createNew(new DataTracking(dataTrackingModels.get(j).getTrackableId(), "No Tracking Data",
                             StartTime,
                             Endtime,
@@ -185,7 +186,7 @@ implements Filterable{
                             MeetTime
                             , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
 
-                Log.i("HEREE",Integer.toString( i ));
+
                 }
         }
     }

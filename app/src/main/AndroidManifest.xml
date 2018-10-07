@@ -3,13 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.macintosh.assignmentt1">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature android:name="android.hardware.location.gps" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -43,10 +46,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Detailactivity" />
-        <activity android:name=".Activities.ShowFragment"/>
-        <activity android:name=".Activities.TestPermissionsActivity"/>
-        <activity android:name=".Activities.AddTrackingServiceActivity"/>
-        <activity android:name=".Activities.show_TL"></activity>
+        <activity android:name=".Activities.ShowFragment" />
+        <activity android:name=".Activities.TestPermissionsActivity" />
+        <activity android:name=".Activities.AddTrackingServiceActivity" />
+        <activity android:name=".Activities.show_TL" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -61,6 +64,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps">
@@ -71,7 +75,8 @@
             </intent-filter>
         </activity>
         <!-- Register the Alarm Receiver -->
-        <receiver android:name=".Receiver.AlarmReceiver"
+        <receiver
+            android:name=".Receiver.AlarmReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -80,10 +85,23 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
-        <service android:name=".Service.GPS_Service"/>
+
+        <service android:name=".Service.GPS_Service" />
+
         <receiver android:name=".Receiver.SkipReceiver" />
         <receiver android:name=".Receiver.CancelReceiver" />
+        <receiver android:name=".Receiver.NotiReceiver" />
+        <receiver android:name=".Receiver.DirectionReceiver" />
 
+        <activity
+            android:name=".Activities.DirectionActivity"
+            android:label="@string/title_activity_direction">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

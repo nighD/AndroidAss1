@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -23,9 +24,11 @@ import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.NotificationModel;
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.Receiver.CancelReceiver;
+import com.example.macintosh.assignmentt1.Receiver.DirectionReceiver;
 import com.example.macintosh.assignmentt1.Receiver.NotiReceiver;
 import com.example.macintosh.assignmentt1.Receiver.SkipReceiver;
 import com.example.macintosh.assignmentt1.Service.GPS_Service;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,11 +67,11 @@ public class NotificationScheduler
         // Calendar calendar = Calendar.getInstance();
         Intent intent0 =new Intent(context,GPS_Service.class);
         context.startService(intent0);
-        Log.i(TAG, "Reminder Set");
+        Log.i(TAG, "Reminder");
         Calendar cal = Calendar.getInstance();
         // add alarmTriggerTime seconds to the calendar object
         cal.add(Calendar.SECOND, alarmTriggerTime);
-        cancelReminder( context );
+        //cancelReminder( context );
         Intent alarmIntent = new Intent(context, NotiReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,NOTI_ID0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);//get instance of alarm manager
@@ -131,14 +134,13 @@ public class NotificationScheduler
         builder.setContentIntent(resultPendingIntent);
         notificationManager.notify(NOTI_ID, builder.build());
     }
-    public static void showNoti(Context context, DataTracking dataTracking)
+    public static void showNoti(Context context, DataTracking dataTracking, NotificationModel notificationModel, LatLng latLng)
     {
         String CHANNEL_ID = "my_channel_02";
         Intent i = new Intent(context,GPS_Service.class);
         context.stopService(i);
 
-        //PendingIntent acceptIntent = createAcceptIntent( context,currentMeetLocationModel );
-        PendingIntent skipIntent = createSkipIntent( context );
+        PendingIntent GoIntent = createGoIntent( context,dataTracking,latLng );
         PendingIntent cancelIntent= createCancelIntent( context );
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -147,13 +149,17 @@ public class NotificationScheduler
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("You are near ")
-                .setContentText(" Do you want to add Tracking Service ?" )
+                .setContentTitle("You are near: " + notificationModel.getDestination())
+                .setContentText(" You have to go now"  + ". Duration: " + notificationModel.getDuration())
                 .setAutoCancel(true)
                 .addAction(new NotificationCompat.Action(
                         R.mipmap.ic_thumbs_up_down_black_36dp,
-                        "Skip",
-                        skipIntent))
+                        "Go",
+                        GoIntent))
+                .addAction(new NotificationCompat.Action(
+                        R.mipmap.ic_thumbs_up_down_black_36dp,
+                        "Dismiss",
+                        cancelIntent))
                 .addAction(new NotificationCompat.Action(
                         R.mipmap.ic_thumb_down_black_36dp,
                         "Cancel",
@@ -169,7 +175,16 @@ public class NotificationScheduler
         builder.setContentIntent(resultPendingIntent);
         notificationManager.notify(NOTI_ID, builder.build());
     }
-
+    private static PendingIntent createGoIntent(Context context,DataTracking dataTracking,LatLng latLng) {
+        Intent goIntent = new Intent(context, DirectionReceiver.class );
+        goIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+        goIntent.putExtra("location", dataTracking.getMeetLocationlatitude() +" "+ dataTracking.getMeetLocationlongtitude());
+        goIntent.putExtra( "current", latLng.latitude + " "+latLng.longitude );
+        Log.i(TAG, "meet " +dataTracking.getMeetLocationlatitude() +" "+ dataTracking.getMeetLocationlongtitude() );
+        Log.i(TAG, "start " +latLng.latitude + " "+latLng.longitude);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast( context,3, goIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        return pendingIntent;
+    }
     private static PendingIntent createCancelIntent(Context context) {
         Intent skipIntent = new Intent(context, CancelReceiver.class );
         skipIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
@@ -193,7 +208,6 @@ public class NotificationScheduler
     private static PendingIntent createSkipIntent(Context context){
         Intent skipIntent = new Intent(context, SkipReceiver.class );
         skipIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
-
         PendingIntent pendingIntent = PendingIntent.getBroadcast( context,1, skipIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }

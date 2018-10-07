@@ -41,6 +41,7 @@ import com.example.macintosh.assignmentt1.ModelClass.Trackable;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
 import com.example.macintosh.assignmentt1.Service.GPS_Service;
 import com.example.macintosh.assignmentt1.ViewAdapter.MyRecyclerViewAdapter;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -66,8 +67,8 @@ public class MainActivity extends AppCompatActivity  {
     private ImageButton locationBtn;
     private Button testAct;
     private String string0;
-    private static final int REMINDER_TIME = 10;
-    private static final int CHECK_TIME = 10;
+    private static final int REMINDER_TIME = 60;
+    private static final int CHECK_TIME = 300;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity  {
 //        MainActivity.this.startService(intent0);
 
         NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
-        //NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
+        NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -367,8 +368,8 @@ public class MainActivity extends AppCompatActivity  {
         NotificationScheduler.showNotification(context,currentMeetLocationModel
                 ,truckName,id, notificationModel);
     }
-    public void displayNoti(Context context,DataTracking dataTracking){
-
+    public void displayNoti(Context context, DataTracking dataTracking, NotificationModel notificationModel, LatLng latLng){
+        NotificationScheduler.showNoti( context,dataTracking,notificationModel,latLng );
     }
 
 

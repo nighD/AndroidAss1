@@ -379,9 +379,7 @@ public class JDBCActivity
                         //Log.i(LOG_TAG,Integer.toString( currentMeetLocationModels[begin].getTrackableId() ));
                         begin++;
                     }
-                    rs.close();
-                    st.close();
-                    con.close();
+
                     int currentID = currentMeetLocationModels[0].getTrackableId();
                     int currentposition = 0;
                     int begin0 = 0;
@@ -418,7 +416,9 @@ public class JDBCActivity
                     Log.i(LOG_TAG, "*** query result: ");
 
                     // Release resources //Step 7
-
+                    rs.close();
+                    st.close();
+                    con.close();
 
 
 
