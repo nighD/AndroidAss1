@@ -23,6 +23,7 @@ import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.NotificationModel;
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.Receiver.CancelReceiver;
+import com.example.macintosh.assignmentt1.Receiver.NotiReceiver;
 import com.example.macintosh.assignmentt1.Receiver.SkipReceiver;
 import com.example.macintosh.assignmentt1.Service.GPS_Service;
 
@@ -33,6 +34,7 @@ import java.util.Calendar;
 public class NotificationScheduler
 {
     public static final int NOTI_ID=1;
+    public static final int NOTI_ID0=2;
     public static final String TAG="NotificationScheduler";
     private static final String YES_ACTION = "com.example.macintosh.assignmentt1.NotificationScheduler.YES_ACTION";
     private static final String MAYBE_ACTION = "com.example.macintosh.assignmentt1.NotificationScheduler.MAYBE_ACTION";
@@ -57,7 +59,24 @@ public class NotificationScheduler
         Toast.makeText(context, "Alarm Set for " + alarmTriggerTime + " seconds.", Toast.LENGTH_SHORT).show();
 
     }
+    public static void setReminderNoti(Context context,int alarmTriggerTime)
+    {
+        // Calendar calendar = Calendar.getInstance();
+        Intent intent0 =new Intent(context,GPS_Service.class);
+        context.startService(intent0);
+        Log.i(TAG, "Reminder Set");
+        Calendar cal = Calendar.getInstance();
+        // add alarmTriggerTime seconds to the calendar object
+        cal.add(Calendar.SECOND, alarmTriggerTime);
+        cancelReminder( context );
+        Intent alarmIntent = new Intent(context, NotiReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,NOTI_ID0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);//get instance of alarm manager
+        manager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);//set alarm manager with entered timer by converting into milliseconds
 
+        Toast.makeText(context, "Alarm Set for " + alarmTriggerTime + " seconds.", Toast.LENGTH_SHORT).show();
+
+    }
     public static void cancelReminder(Context context)
     {
         // Disable a receiver
