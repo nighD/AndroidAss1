@@ -161,7 +161,6 @@ public class MapsActivity extends AppCompatActivity implements
         // Enable going into StreetView by clicking on an InfoWindow from a
         // point of interest.
         setInfoWindowClickToPanorama(mMap);
-
        // getDeviceLocation();
 
         //showCurrentPlace();
@@ -367,7 +366,13 @@ public class MapsActivity extends AppCompatActivity implements
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     INITIAL_ZOOM);
 
+
 //                            try {
+
+                                //return latLng;
+//                            }
+//                            catch (NullPointerException ex){}
+
 
                                 //return latLng;
 //                            }
@@ -386,7 +391,10 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
 
+
         return location1[0];
+
+
 
     }
     private void moveCamera(LatLng latLng, float zoom){

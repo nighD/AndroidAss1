@@ -22,9 +22,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class JDBCActivity
@@ -47,7 +49,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    //st.executeUpdate("Drop table trackingdata");
+                    st.executeUpdate("Drop table trackingdata");
                     // Create table:
                     st.executeUpdate("create table trackingdata( " +
                             "date0 date not null, " +
@@ -136,7 +138,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    //st.executeUpdate("Drop table servicedata");
+                    st.executeUpdate("Drop table servicedata");
                     // Create table:
                     st.executeUpdate("create table servicedata( " +
                             "ID int not null, " +
@@ -191,9 +193,9 @@ public class JDBCActivity
                     Log.i(LOG_TAG,"Add new data successfully");
                     st.close();
                     con.close();
-
                 } catch (SQLException sqlEx)
                 {
+                    Log.i(LOG_TAG, "Failed to add new data");
                     while (sqlEx != null)
                     {
                         Log.i(LOG_TAG,
@@ -204,6 +206,7 @@ public class JDBCActivity
                     }
                 } catch (Exception ex)
                 {
+                    Log.i(LOG_TAG, "Failed to add new data !!!!!");
                     ex.printStackTrace();
                 }
 
@@ -281,8 +284,8 @@ public class JDBCActivity
         }).start();
     }
 
-    public DataTracking getData(final int ID, final String db){
-        final DataTracking[] dataTracking = new DataTracking[1];
+    public ArrayList<DataTracking> getData(final int ID, final String db){
+        final ArrayList<DataTracking> dataTracking = new ArrayList<>();
         new Thread(new Runnable()
         {
             @Override
@@ -296,23 +299,23 @@ public class JDBCActivity
                     Statement st = con.createStatement();
 
                     // Query and display results //Step 5
-                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata") ;
+                    ResultSet rs = st.executeQuery("SELECT * FROM servicedata WHERE ID="+ID) ;
                     Log.i(LOG_TAG, "*** Query results:");
-                    DataTracking dataTracking0 = null;
+                    DataTracking dataTracking0 = new DataTracking();
                     while (rs.next())
                     {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+                        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                         Date dateStart = sdf.parse(rs.getString(3));
                         Date dateEnd = sdf.parse(rs.getString(4));
                         Date dateMeet = sdf.parse(rs.getString(5));
-                        dataTracking0 = new DataTracking(Integer.parseInt( rs.getString(1) ),rs.getString( 2 ),
+                        dataTracking.add(new DataTracking(Integer.parseInt( rs.getString(1) ),rs.getString( 2 ),
                                 dateStart, dateEnd, dateMeet,
                                 Double.parseDouble(rs.getString(6)),Double.parseDouble(rs.getString(7)),
-                                Double.parseDouble(rs.getString(8)),Double.parseDouble(rs.getString(9)));
+                                Double.parseDouble(rs.getString(8)),Double.parseDouble(rs.getString(9))));
                         Log.i(LOG_TAG,"Result found");
                     }
-                    dataTracking[0] = dataTracking0;
                     Log.i(LOG_TAG, "*** query result:ID "+ Integer.toString(ID));
+                    Log.i(LOG_TAG, dataTracking.toString());
 
                     // Release resources //Step 7
                     rs.close();
@@ -336,7 +339,7 @@ public class JDBCActivity
 
             }
         }).start();
-        return dataTracking[0];
+        return dataTracking;
     }
 
     public CurrentMeetLocationModel[] takeLatLng(final String db, Date date){
