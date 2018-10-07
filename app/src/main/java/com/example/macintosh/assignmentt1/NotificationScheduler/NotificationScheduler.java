@@ -101,7 +101,7 @@ public class NotificationScheduler
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        createChannel( context );
+        createChannel( context,CHANNEL_ID );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -131,7 +131,44 @@ public class NotificationScheduler
         builder.setContentIntent(resultPendingIntent);
         notificationManager.notify(NOTI_ID, builder.build());
     }
+    public static void showNoti(Context context, DataTracking dataTracking)
+    {
+        String CHANNEL_ID = "my_channel_02";
+        Intent i = new Intent(context,GPS_Service.class);
+        context.stopService(i);
 
+        //PendingIntent acceptIntent = createAcceptIntent( context,currentMeetLocationModel );
+        PendingIntent skipIntent = createSkipIntent( context );
+        PendingIntent cancelIntent= createCancelIntent( context );
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        createChannel( context,CHANNEL_ID );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("You are near ")
+                .setContentText(" Do you want to add Tracking Service ?" )
+                .setAutoCancel(true)
+                .addAction(new NotificationCompat.Action(
+                        R.mipmap.ic_thumbs_up_down_black_36dp,
+                        "Skip",
+                        skipIntent))
+                .addAction(new NotificationCompat.Action(
+                        R.mipmap.ic_thumb_down_black_36dp,
+                        "Cancel",
+                        cancelIntent));
+        builder.setTimeoutAfter( 20 );
+
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+        notificationManager.notify(NOTI_ID, builder.build());
+    }
 
     private static PendingIntent createCancelIntent(Context context) {
         Intent skipIntent = new Intent(context, CancelReceiver.class );
@@ -160,8 +197,8 @@ public class NotificationScheduler
         PendingIntent pendingIntent = PendingIntent.getBroadcast( context,1, skipIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
-    private static void createChannel(Context context){
-        String CHANNEL_ID = "my_channel_01";
+    private static void createChannel(Context context,String CHANNEL_ID){
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             CharSequence name = "my_channel";
             String Description = "This is my channel";

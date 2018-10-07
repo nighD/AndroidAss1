@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity  {
         jdbcActivity.createServiceDatabase(db);
         Date date = new Date(  );
         Log.i(LOG_TAG,"Create NEW");
-        jdbcActivity.createNew(new DataTracking(1,"No data",date,date,date,0,0,0,0  ),db  );
+        //jdbcActivity.createNew(new DataTracking(1,"No data",date,date,date,0,0,0,0  ),db  );
 
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
@@ -358,13 +358,15 @@ public class MainActivity extends AppCompatActivity  {
 
             ) );
         }
-
        // int position = notificationModel.getID();
         int id  = currentMeetLocationModel.getTrackableId() - 1;
         String truckName = dataa1.get(id).getName();
         Log.i(LOG_TAG,"Position " + id);
         NotificationScheduler.showNotification(context,currentMeetLocationModel
                 ,truckName,id, notificationModel);
+    }
+    public void displayNoti(Context context,DataTracking dataTracking){
+
     }
 
 

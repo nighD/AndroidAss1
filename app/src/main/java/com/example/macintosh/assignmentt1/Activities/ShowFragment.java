@@ -62,8 +62,7 @@ public class ShowFragment extends AppCompatActivity {
     private static ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
-    final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
-    JDBCActivity jdbcActivity = new JDBCActivity();
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -92,6 +91,8 @@ public class ShowFragment extends AppCompatActivity {
     }
    public View.OnClickListener onAddClickListener(final int position) {
         final Context c = this.getApplicationContext();
+       final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
+       JDBCActivity jdbcActivity = new JDBCActivity();
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
