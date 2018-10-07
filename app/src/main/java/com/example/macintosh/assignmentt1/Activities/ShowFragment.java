@@ -41,6 +41,7 @@ import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.ModelClass.Trackable;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
+import com.example.macintosh.assignmentt1.ViewAdapter.MyRecyclerViewAdapter;
 import com.example.macintosh.assignmentt1.ViewAdapter.RecyclerViewDialogAdapter;
 
 import org.w3c.dom.Text;
@@ -62,6 +63,8 @@ public class ShowFragment extends AppCompatActivity {
     private static ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
+//    final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
+    //JDBCActivity jdbcActivity = new JDBCActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -81,7 +84,7 @@ public class ShowFragment extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //ADAPTER
         try {
-            adapter=new RecyclerViewDialogAdapter(this,trackingData,dataa,mIntent.getIntExtra("CellPosition",0),this.dataTrackings.get(mIntent.getIntExtra("CellPosition",0)));
+            adapter=new RecyclerViewDialogAdapter(this,trackingData,dataa,mIntent.getIntExtra("CellPosition",0),this.dataTrackings.get(mIntent.getIntExtra("CellPosition",0)),"jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -209,7 +212,8 @@ public class ShowFragment extends AppCompatActivity {
                             });
                             dialog.show();
                             jdbcActivity.createNew(new DataTracking(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
-                                    0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),db);
+                                    0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),"jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath());
+
                         }
                     }
                 });
