@@ -138,21 +138,21 @@ public class MainActivity extends AppCompatActivity  {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
-        for (int i = 0; i < trackingService.trackingList.size(); i++){
-            jdbcActivity.createNew(new DataTracking(trackingService.trackingList.get(i).trackableId,
-                    "No Data",
-                    trackingService.trackingList.get(i).date,
-                    trackingService.trackingList.get(i).date,
-                    trackingService.trackingList.get(i).date,
-                    0.0,0.0,
-                    trackingService.trackingList.get(i).latitude,
-                    trackingService.trackingList.get(i).longitude),db);
-        }
+//        for (int i = 0; i < trackingService.trackingList.size(); i++){
+//            jdbcActivity.createNew(new DataTracking(trackingService.trackingList.get(i).trackableId,
+//                    "No Data",
+//                    trackingService.trackingList.get(i).date,
+//                    trackingService.trackingList.get(i).date,
+//                    trackingService.trackingList.get(i).date,
+//                    0.0,0.0,
+//                    trackingService.trackingList.get(i).latitude,
+//                    trackingService.trackingList.get(i).longitude),db);
+//        }
 
         recyclerView = findViewById( R.id.recycler_view );
-        for (int i = 0; i < trackable.trackableList.size(); i++){
-            this.dataTrackings.add(new ArrayList<DataTracking>());
-        }
+//        for (int i = 0; i < trackable.trackableList.size(); i++){
+//            this.dataTrackings.add(new ArrayList<DataTracking>());
+//        }
 //        for(int i = 0; i < trackingService.trackingList.size(); i++){
 //            for (int j = 0; j < trackable.trackableList.size(); j++){
 //                if (trackingService.trackingList.get(i).trackableId==j+1){
@@ -174,21 +174,21 @@ public class MainActivity extends AppCompatActivity  {
 //                }
 //            }
 //        }
-        for (int i = 0; i < trackable.trackableList.size(); i++){
-            ArrayList<DataTracking> newArray = jdbcActivity.getData(i,db);
-            for (int j = 0; j < newArray.size(); j++){
-                this.dataTrackings.get(i).add(newArray.get(j));
-            }
-        }
-        for (int i = 0; i < dataTrackings.size(); i++){
-            if (dataTrackings.get(i).isEmpty()){
-                this.dataTrackings.get(i).add(new DataTracking());
-            }
-        }
+//        for (int i = 0; i < trackable.trackableList.size(); i++){
+//            ArrayList<DataTracking> newArray = jdbcActivity.getData(i,db);
+//            for (int j = 0; j < newArray.size(); j++){
+//                this.dataTrackings.get(i).add(newArray.get(j));
+//            }
+//        }
+//        for (int i = 0; i < dataTrackings.size(); i++){
+//            if (dataTrackings.get(i).isEmpty()){
+//                this.dataTrackings.get(i).add(new DataTracking());
+//            }
+//        }
 //        this.dataTrackings = dataTrackings;
-        this.dataTrackings.get(0);
+//        this.dataTrackings.get(0);
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-        dataTrackings.get(5).get(0).getTrackableId();
+//        dataTrackings.get(5).get(0).getTrackableId();
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
         try {
-            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData,this.dataTrackings, getApplicationContext(), this);
+            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this);
         }
         catch (ParseException e){}
         layoutManager = new LinearLayoutManager( this );

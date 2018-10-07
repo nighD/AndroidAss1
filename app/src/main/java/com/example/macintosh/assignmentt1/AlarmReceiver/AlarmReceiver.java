@@ -21,6 +21,7 @@ import com.example.macintosh.assignmentt1.NotificationScheduler.NotificationSche
 import com.example.macintosh.assignmentt1.Service.GPS_Service;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -57,11 +58,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     final String db = "jdbc:sqldroid:" + context.getApplicationContext().getDatabasePath("ass1.db").getAbsolutePath();
                     JDBCActivity jdbcActivity = new JDBCActivity();
 
-                    CurrentMeetLocationModel[] currentMeetLocationModels = jdbcActivity.takeLatLng( db );
+                    CurrentMeetLocationModel[] currentMeetLocationModels = jdbcActivity.takeLatLng(db,new Date());
                     for(int i = 0 ; i < currentMeetLocationModels.length;i++){
                         LatLng latLng1 = new LatLng( currentMeetLocationModels[i].getMeetLocationLatitude()
                                 ,currentMeetLocationModels[i].getMeetLocationLongtitude());
-                        new HttpClientApacheAsyncTask( mainActivity,updateURL.UpdateURLService(latLng0,latLng1),context ).execute( );
+//                        new HttpClientApacheAsyncTask( mainActivity,updateURL.UpdateURLService(latLng0,latLng1),context ).execute( );
                         if(broadcastReceiver1 == null) {
                             broadcastReceiver1 = new BroadcastReceiver() {
                                 @Override
@@ -73,9 +74,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                             };
                         }
                     }
-
-                    NotificationScheduler.showNotification(context, MainActivity.class,
-                          "SHIT", "Watch them now?");
+//                    NotificationScheduler.showNotification(context, MainActivity.class,
+//                            "SHIT", "Watch them now?");
 
                 }
             };
@@ -119,8 +119,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 Log.i(TAG,"\n" +longtitude[0] + latitude[0]);
                                 LatLng latlng = new LatLng(Double.parseDouble(longtitude[0]),Double.parseDouble(latitude[0]));
 
-                                NotificationScheduler.showNotification(context, MainActivity.class,
-                                        longtitude[0] + " " +latitude[0], "Watch them now?");
+//                                NotificationScheduler.showNotification(context, MainActivity.class,
+//                                        longtitude[0] + " " +latitude[0], "Watch them now?");
                             }
                         };
                     }

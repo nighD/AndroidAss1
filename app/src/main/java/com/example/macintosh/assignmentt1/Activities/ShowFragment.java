@@ -34,6 +34,7 @@ import java.util.Date;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
@@ -61,6 +62,8 @@ public class ShowFragment extends AppCompatActivity {
     private static ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
+    final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+    JDBCActivity jdbcActivity = new JDBCActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -146,6 +149,7 @@ public class ShowFragment extends AppCompatActivity {
                                         }
                                     });
                                     editStartTime.show();
+
                                 }
                             });
                             chooseMeetTime.setOnClickListener(new View.OnClickListener() {
@@ -204,6 +208,8 @@ public class ShowFragment extends AppCompatActivity {
                             });
                             dialog.show();
                         }
+                        jdbcActivity.createNew(new DataTracking(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
+                                0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),db);
                     }
                 });
             }
