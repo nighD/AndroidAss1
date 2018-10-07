@@ -55,7 +55,7 @@ implements Filterable{
     private String databasePath;
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
-    private RecyclerViewAdapterListener listener;
+    private ShowTrackingListAdapter.RecyclerViewAdapterListener listener;
     JDBCActivity jdbcActivity = new JDBCActivity();
     int id;
 
@@ -133,18 +133,8 @@ implements Filterable{
 
         @Override
         public void onClick(View v) {
-
             this.itemClickListener.onItemClick(v,getLayoutPosition() );
-
         }
-
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if( requestCode == 1888 ) {
-//                Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                ((ImageView)inflatedView.findViewById(R.id.image)).setImageBitmap(photo);
-            }
-        }
-
     }
 
     public void updateAdapter(/* gets params like TITLES,ICONS,NAME,EMAIL,PROFILE*/){
@@ -165,19 +155,19 @@ implements Filterable{
         this.databasePath = databasePath;
         this.dataTrackings = dataTrackings;
         this.dataTrackings2 = dataTrackings2;
-        try{
+        try {
             mCallback = (CallbackInterface) ctx;
-        }catch(ClassCastException ex){
+        } catch (ClassCastException ex) {
             //.. should log the error or throw and exception
-            Log.e("MyAdapter","Must implement the CallbackInterface in the Activity", ex);
+            Log.e("MyAdapter", "Must implement the CallbackInterface in the Activity", ex);
         }
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View view = inflater.inflate(R.layout.cardview, parent, false);
-        final MyViewHolder holder = new MyViewHolder(view);
-        return holder;
+       LayoutInflater inflater = activity.getLayoutInflater();
+       View view = inflater.inflate(R.layout.cardview, parent, false);
+       final MyViewHolder holder = new MyViewHolder(view);
+       return holder;
     }
     @Override
     public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder,final int position) {
@@ -262,7 +252,6 @@ implements Filterable{
     {
         this.dataTrackings.get(position).add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
-
 }
 
 

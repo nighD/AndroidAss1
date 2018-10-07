@@ -41,6 +41,7 @@ import com.example.macintosh.assignmentt1.ModelClass.Trackable;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
 import com.example.macintosh.assignmentt1.Service.GPS_Service;
 import com.example.macintosh.assignmentt1.ViewAdapter.MyRecyclerViewAdapter;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -67,8 +68,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private ImageButton locationBtn;
     private Button testAct;
     private String string0;
-    private static final int REMINDER_TIME = 10;
-    private static final int CHECK_TIME = 10;
+    private static final int REMINDER_TIME = 60;
+    private static final int CHECK_TIME = 300;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
-        //NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
+        NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,52 +144,80 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         {
             dataTrackings2.add(new ArrayList<DataTrackingModel>());
         }
-        for (int i = 0; i < dataa.size(); i++ ) {
-            for(int j = 0; j < trackingData.size(); j++){
-                if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
-                    Date StartTime = new Date();
-                    Date Endtime = new Date();
-                    Date MeetTime = new Date();
-                    StartTime.setTime(trackingData.get(j).getDate().getTime());
-                    MeetTime.setTime(trackingData.get(j).getDate().getTime());
-                    Endtime.setTime(trackingData.get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+trackingData.get(j).getStopTime()));
-                    dataTrackings2.get(i).add(trackingData.get(j));
-                    jdbcActivity.createNew(new DataTracking(trackingData.get(j).getTrackableId(), "No Tracking Data",
-                            StartTime,
-                            Endtime,
-                            MeetTime
-                            , 0, 0, trackingData.get(j).getLatitude(), trackingData.get(j).getLongitude()),db);
-                }
-            }
-        }
-        for (int i = 0; i < dataa.size(); i++ ) {
-            if (dataTrackings2.get(i).isEmpty()) {
-                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-            }
-        }
         for(int i = 0; i < dataa.size(); i++)
         {
             dataTrackings.add(new ArrayList<DataTracking>());
         }
-        for (int i = 0; i < dataa.size(); i++ ) {
-            for (int j = 0; j < dataTrackings2.get(i).size(); j++){
-                Date StartTime = new Date();
-                Date Endtime = new Date();
-                Date MeetTime = new Date();
-                StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
-                this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-                        StartTime,
-                        Endtime,
-                        MeetTime
-                        , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+        if(jdbcActivity.getData(db)==null){
+            for (int i = 0; i < dataa.size(); i++ ) {
+                for(int j = 0; j < trackingData.size(); j++){
+                    if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
+                        Date StartTime = new Date();
+                        Date Endtime = new Date();
+                        Date MeetTime = new Date();
+                        StartTime.setTime(trackingData.get(j).getDate().getTime());
+                        MeetTime.setTime(trackingData.get(j).getDate().getTime());
+                        Endtime.setTime(trackingData.get(j).getDate().getTime());
+                        Endtime.setMinutes((Endtime.getMinutes()+trackingData.get(j).getStopTime()));
+                        dataTrackings2.get(i).add(trackingData.get(j));
+                        jdbcActivity.createNew(new DataTracking(trackingData.get(j).getTrackableId(), "No Tracking Data",
+                                StartTime,
+                                Endtime,
+                                MeetTime
+                                , 0, 0, trackingData.get(j).getLatitude(), trackingData.get(j).getLongitude()),db);
+                    }
+                }
+            }
+            for (int i = 0; i < dataa.size(); i++ ) {
+                if (dataTrackings2.get(i).isEmpty()) {
+                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
+                }
+            }
+            for (int i = 0; i < dataa.size(); i++ ) {
+                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
+                    Date StartTime = new Date();
+                    Date Endtime = new Date();
+                    Date MeetTime = new Date();
+                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
+                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                            StartTime,
+                            Endtime,
+                            MeetTime
+                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
 
-                Log.i("HEREE",Integer.toString( i ));
+                    Log.i("HEREE",Integer.toString( i ));
+                }
             }
         }
+        else {
+            for (int i = 0; i < dataa.size(); i++ ) {
+                for(int j = 0; j < trackingData.size(); j++){
+                    if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
+                        Date StartTime = new Date();
+                        Date Endtime = new Date();
+                        Date MeetTime = new Date();
+                        StartTime.setTime(trackingData.get(j).getDate().getTime());
+                        MeetTime.setTime(trackingData.get(j).getDate().getTime());
+                        Endtime.setTime(trackingData.get(j).getDate().getTime());
+                        Endtime.setMinutes((Endtime.getMinutes()+trackingData.get(j).getStopTime()));
+                        dataTrackings2.get(i).add(trackingData.get(j));
+                    }
+                }
+            }
+            for (int i = 0; i < dataa.size(); i++ ) {
+                if (dataTrackings2.get(i).isEmpty()) {
+                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
+                }
+            }
+            dataTrackings.clear();
+            for (int i = 0; i < dataa.size(); i++){
+                dataTrackings.add(jdbcActivity.getData(db));
+            }
+        }
+
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -330,8 +359,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         NotificationScheduler.showNotification(context,currentMeetLocationModel
                 ,truckName,id, notificationModel);
     }
-    public void displayNoti(Context context,DataTracking dataTracking){
-
+    public void displayNoti(Context context, DataTracking dataTracking, NotificationModel notificationModel, LatLng latLng){
+        NotificationScheduler.showNoti( context,dataTracking,notificationModel,latLng );
     }
     @Override
     public void onHandleSelection(int position, ArrayList<ArrayList<DataTracking>> updatedArrayList) {

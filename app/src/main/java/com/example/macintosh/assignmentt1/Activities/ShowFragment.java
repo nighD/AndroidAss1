@@ -179,13 +179,6 @@ public class ShowFragment extends AppCompatActivity {
                                     editMeetTime.getMenu().clear();
                                     int e = 0;
                                     for(int i = 0; i < dataTrackingModels.get(position).size();i++){
-//                                        for(int j = 1; j < dataTrackingModels.get(position).get(i).getStopTime(); j++){
-//                                            if((dataTrackingModels.get(position).get(i).getDate().getTime()<startTime2.getTime())||(dataTrackingModels.get(position).get(i).getDate().getMinutes()-startTime2.getMinutes()>=dataTrackingModels.get(position).get(i).getStopTime())){
-//                                                continue;
-//                                            }
-//                                            editMeetTime.getMenu().add(1,R.id.timeSlot1+e,i,dataTrackingModels.get(position).get(i).getDate().getHours()+":"+(dataTrackingModels.get(position).get(i).getDate().getMinutes()+j));
-//                                            e++;
-//                                        }
                                         if(dataTrackingModels.get(position).get(i).getDate().getTime()==startTime2.getTime()){
                                             for(int j = 1; j < dataTrackingModels.get(position).get(i).getStopTime(); j++){
                                                 editMeetTime.getMenu().add(1,R.id.timeSlot1+j-1,j,dataTrackingModels.get(position).get(i).getDate().getHours()+":"+(dataTrackingModels.get(position).get(i).getDate().getMinutes()+j));

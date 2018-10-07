@@ -42,6 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         //context.getApplicationContext().registerReceiver(broadcastReceiver1,new IntentFilter("location_and_duration"));
         //NotificationModel[] notificationModel1 = new NotificationModel[currentMeetLocationModels.length];
         final LatLng[] latLng0 = new LatLng[1];
+
         if(broadcastReceiver == null){
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
@@ -57,7 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     Random rand = new Random();
                     int  n = rand.nextInt(3) + 0;
                     Log.i(TAG,"number "+ n);
-                    Log.i(TAG,"Size " + jdbcActivity.getData( db ).size());
+
                     LatLng latLng1 = new LatLng( currentMeetLocationModels[n].getMeetLocationLatitude()
                                 , currentMeetLocationModels[n].getMeetLocationLongtitude() );
                     Log.i(TAG,"trackableID "+currentMeetLocationModels[n].getTrackableId());

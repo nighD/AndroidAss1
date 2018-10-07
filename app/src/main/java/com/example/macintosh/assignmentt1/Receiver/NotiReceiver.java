@@ -70,10 +70,11 @@ public class NotiReceiver extends BroadcastReceiver {
                     latitude[0] = scanner.next();
                     latLng0[0] = new LatLng( Double.parseDouble( latitude[0] ), Double.parseDouble( longtitude[0] ) );
                     if( chosenClosest != 10){
+                        Log.i("CLOSEST","Closest : " + dataTrackings.get( chosenClosest ).getTrackableId());
                         LatLng latLng1 = new LatLng( dataTrackings.get(chosenClosest).getMeetLocationlatitude()
                             , dataTrackings.get(chosenClosest).getMeetLocationlongtitude() );
                         new HttpClientApacheAsyncTask0( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )
-                            , context, dataTrackings.get( chosenClosest )).execute();
+                            , context, dataTrackings.get( chosenClosest ),latLng0[0]).execute();
                     }
 //                    Random rand = new Random();
 //                    int  n = rand.nextInt(3) + 0;
@@ -91,7 +92,7 @@ public class NotiReceiver extends BroadcastReceiver {
         context.getApplicationContext().registerReceiver( broadcastReceiver, new IntentFilter( "location_update" ) );
         // Set the alarm here.
         Log.d( TAG, "onReceive AlarmReceiver: BOOT_COMPLETED" );
-        NotificationScheduler.setReminder( context, REMINDER_TIME );
+        NotificationScheduler.setReminderNoti( context, 10 );
 
     }
     private static Date parseDate(String date) {
@@ -112,6 +113,7 @@ public class NotiReceiver extends BroadcastReceiver {
             int trackingMinute = Integer.parseInt( minute.format( dataTrackings.get(i).getMeetTime()));
             int compareHour = trackingHour - currentHour;
             int compareMinute = trackingMinute - currentMinute;
+            Log.i("COMPARISION", " Compare Minute : " + i + " Result: "+compareMinute);
             if (compareHour == 0){
                 if( compareMinute > 5 && compareMinute < 10 ){
                     chosen.add(i);

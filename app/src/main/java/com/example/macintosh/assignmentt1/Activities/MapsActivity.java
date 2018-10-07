@@ -181,6 +181,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         JDBCActivity jdbcActivity = new JDBCActivity();
         //jdbcActivity.trackingDataDatabase(this,db);
+
         CurrentMeetLocationModel[] currentMeetLocationModels = jdbcActivity.takeLatLng( db,parseDate("07-05-2018 13:00:00") );
         //Log.i(LOG_TAG,"LatLong = "+ currentMeetLocationModels);
     try{
