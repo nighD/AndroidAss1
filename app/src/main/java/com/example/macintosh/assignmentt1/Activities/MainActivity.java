@@ -71,16 +71,16 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-//        Intent myIntent = new Intent();
-//        myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
-//        this.startActivity(myIntent);
-//        ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//        if (networkInfo != null && networkInfo.isConnected()) {
-//            Toast.makeText(MainActivity.this, "Internet is connected",Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(MainActivity.this, "Internet is disconnected",Toast.LENGTH_SHORT).show();
-//        }
+        Intent myIntent = new Intent();
+        myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
+        this.startActivity(myIntent);
+        ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            Toast.makeText(MainActivity.this, "Internet is connected",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "Internet is disconnected",Toast.LENGTH_SHORT).show();
+        }
         setContentView( R.layout.activity_main );
         locationBtn = findViewById(R.id.browseLocation);
         testAct = findViewById(R.id.testAddActivity);
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity  {
         jdbcActivity.createServiceDatabase(db);
         Date date = new Date(  );
         Log.i(LOG_TAG,"Create NEW");
+
         //jdbcActivity.createNew(new DataTracking(1,"No data",date,date,date,0,0,0,0  ),db  );
 
         dataa = new ArrayList<>();
@@ -108,7 +109,8 @@ public class MainActivity extends AppCompatActivity  {
         //new HttpClientApacheAsyncTask(this,"https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.81289833333334,144.0&destinations=-37.8207,144.958&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI").execute();
 
 
-
+//        Intent intent0 =new Intent(MainActivity.this,GPS_Service.class);
+//        MainActivity.this.startService(intent0);
 
         NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
         //NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
@@ -202,18 +204,18 @@ public class MainActivity extends AppCompatActivity  {
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(LOG_TAG,jdbcActivity.getData(db).toString());
-                Intent testIntent = new Intent();
-                Date EndTime2 = new Date();
-                EndTime2.setTime(trackingData.get(2).getDate().getTime());
-                EndTime2.setMinutes((EndTime2.getMinutes()+trackingData.get(2).getStopTime()));
-                testIntent.setClass(MainActivity.this,AddTrackingServiceActivity.class);
-                testIntent.putExtra("dataTrackingModel1",trackingData.get(2));
-                testIntent.putExtra("dataTracking1", new DataTracking(trackingData.get(2).getTrackableId(),"No Data",
-                        trackingData.get(2).getDate(),EndTime2,trackingData.get(2).getDate(),0.0,0.0,
-                        trackingData.get(2).getLatitude(),trackingData.get(2).getLongitude()));
-
-                MainActivity.this.startActivity(testIntent);
+//                Log.i(LOG_TAG,jdbcActivity.getData(db).toString());
+//                Intent testIntent = new Intent();
+//                Date EndTime2 = new Date();
+//                EndTime2.setTime(trackingData.get(2).getDate().getTime());
+//                EndTime2.setMinutes((EndTime2.getMinutes()+trackingData.get(2).getStopTime()));
+//                testIntent.setClass(MainActivity.this,AddTrackingServiceActivity.class);
+//                testIntent.putExtra("dataTrackingModel1",trackingData.get(2));
+//                testIntent.putExtra("dataTracking1", new DataTracking(trackingData.get(2).getTrackableId(),"No Data",
+//                        trackingData.get(2).getDate(),EndTime2,trackingData.get(2).getDate(),0.0,0.0,
+//                        trackingData.get(2).getLatitude(),trackingData.get(2).getLongitude()));
+//
+//                MainActivity.this.startActivity(testIntent);
             }
         });
         try {
