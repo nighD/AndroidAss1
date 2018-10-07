@@ -46,18 +46,19 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.CallbackInterface{
 
     //    private Activity activity;
     private static final String YES_ACTION = "com.example.macintosh.assignmentt1.Activities.YES_ACTION";
     private static final String MAYBE_ACTION = "com.example.macintosh.assignmentt1.Activities.MAYBE_ACTION";
     private static final String NO_ACTION = "com.example.macintosh.assignmentt1.Activities.NO_ACTION";
-    MyRecyclerViewAdapter adapter;
+    public MyRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
     private ArrayList<DataModel> dataa;
     private ArrayList<DataTrackingModel> trackingData;
-    private ArrayList<ArrayList<DataTracking>> dataTrackings;
+    private static ArrayList<ArrayList<DataTracking>> dataTrackings;
+    private static ArrayList<ArrayList<DataTrackingModel>> dataTrackings2;
     private SearchView searchView;
     private ProgressBar bar = null;
     private WebView webView = null;
@@ -103,15 +104,10 @@ public class MainActivity extends AppCompatActivity  {
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         dataTrackings = new ArrayList<>();
+        dataTrackings2 = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        //new HttpClientApacheAsyncTask(this,"https://maps.googleapis.com/maps/api/distancematrix/json?origins=-37.81289833333334,144.0&destinations=-37.8207,144.958&key=AIzaSyCDbBGQ8CaRLa4rvOhsaG-LO0Rxy0CUGxI").execute();
-
-
-//        Intent intent0 =new Intent(MainActivity.this,GPS_Service.class);
-//        MainActivity.this.startService(intent0);
-
         NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
         //NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
         locationBtn.setOnClickListener(new View.OnClickListener() {
@@ -142,65 +138,57 @@ public class MainActivity extends AppCompatActivity  {
                     trackingService.trackingList.get(i).latitude,
                     trackingService.trackingList.get(i).longitude));
         }
-//        for (int i = 0; i < trackingService.trackingList.size(); i++){
-//            jdbcActivity.createNew(new DataTracking(trackingService.trackingList.get(i).trackableId,
-//                    "No Data",
-//                    trackingService.trackingList.get(i).date,
-//                    trackingService.trackingList.get(i).date,
-//                    trackingService.trackingList.get(i).date,
-//                    0.0,0.0,
-//                    trackingService.trackingList.get(i).latitude,
-//                    trackingService.trackingList.get(i).longitude),db);
-//        }
-
         recyclerView = findViewById( R.id.recycler_view );
-//        for (int i = 0; i < trackable.trackableList.size(); i++){
-//            this.dataTrackings.add(new ArrayList<DataTracking>());
-//        }
-//        for(int i = 0; i < trackingService.trackingList.size(); i++){
-//            for (int j = 0; j < trackable.trackableList.size(); j++){
-//                if (trackingService.trackingList.get(i).trackableId==j+1){
-//                    jdbcActivity.getData(j+1,db);
-//                    for(int k = 0; k < jdbcActivity.getData(j+1,db).size(); k++){
-//                        this.dataTrackings.get(j).add(jdbcActivity.getData(j+1,db).get(k));
-//                    }
-//                    if(jdbcActivity.getData(i,db) == null){
-//                        Log.i(LOG_TAG,"Failed to get data !!!");
-//                        jdbcActivity.createNew(new DataTracking(i,
-//                                "No Data",
-//                                trackingService.trackingList.get(0).date,
-//                                trackingService.trackingList.get(0).date,
-//                                trackingService.trackingList.get(0).date,
-//                                0.0,0.0,
-//                                0.0,
-//                                0.0),db);
-//                    }
-//                }
-//            }
-//        }
-//        for (int i = 0; i < trackable.trackableList.size(); i++){
-//            ArrayList<DataTracking> newArray = jdbcActivity.getData(i,db);
-//            for (int j = 0; j < newArray.size(); j++){
-//                this.dataTrackings.get(i).add(newArray.get(j));
-//            }
-////        }
-//<<<<<<< HEAD
-//        for (int i = 0; i < dataTrackings.size(); i++){
-//            if (dataTrackings.get(i).isEmpty()){
-//                this.dataTrackings.get(i).add(new DataTracking());
-//            }
-//        }
-//=======
-//        for (int i = 0; i < dataTrackings.size(); i++){
-//            if (dataTrackings.get(i).isEmpty()){
-//                this.dataTrackings.get(i).add(new DataTracking());
-//            }
-//        }
-//>>>>>>> 1266e798b8ebadee108b456683f7567cf56075b1
-//        this.dataTrackings = dataTrackings;
-//        this.dataTrackings.get(0);
-//        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
-//        dataTrackings.get(5).get(0).getTrackableId();
+        for(int i = 0; i < dataa.size(); i++)
+        {
+            dataTrackings2.add(new ArrayList<DataTrackingModel>());
+        }
+        for (int i = 0; i < dataa.size(); i++ ) {
+            for(int j = 0; j < trackingData.size(); j++){
+                if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
+                    Date StartTime = new Date();
+                    Date Endtime = new Date();
+                    Date MeetTime = new Date();
+                    StartTime.setTime(trackingData.get(j).getDate().getTime());
+                    MeetTime.setTime(trackingData.get(j).getDate().getTime());
+                    Endtime.setTime(trackingData.get(j).getDate().getTime());
+                    Endtime.setMinutes((Endtime.getMinutes()+trackingData.get(j).getStopTime()));
+                    dataTrackings2.get(i).add(trackingData.get(j));
+                    jdbcActivity.createNew(new DataTracking(trackingData.get(j).getTrackableId(), "No Tracking Data",
+                            StartTime,
+                            Endtime,
+                            MeetTime
+                            , 0, 0, trackingData.get(j).getLatitude(), trackingData.get(j).getLongitude()),db);
+                }
+            }
+        }
+        for (int i = 0; i < dataa.size(); i++ ) {
+            if (dataTrackings2.get(i).isEmpty()) {
+                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
+            }
+        }
+        for(int i = 0; i < dataa.size(); i++)
+        {
+            dataTrackings.add(new ArrayList<DataTracking>());
+        }
+        for (int i = 0; i < dataa.size(); i++ ) {
+            for (int j = 0; j < dataTrackings2.get(i).size(); j++){
+                Date StartTime = new Date();
+                Date Endtime = new Date();
+                Date MeetTime = new Date();
+                StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
+                this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                        StartTime,
+                        Endtime,
+                        MeetTime
+                        , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+
+                Log.i("HEREE",Integer.toString( i ));
+            }
+        }
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -215,11 +203,11 @@ public class MainActivity extends AppCompatActivity  {
                         trackingData.get(2).getDate(),EndTime2,trackingData.get(2).getDate(),0.0,0.0,
                         trackingData.get(2).getLatitude(),trackingData.get(2).getLongitude()));
 
-                MainActivity.this.startActivity(testIntent);
+                MainActivity.this.startActivityForResult(testIntent,2);
             }
         });
         try {
-            adapter = new MyRecyclerViewAdapter( this.dataa, this.trackingData, getApplicationContext(), this,db);
+            adapter = new MyRecyclerViewAdapter( this.dataa,this.trackingData,this.dataTrackings2, this.dataTrackings, getApplicationContext(), this,db);
         }
         catch (ParseException e){}
         layoutManager = new LinearLayoutManager( this );
@@ -313,31 +301,6 @@ public class MainActivity extends AppCompatActivity  {
         CheckAvailability.activityPaused();// On Pause notify the Application
     }
 
-
-//    private boolean runtime_permissions() {
-//        if(Build.VERSION.SDK_INT >= 25 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-//
-//            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
-//
-//            return true;
-//        }
-//        return false;
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if(requestCode == 1){
-//            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-//                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
-//                startService(intent);
-//            }else {
-//                runtime_permissions();
-//            }
-//        }
-//    }
-
-
     public void updateProgress(int progress)
     {
         //bar.setProgress(progress);
@@ -370,9 +333,53 @@ public class MainActivity extends AppCompatActivity  {
     public void displayNoti(Context context,DataTracking dataTracking){
 
     }
+    @Override
+    public void onHandleSelection(int position, ArrayList<ArrayList<DataTracking>> updatedArrayList) {
+        // ... Start a new Activity here and pass the values
+        Intent secondActivity = new Intent(MainActivity.this, ShowFragment.class);
+        secondActivity.putExtra("UpdateAdd", updatedArrayList);
+        startActivityForResult(secondActivity, 1);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(resultCode){
 
+            case RESULT_OK:
 
+                // ... Check for some data from the intent
+                if(requestCode == 1){
+                    // .. lets toast again
+                    int position = -1;
+                    if(data != null){
+                        position = data.getIntExtra("Position", 0);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    if(position != -1) {
+                        Toast.makeText(this, "Handled the result successfully at position " + position, Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(this, "Failed to get data from intent" , Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                break;
+
+            case RESULT_CANCELED:
+
+                // ... Handle this situation
+                break;
+        }
+    }
+
+    public static ArrayList<ArrayList<DataTracking>> getDataTrackings() {
+        return dataTrackings;
+    }
+
+    public static ArrayList<ArrayList<DataTrackingModel>> getDataTrackings2() {
+        return dataTrackings2;
+    }
 }
 
 

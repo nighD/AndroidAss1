@@ -61,6 +61,8 @@ public class ShowFragment extends AppCompatActivity {
     private ArrayList<DataTrackingModel> trackingData;
     private static ArrayList<ArrayList<DataTracking>> dataTrackings;
     private static ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
+
+
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
 //    final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
@@ -77,8 +79,10 @@ public class ShowFragment extends AppCompatActivity {
         trackingData = new ArrayList<>();
         dataa = (ArrayList<DataModel>)mIntent.getSerializableExtra("dataModels");
         trackingData = (ArrayList<DataTrackingModel>)mIntent.getSerializableExtra("dataTrackingM");
-        dataTrackings = (ArrayList<ArrayList<DataTracking>>) mIntent.getSerializableExtra("dataTrackings");
-        dataTrackingModels = (ArrayList<ArrayList<DataTrackingModel>>) mIntent.getSerializableExtra("dataTrackingModels");
+//        dataTrackings = (ArrayList<ArrayList<DataTracking>>) mIntent.getSerializableExtra("dataTrackings");
+//        dataTrackingModels = (ArrayList<ArrayList<DataTrackingModel>>) mIntent.getSerializableExtra("dataTrackingModels");
+        dataTrackings = MainActivity.getDataTrackings();
+        dataTrackingModels = MainActivity.getDataTrackings2();
         addButton = findViewById(R.id.btn_add);
         rv=findViewById(R.id.mRecyerID);
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -110,9 +114,19 @@ public class ShowFragment extends AppCompatActivity {
                             final TextView endTime = mView.findViewById(R.id.endTimeTS);
                             final TextView meetTime = mView.findViewById(R.id.meetTimeTS);
                             TextView currLoc = mView.findViewById(R.id.currLocTS);
-                            startTime.setText("Start time: "+stf.format(dataTrackings.get(position).get(0).getStartTime()));
-                            endTime.setText("End time: "+stf.format(dataTrackings.get(position).get(0).getEndTime()));
-                            meetTime.setText("Meet time: "+stf.format(dataTrackings.get(position).get(0).getMeetTime()));
+                            if(dataTrackings.get(position).isEmpty()==false){
+                                startTime.setText("Start time: "+stf.format(dataTrackings.get(position).get(0).getStartTime()));
+                                endTime.setText("End time: "+stf.format(dataTrackings.get(position).get(0).getEndTime()));
+                                meetTime.setText("Meet time: "+stf.format(dataTrackings.get(position).get(0).getMeetTime()));
+                            }
+                            else{
+                                Date endTime2 = new Date();
+                                endTime2.setTime(dataTrackingModels.get(position).get(0).getDate().getTime());
+                                endTime2.setMinutes((endTime2.getMinutes()+dataTrackingModels.get(position).get(0).getStopTime()));
+                                startTime.setText("Start time: "+stf.format(dataTrackingModels.get(position).get(0).getDate()));
+                                endTime.setText("End time: "+stf.format(endTime2));
+                                meetTime.setText("Meet time: "+stf.format(dataTrackingModels.get(position).get(0).getDate()));
+                            }
                             currLoc.setText("No Data");
                             final Date startTime2 = new Date();
                             final Date meetTime2 = new Date();
@@ -213,6 +227,11 @@ public class ShowFragment extends AppCompatActivity {
                             dialog.show();
                             jdbcActivity.createNew(new DataTracking(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
                                     0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),"jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath());
+                            Intent updateAdd = new Intent();
+                            updateAdd.putExtra("action","add");
+                            updateAdd.putExtra("updateAdd",dataTrackings);
+                            updateAdd.putExtra("Position",position);
+                            setResult(RESULT_OK,updateAdd);
 
                         }
                     }
@@ -224,4 +243,10 @@ public class ShowFragment extends AppCompatActivity {
                                 double meetLat, double meetLong){
         this.dataTrackings.get(ID).add(new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
+//    @Override
+//    public void onStop(){
+//        this.dataTracking2 = this.dataTrackings;
+//        super.onStop();
+//    }
+
 }

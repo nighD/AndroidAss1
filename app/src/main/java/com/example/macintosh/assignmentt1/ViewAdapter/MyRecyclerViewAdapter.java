@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,6 +46,7 @@ implements Filterable{
 
 
     private Context ctx;
+    private CallbackInterface mCallback;
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
@@ -57,6 +59,10 @@ implements Filterable{
     JDBCActivity jdbcActivity = new JDBCActivity();
     int id;
 
+    public interface CallbackInterface{
+
+        void onHandleSelection(int position, ArrayList<ArrayList<DataTracking>> updatedArrayList);
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -101,13 +107,16 @@ implements Filterable{
                                 ctx.startActivity(showTL);
                             }
                             else{
-                                Intent showFrag = new Intent().setClass(ctx,ShowFragment.class);
+                                Intent showFrag = new Intent().setClass(MyRecyclerViewAdapter.this.activity,ShowFragment.class);
                                 showFrag.putExtra("CellPosition",getAdapterPosition());
                                 showFrag.putExtra("dataTrackings",dataTrackings);
                                 showFrag.putExtra("dataModels",dataSetFilter );
                                 showFrag.putExtra("dataTrackingM",dataTrackingModels);
                                 showFrag.putExtra("dataTrackingModels",dataTrackings2);
-                                ctx.startActivity(showFrag);
+                                MyRecyclerViewAdapter.this.activity.startActivityForResult(showFrag,1);
+//                                if(mCallback != null){
+//                                    mCallback.onHandleSelection(getAdapterPosition(), dataTrackings);
+//                                }
                             }
                             Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
                             return false;
@@ -129,64 +138,38 @@ implements Filterable{
 
         }
 
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            if( requestCode == 1888 ) {
+//                Bitmap photo = (Bitmap) data.getExtras().get("data");
+//                ((ImageView)inflatedView.findViewById(R.id.image)).setImageBitmap(photo);
+            }
+        }
+
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity, String databasePath) throws ParseException {
+    public void updateAdapter(/* gets params like TITLES,ICONS,NAME,EMAIL,PROFILE*/){
+
+        // update adapter element like NAME, EMAIL e.t.c. here
+
+        // then in order to refresh the views notify the RecyclerView
+        notifyDataSetChanged();
+    }
+
+
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,ArrayList<ArrayList<DataTrackingModel>> dataTrackings2, ArrayList<ArrayList<DataTracking>> dataTrackings,Context ctx, Activity activity, String databasePath) throws ParseException {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
         this.dataTrackingModels = dataTracking;
         this.databasePath = databasePath;
-        for(int i = 0; i < data.size(); i++)
-        {
-            dataTrackings2.add(new ArrayList<DataTrackingModel>());
-        }
-        for (int i = 0; i < data.size(); i++ ) {
-            for(int j = 0; j < dataTrackingModels.size(); j++){
-                if((dataTrackingModels.get(j).getTrackableId()==i+1)&&(dataTrackingModels.get(j).getStopTime()!=0)){
-                    Date StartTime = new Date();
-                    Date Endtime = new Date();
-                    Date MeetTime = new Date();
-                    StartTime.setTime(dataTrackingModels.get(j).getDate().getTime());
-                    MeetTime.setTime(dataTrackingModels.get(j).getDate().getTime());
-                    Endtime.setTime(dataTrackingModels.get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackingModels.get(j).getStopTime()));
-                    dataTrackings2.get(i).add(dataTrackingModels.get(j));
-                    jdbcActivity.createNew(new DataTracking(dataTrackingModels.get(j).getTrackableId(), "No Tracking Data",
-                            StartTime,
-                            Endtime,
-                            MeetTime
-                            , 0, 0, dataTrackingModels.get(j).getLatitude(), dataTrackingModels.get(j).getLongitude()),databasePath);
-                }
-            }
-        }
-        for (int i = 0; i < data.size(); i++ ) {
-            if (dataTrackings2.get(i).isEmpty()) {
-                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-            }
-        }
-        for(int i = 0; i < data.size(); i++)
-        {
-            dataTrackings.add(new ArrayList<DataTracking>());
-        }
-        for (int i = 0; i < data.size(); i++ ) {
-                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
-                    Date StartTime = new Date();
-                    Date Endtime = new Date();
-                    Date MeetTime = new Date();
-                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
-                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-                            StartTime,
-                            Endtime,
-                            MeetTime
-                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
-
-                Log.i("HEREE",Integer.toString( i ));
-                }
+        this.dataTrackings = dataTrackings;
+        this.dataTrackings2 = dataTrackings2;
+        try{
+            mCallback = (CallbackInterface) ctx;
+        }catch(ClassCastException ex){
+            //.. should log the error or throw and exception
+            Log.e("MyAdapter","Must implement the CallbackInterface in the Activity", ex);
         }
     }
     @Override
@@ -210,6 +193,11 @@ implements Filterable{
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
+
+//        if(mCallback != null){
+//            mCallback.onHandleSelection(position, dataTrackings);
+//        }
+
 
         try {
             String picImage = "pic" + Integer.parseInt(dataModel.getImage());
