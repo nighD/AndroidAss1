@@ -5,6 +5,7 @@ public class ResponseJSON {
     private String destination;
     private String distance;
     private String duration;
+    private int id;
     public ResponseJSON(String origin,String destination,String distance,String duration){
         this.origin = origin;
         this.destination = destination;
@@ -23,4 +24,6 @@ public class ResponseJSON {
     public String getDuration(){
         return duration;
     }
+    public void setID(int ID){this.id = ID;}
+    public Integer getID(){return id;}
 }

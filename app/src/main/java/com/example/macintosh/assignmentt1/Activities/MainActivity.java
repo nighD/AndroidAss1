@@ -4,9 +4,7 @@ import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -31,13 +29,12 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.macintosh.assignmentt1.AlarmReceiver.AlarmReceiver;
-import com.example.macintosh.assignmentt1.HTTP.AbstractHttpAsyncTask;
-import com.example.macintosh.assignmentt1.HTTP.HttpClientApacheAsyncTask;
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
+import com.example.macintosh.assignmentt1.ModelClass.CurrentMeetLocationModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
+import com.example.macintosh.assignmentt1.ModelClass.NotificationModel;
 import com.example.macintosh.assignmentt1.NotificationScheduler.NotificationScheduler;
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.ModelClass.Trackable;
@@ -69,6 +66,7 @@ public class MainActivity extends AppCompatActivity  {
     private ImageButton locationBtn;
     private Button testAct;
     private String string0;
+    private static final int REMINDER_TIME = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -110,7 +108,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-        NotificationScheduler.setReminder(MainActivity.this, 20);
+        NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
 
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -326,7 +324,7 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-<<<<<<< HEAD
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -339,34 +337,32 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
     }
-=======
-    //   @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if(requestCode == 100){
-//            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-//                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
-//                startService(intent);
-//            }else {
-//                runtime_permissions();
-//            }
-//        }
-//    }
->>>>>>> 2813457edc028a61cddc5a7a22348f4ea28ef455
-    public void updateProgress(int progress)
+
+
+    public void displayNotification(NotificationModel notificationModel, Context context, CurrentMeetLocationModel currentMeetLocationModel)
     {
-        //bar.setProgress(progress);
+        ArrayList<DataModel> dataa1 = new ArrayList<DataModel>(  );
+        Trackable trackable = new Trackable();
+        trackable.parseFile(context );
+        for (int i = 0; i < trackable.trackableList.size(); i++) {
+            dataa1.add( new DataModel(
+                    trackable.trackableList.get( i ).name,
+                    trackable.trackableList.get( i ).description,
+                    trackable.trackableList.get( i ).webURL,
+                    trackable.trackableList.get( i ).Category,
+                    trackable.trackableList.get( i ).getID()
+
+            ) );
+        }
+
+       // int position = notificationModel.getID();
+        int id  = currentMeetLocationModel.getTrackableId() - 1;
+        String truckName = dataa1.get(id).getName();
+        Log.i(LOG_TAG,"Position " + id);
+        NotificationScheduler.showNotification(context,currentMeetLocationModel
+                ,truckName,id, notificationModel);
     }
 
-    public void displayHTML(String htmlText)
-    {
-        // if you just wanted to display directly from URL without progress
-        // webView.loadUrl(AbstractHttpAsyncTask.TEST_URL);
-        //webView.loadData(htmlText,
-//              "text/html", null);
-        //webView.loadDataWithBaseURL( AbstractHttpAsyncTask.DistanceURL, htmlText,
-        //  "text/html", null, null);
-    }
     @Override
     protected void onNewIntent(Intent intent) {
         processIntentAction(intent);
@@ -390,15 +386,12 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
     }
-<<<<<<< HEAD
-    public void sendBroadcast(String string0){
-        this.string0 = string0;
-    }
+
 }
 
-=======
-}
->>>>>>> 2813457edc028a61cddc5a7a22348f4ea28ef455
+
+
+
 
 
 

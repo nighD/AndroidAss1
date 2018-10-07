@@ -339,8 +339,15 @@ public class JDBCActivity
         return dataTracking[0];
     }
 
-    public CurrentMeetLocationModel[] takeLatLng(final String db){
+    public CurrentMeetLocationModel[] takeLatLng(final String db, Date date){
         final CurrentMeetLocationModel[] currentMeetLocationModels = new CurrentMeetLocationModel[6];
+        CurrentMeetLocationModel[] currentMeetLocationModels1 = new CurrentMeetLocationModel[3];
+        SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY hh:mm:ss");
+        Scanner scanner0 = new Scanner(sdf.format(date));
+        scanner0.useDelimiter( "\\s" );
+        String date0 = scanner0.next();
+        String startTime = scanner0.next();
+        long[] compare = new long[6];
                 try
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
@@ -355,11 +362,58 @@ public class JDBCActivity
                     int begin = 0;
                     while (rs.next())
                     {
-                        currentMeetLocationModels[begin] = new CurrentMeetLocationModel(Integer.parseInt( rs.getString( "trackableID" ) )
+                        String endTime = rs.getString("time0");;
+                        SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
+                        Date d1 = sdf1.parse(startTime);
+                        Date d2 = sdf1.parse(endTime);
+                        long elapsed = d2.getTime() - d1.getTime();
+                        compare[begin] = elapsed;
+                        Log.i(LOG_TAG,"COMPArE" + elapsed);
+                        int stopTime = Integer.parseInt(rs.getString("stoptime"));
+                        String convert = String.format("%02d:%02d", 0, stopTime );
+                        Date stoptime1 = sdf1.parse( convert );
+                        Log.i(LOG_TAG,"stop time "+stoptime1);
+                        currentMeetLocationModels[begin] = new CurrentMeetLocationModel(
+                                Integer.parseInt( rs.getString( "trackableID" ))
+                                ,d2,stoptime1
                                 ,Double.parseDouble( rs.getString("latitude"))
-                                                  ,Double.parseDouble( rs.getString("longtitude")));
+                                ,Double.parseDouble( rs.getString("longtitude")));
                         //Log.i(LOG_TAG,Integer.toString( currentMeetLocationModels[begin].getTrackableId() ));
                         begin++;
+                    }
+
+                    int currentID = currentMeetLocationModels[0].getTrackableId();
+                    int currentposition = 0;
+                    int begin0 = 0;
+                    for ( int i = 1; i <currentMeetLocationModels.length;i++){
+                        Log.i(LOG_TAG,"TrackableID " +Integer.toString( currentMeetLocationModels[i].getTrackableId() ));
+                        Log.i(LOG_TAG,"CurrentID " +Integer.toString(  currentID));
+                        if (currentID == currentMeetLocationModels[i].getTrackableId()){
+                            if(compare[currentposition] < compare[i] && compare[currentposition] > 0 && compare[i] > 0){
+                                currentMeetLocationModels1[begin0] = currentMeetLocationModels[currentposition];
+                                Log.i(LOG_TAG,"SHITTTT" + Long.toString(compare[currentposition]));
+                                begin0 ++;
+                            }
+                            else if (compare[currentposition] > compare[i] && compare[currentposition] > 0 && compare[i] > 0){
+                                currentMeetLocationModels1[begin0] = currentMeetLocationModels[i];
+                                Log.i(LOG_TAG,"SHITTTT" + Long.toString(compare[i]));
+                                begin0 ++;
+                            }
+                            else if (compare[currentposition] < 0){
+                                currentMeetLocationModels1[begin0] = currentMeetLocationModels[i];
+                                Log.i(LOG_TAG,"SHITTTT" + Long.toString(compare[i]));
+                                begin0 ++;
+                            }
+                            else if (compare[i] < 0){
+                                currentMeetLocationModels1[begin0] = currentMeetLocationModels[currentposition];
+                                Log.i(LOG_TAG,"SHITTTT" + Long.toString(compare[currentposition]));
+                                begin0 ++;
+                            }
+                        }
+                        else if (currentID != currentMeetLocationModels[i].getTrackableId()){
+                            currentID = currentMeetLocationModels[i].getTrackableId();
+                            currentposition = i;
+                        }
                     }
                     Log.i(LOG_TAG, "*** query result: ");
 
@@ -382,7 +436,7 @@ public class JDBCActivity
                 {
                     ex.printStackTrace();
                 }
-        return currentMeetLocationModels;
+        return currentMeetLocationModels1;
     }
 
 

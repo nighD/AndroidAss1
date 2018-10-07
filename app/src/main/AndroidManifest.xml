@@ -71,7 +71,7 @@
             </intent-filter>
         </activity>
         <!-- Register the Alarm Receiver -->
-        <receiver android:name=".AlarmReceiver.AlarmReceiver"
+        <receiver android:name=".Receiver.AlarmReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -81,6 +81,9 @@
             </intent-filter>
         </receiver>
         <service android:name=".Service.GPS_Service"/>
+        <receiver android:name=".Receiver.SkipReceiver" />
+        <receiver android:name=".Receiver.CancelReceiver" />
+
     </application>
 
 </manifest>

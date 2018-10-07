@@ -1,12 +1,12 @@
 package com.example.macintosh.assignmentt1.HTTP;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.example.macintosh.assignmentt1.Activities.MainActivity;
-import com.example.macintosh.assignmentt1.AlarmReceiver.AlarmReceiver;
+import com.example.macintosh.assignmentt1.Receiver.AlarmReceiver;
+import com.example.macintosh.assignmentt1.ModelClass.CurrentMeetLocationModel;
+import com.example.macintosh.assignmentt1.ModelClass.NotificationModel;
 import com.example.macintosh.assignmentt1.ModelClass.ResponseJSON;
 import com.example.macintosh.assignmentt1.json.JSON;
 
@@ -22,21 +22,23 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 
-
-
 public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
 {
    private String LOG_TAG = HttpClientApacheAsyncTask.class.getName();
    public ResponseJSON response;
    private String DistURL;
    private AlarmReceiver alarmReceiver;
-   private Context context;
-   public HttpClientApacheAsyncTask(MainActivity activity, String URL, Context context)
+   //private Context context;
+
+
+   public HttpClientApacheAsyncTask(MainActivity activity, String URL, Context context, CurrentMeetLocationModel currentMeetLocationModel0)
    {
       super(activity);
       Log.i(LOG_TAG,URL);
       this.context = context;
       DistURL = URL;
+      currentMeetLocationModel = currentMeetLocationModel0;
+
    }
 
    @Override
@@ -53,14 +55,14 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
          String responseBody = httpclient.execute(getRequest,
                  new BasicResponseHandler());
          // log the full HTML
-         Log.i(LOG_TAG, responseBody);
+         //Log.i(LOG_TAG, responseBody);
 
          Log.i(LOG_TAG, "MANUAL with progress:");
 
          // the manual way retrieving a content entity
          HttpResponse response = httpclient.execute(getRequest);
          HttpEntity entity = response.getEntity();
-         logHeaders(response.getAllHeaders());
+         //logHeaders(response.getAllHeaders());
 
          if (entity != null)
          {
@@ -76,7 +78,7 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
             if (length == -1)
                length = 11000;
 
-            Log.i(LOG_TAG, "getContentLength()=" + length);
+            //Log.i(LOG_TAG, "getContentLength()=" + length);
 
             String line;
             // read chunk at a time so we can publish progress
@@ -91,10 +93,17 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
             // finished
             publishProgress(100);
             this.response = JSON.responseJSON( responseBody );
-            Intent i = new Intent("location_and_duration");
-            Log.i(LOG_TAG,this.response.getDistance());
-            i.putExtra("update",this.response.getDistance().toString() +" "+ this.response.getDuration().toString());
-            context.sendBroadcast(i);
+            int ID = this.response.getID();
+            String destination = this.response.getDestination();
+            String duration = this.response.getDuration();
+            notificationModel = new NotificationModel( ID,destination,duration );
+//            Intent i = new Intent("location_and_duration");
+//            Log.i(LOG_TAG,this.response.getDistance());
+//            //this.response.setID( trackableID );
+//            i.putExtra("destination",this.response.getDestination().toString());
+//            i.putExtra("duration",this.response.getDuration().toString() );
+//            i.putExtra( "trackableID",this.response.getID().toString());
+//            context.sendBroadcast(i);
             // Log.i(LOG_TAG, htmlStringBuilder.toString());
             Log.i(LOG_TAG, "DONE");
 
@@ -122,4 +131,5 @@ public class HttpClientApacheAsyncTask extends AbstractHttpAsyncTask
                  .append('\n');
       Log.i(LOG_TAG, sb.toString());
    }
+
 }

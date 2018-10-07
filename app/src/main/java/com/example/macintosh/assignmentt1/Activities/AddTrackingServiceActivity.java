@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,9 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
     Context ctx;
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
+    SimpleDateFormat sdf = new SimpleDateFormat( "mm" );
+    SimpleDateFormat sdf1 = new SimpleDateFormat( "hh" );
+    private String LOG_TAG = this.getClass().getName();
 //    private ArrayList<DataTrackingModel> trackingData;
 //    private ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
 //    private ArrayList<ArrayList<DataTracking>> dataTrackings;
@@ -62,17 +66,24 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
         this.currLoc.setText("No Data");
         this.Save = findViewById(R.id.SaveNow2);
         this.dataTracking1 = (DataTracking) mIntent.getSerializableExtra("dataTracking1");
-        this.dataTrackingModel1 = (DataTrackingModel) mIntent.getSerializableExtra("dataTrackingModel1");
+        int startMinute = Integer.parseInt( sdf.format( dataTracking1.getStartTime()));
+        int startHours = Integer.parseInt( sdf1.format( dataTracking1.getStartTime()));
+        int endTIME = Integer.parseInt(sdf.format( dataTracking1.getEndTime() ));
+        int endTIMEMinute = startMinute +endTIME;
+        String convert = String.format("%02d:%02d", startHours, endTIMEMinute );
+        //this.dataTrackingModel1 = (DataTrackingModel) mIntent.getSerializableExtra("dataTrackingModel1");
 //        trackingData = (ArrayList<DataTrackingModel>)mIntent.getSerializableExtra("dataTrackingM");
 //        dataTrackings = (ArrayList<ArrayList<DataTracking>>) mIntent.getSerializableExtra("dataTrackings");
 //        dataTrackingModels = (ArrayList<ArrayList<DataTrackingModel>>) mIntent.getSerializableExtra("dataTrackingModels");
         startTime.setText("Start time: "+stf.format(dataTracking1.getStartTime()));
-        endTime.setText("End time: "+stf.format(dataTracking1.getEndTime()));
+        endTime.setText("End time: "+convert);
         meetTime.setText("Meet time: "+stf.format(dataTracking1.getMeetTime()));
+
+        Log.i(LOG_TAG,"END TIME "+endTIME);
         currLoc.setText("No Data");
         final Date startTime2 = new Date();
         final Date meetTime2 = new Date();
-        startTime2.setTime(dataTrackingModel1.getDate().getTime());
+        startTime2.setTime(dataTracking1.getStartTime().getTime());
         meetTime2.setTime(startTime2.getTime());
         editTitle.setEnabled(true);
         Save.setEnabled(true);
@@ -113,8 +124,8 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
                 PopupMenu editMeetTime = new PopupMenu(AddTrackingServiceActivity.this,browseMeetTime);
                 editMeetTime.getMenuInflater().inflate(R.menu.edit_meet_time_menu,editMeetTime.getMenu());
                 editMeetTime.getMenu().clear();
-                for(int j = 1; j < dataTrackingModel1.getStopTime(); j++){
-                    editMeetTime.getMenu().add(1,R.id.timeSlot1+j-1,j,dataTrackingModel1.getDate().getHours()+":"+(dataTrackingModel1.getDate().getMinutes()+j));
+                for(int j = 1; j < endTIME; j++){
+                    editMeetTime.getMenu().add(1,R.id.timeSlot1+j-1,j,dataTracking1.getStartTime().getHours()+":"+(dataTracking1.getStartTime().getMinutes()+j));
                 }
                 editMeetTime.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
