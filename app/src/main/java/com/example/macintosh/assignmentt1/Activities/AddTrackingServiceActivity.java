@@ -48,7 +48,7 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         this.mIntent = getIntent();
-        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
         JDBCActivity jdbcActivity = new JDBCActivity();
         jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
         //jdbcActivity.takeLatLng( db );

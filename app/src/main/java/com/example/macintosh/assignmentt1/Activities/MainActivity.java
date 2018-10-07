@@ -67,19 +67,20 @@ public class MainActivity extends AppCompatActivity  {
     private Button testAct;
     private String string0;
     private static final int REMINDER_TIME = 10;
+    private static final int CHECK_TIME = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        Intent myIntent = new Intent();
-        myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
-        this.startActivity(myIntent);
-        ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            Toast.makeText(MainActivity.this, "Internet is connected",Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(MainActivity.this, "Internet is disconnected",Toast.LENGTH_SHORT).show();
-        }
+//        Intent myIntent = new Intent();
+//        myIntent.setClass(MainActivity.this,TestPermissionsActivity.class);
+//        this.startActivity(myIntent);
+//        ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//        if (networkInfo != null && networkInfo.isConnected()) {
+//            Toast.makeText(MainActivity.this, "Internet is connected",Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(MainActivity.this, "Internet is disconnected",Toast.LENGTH_SHORT).show();
+//        }
         setContentView( R.layout.activity_main );
         locationBtn = findViewById(R.id.browseLocation);
         testAct = findViewById(R.id.testAddActivity);
@@ -89,14 +90,15 @@ public class MainActivity extends AppCompatActivity  {
         trackable.parseFile( getApplicationContext() );
         TrackingService trackingService = new TrackingService();
         trackingService.parseFile(getApplicationContext());
-        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
         JDBCActivity jdbcActivity = new JDBCActivity();
         jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
         //jdbcActivity.takeLatLng( db );
         jdbcActivity.createServiceDatabase(db);
         Date date = new Date(  );
         Log.i(LOG_TAG,"Create NEW");
-        jdbcActivity.createNew(new DataTracking(0,"No data",date,date,date,0,0,0,0  ),db  );
+        jdbcActivity.createNew(new DataTracking(1,"No data",date,date,date,0,0,0,0  ),db  );
+
         dataa = new ArrayList<>();
         trackingData = new ArrayList<>();
         dataTrackings = new ArrayList<>();
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
         NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
-
+        //NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,12 +181,20 @@ public class MainActivity extends AppCompatActivity  {
 //            for (int j = 0; j < newArray.size(); j++){
 //                this.dataTrackings.get(i).add(newArray.get(j));
 //            }
-//        }
+////        }
+//<<<<<<< HEAD
 //        for (int i = 0; i < dataTrackings.size(); i++){
 //            if (dataTrackings.get(i).isEmpty()){
 //                this.dataTrackings.get(i).add(new DataTracking());
 //            }
 //        }
+//=======
+//        for (int i = 0; i < dataTrackings.size(); i++){
+//            if (dataTrackings.get(i).isEmpty()){
+//                this.dataTrackings.get(i).add(new DataTracking());
+//            }
+//        }
+//>>>>>>> 1266e798b8ebadee108b456683f7567cf56075b1
 //        this.dataTrackings = dataTrackings;
 //        this.dataTrackings.get(0);
 //        addTrackingData(1, "lala", new Date(), new Date(),new Date(), 0.0,0.1,0.2,0.3);
@@ -192,7 +202,7 @@ public class MainActivity extends AppCompatActivity  {
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(LOG_TAG,jdbcActivity.getData(0,db).toString());
+                Log.i(LOG_TAG,jdbcActivity.getData(db).toString());
                 Intent testIntent = new Intent();
                 Date EndTime2 = new Date();
                 EndTime2.setTime(trackingData.get(2).getDate().getTime());
@@ -302,28 +312,28 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-    private boolean runtime_permissions() {
-        if(Build.VERSION.SDK_INT >= 25 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+//    private boolean runtime_permissions() {
+//        if(Build.VERSION.SDK_INT >= 25 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+//
+//            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
+//
+//            return true;
+//        }
+//        return false;
+//    }
 
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
-
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 1){
-            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
-                startService(intent);
-            }else {
-                runtime_permissions();
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if(requestCode == 1){
+//            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+//                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+//                startService(intent);
+//            }else {
+//                runtime_permissions();
+//            }
+//        }
+//    }
 
 
     public void updateProgress(int progress)

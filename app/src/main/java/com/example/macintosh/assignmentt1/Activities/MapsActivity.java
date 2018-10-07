@@ -99,7 +99,7 @@ public class MapsActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.map, mapFragment).commit();
         mapFragment.getMapAsync(this);
-        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
         JDBCActivity jdbcActivity = new JDBCActivity();
         jdbcActivity.trackingDataDatabase(this,db);
     }
@@ -169,7 +169,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
     catch (NullPointerException ex){}
 
-        getDeviceLocation();
+        //getDeviceLocation();
 //        showCurrentPlace();
     }
     /**
@@ -177,7 +177,7 @@ public class MapsActivity extends AppCompatActivity implements
      *
      */
     private void getTrackablePos(){
-        final String db = "jdbc:sqldroid:" + getDatabasePath("ass1.db").getAbsolutePath();
+        final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
 
         JDBCActivity jdbcActivity = new JDBCActivity();
         //jdbcActivity.trackingDataDatabase(this,db);

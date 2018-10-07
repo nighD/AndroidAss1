@@ -22,7 +22,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class NotiReceiver extends BroadcastReceiver {
     private static BroadcastReceiver broadcastReceiver;
     private static int REMINDER_TIME = 10;
     String TAG = "AlarmReceiver";
@@ -54,15 +54,15 @@ public class AlarmReceiver extends BroadcastReceiver {
                     longtitude[0] = scanner.next();
                     latitude[0] = scanner.next();
                     latLng0[0] = new LatLng(Double.parseDouble(latitude[0]),Double.parseDouble(longtitude[0]));
-                    Random rand = new Random();
-                    int  n = rand.nextInt(3) + 0;
-                    Log.i(TAG,"number "+ n);
-                    Log.i(TAG,"Size " + jdbcActivity.getData( db ).size());
-                    LatLng latLng1 = new LatLng( currentMeetLocationModels[n].getMeetLocationLatitude()
-                                , currentMeetLocationModels[n].getMeetLocationLongtitude() );
-                    Log.i(TAG,"trackableID "+currentMeetLocationModels[n].getTrackableId());
-                    new HttpClientApacheAsyncTask( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )
-                                , context, currentMeetLocationModels[n]).execute();
+                    Log.i(TAG,"Size " + jdbcActivity.getData( db ));
+//                    Random rand = new Random();
+//                    int  n = rand.nextInt(3) + 0;
+//                    Log.i(TAG,"number "+ n);
+//                    LatLng latLng1 = new LatLng( currentMeetLocationModels[n].getMeetLocationLatitude()
+//                            , currentMeetLocationModels[n].getMeetLocationLongtitude() );
+//                    Log.i(TAG,"trackableID "+currentMeetLocationModels[n].getTrackableId());
+//                    new HttpClientApacheAsyncTask( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )
+//                            , context, currentMeetLocationModels[n]).execute();
                 }
             };
         }

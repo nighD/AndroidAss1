@@ -208,8 +208,8 @@ public class ShowFragment extends AppCompatActivity {
                             });
                             dialog.show();
                         }
-                        jdbcActivity.createNew(new DataTracking(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
-                                0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),db);
+//                        jdbcActivity.createNew(new DataTracking(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
+//                                0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),db);
                     }
                 });
             }
