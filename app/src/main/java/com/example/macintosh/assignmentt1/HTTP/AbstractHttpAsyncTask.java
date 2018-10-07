@@ -11,7 +11,7 @@ import com.example.macintosh.assignmentt1.ModelClass.NotificationModel;
 import java.net.URL;
 
 
-// example of HttpURLConnection by Caspar, updated sem 2, 2018
+
 public abstract class AbstractHttpAsyncTask extends AsyncTask<Void, Integer, Void>
 {
    private static final String LOG_TAG = AbstractHttpAsyncTask.class.getName();

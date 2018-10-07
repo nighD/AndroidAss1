@@ -49,7 +49,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    //st.executeUpdate("Drop table trackingdata");
+                    st.executeUpdate("Drop table trackingdata");
                     // Create table:
                     st.executeUpdate("create table trackingdata( " +
                             "date0 date not null, " +
@@ -104,6 +104,7 @@ public class JDBCActivity
 
                     // Release resources //Step 7
                     //rs.close();
+
                     st.close();
                     con.close();
 
@@ -138,7 +139,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    //st.executeUpdate("Drop table servicedata");
+                    st.executeUpdate("Drop table servicedata");
                     // Create table:
                     st.executeUpdate("create table servicedata( " +
                             "ID int not null, " +
