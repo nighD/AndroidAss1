@@ -221,5 +221,4 @@ public class ShowFragment extends AppCompatActivity {
                                 double meetLat, double meetLong){
         this.dataTrackings.get(ID).add(new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
-
 }

@@ -144,7 +144,19 @@ implements Filterable{
         for (int i = 0; i < data.size(); i++ ) {
             for(int j = 0; j < dataTrackingModels.size(); j++){
                 if((dataTrackingModels.get(j).getTrackableId()==i+1)&&(dataTrackingModels.get(j).getStopTime()!=0)){
+                    Date StartTime = new Date();
+                    Date Endtime = new Date();
+                    Date MeetTime = new Date();
+                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
                     dataTrackings2.get(i).add(dataTrackingModels.get(j));
+                    jdbcActivity.createNew(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+                            StartTime,
+                            Endtime,
+                            MeetTime
+                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()),databasePath);
                 }
             }
         }
@@ -171,11 +183,6 @@ implements Filterable{
                             Endtime,
                             MeetTime
                             , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
-                jdbcActivity.createNew(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-                        StartTime,
-                        Endtime,
-                        MeetTime
-                        , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()),databasePath);
                 }
         }
     }
@@ -264,7 +271,6 @@ implements Filterable{
     {
         this.dataTrackings.get(position).add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
-
 
 }
 
