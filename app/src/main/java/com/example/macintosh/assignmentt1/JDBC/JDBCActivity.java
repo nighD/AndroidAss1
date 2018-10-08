@@ -49,9 +49,9 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    st.executeUpdate("Drop table trackingdata");
+                    //st.executeUpdate("Drop table trackingdata");
                     // Create table:
-                    st.executeUpdate("create table trackingdata( " +
+                    st.executeUpdate("create table IF NOT EXISTS trackingdata( " +
                             "date0 date not null, " +
                             "time0 time not null, " +
                             "trackableID int not null, " +
@@ -139,9 +139,9 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     Connection con = DriverManager.getConnection(db);
                     Statement st = con.createStatement();
-                    st.executeUpdate("Drop table servicedata");
+                    //st.executeUpdate("Drop table servicedata");
                     // Create table:
-                    st.executeUpdate("create table servicedata( " +
+                    st.executeUpdate("create table IF NOT EXISTS servicedata( " +
                             "ID int not null, " +
                             "title char[100], " +
                             "starttime date not null, " +

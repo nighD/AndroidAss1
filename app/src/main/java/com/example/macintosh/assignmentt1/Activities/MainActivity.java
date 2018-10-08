@@ -148,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         {
             dataTrackings.add(new ArrayList<DataTracking>());
         }
-        if(jdbcActivity.getData(db)==null){
+        ArrayList<DataTracking> databaseData = jdbcActivity.getData(db);
+        if(databaseData.isEmpty()){
             for (int i = 0; i < dataa.size(); i++ ) {
                 for(int j = 0; j < trackingData.size(); j++){
                     if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
@@ -212,9 +213,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
                 }
             }
-            dataTrackings.clear();
-            for (int i = 0; i < dataa.size(); i++){
-                dataTrackings.add(jdbcActivity.getData(db));
+            for(int i = 0; i < databaseData.size(); i++){
+                for (int j = 0; j < this.dataa.size(); j++ ){
+                    if(databaseData.get(i).getTrackableId()==j+1){
+                        this.dataTrackings.get(j).add(databaseData.get(i));
+                    }
+                }
             }
         }
 
