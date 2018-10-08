@@ -1,12 +1,8 @@
 package com.example.macintosh.assignmentt1.ViewAdapter;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,17 +10,17 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.app.Fragment;
 import android.widget.Toast;
 
 
-import com.example.macintosh.assignmentt1.Activities.MainActivity;
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.Interfaces.ItemClickListener;
@@ -45,6 +41,7 @@ implements Filterable{
 
 
     private Context ctx;
+    private CallbackInterface mCallback;
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
@@ -53,10 +50,15 @@ implements Filterable{
     private String databasePath;
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
-    private RecyclerViewAdapterListener listener;
+    private ShowTrackingListAdapter.RecyclerViewAdapterListener listener;
+    private int notiInterval;
     JDBCActivity jdbcActivity = new JDBCActivity();
     int id;
 
+    public interface CallbackInterface{
+
+        void onHandleSelection(int position, ArrayList<ArrayList<DataTracking>> updatedArrayList);
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -100,14 +102,33 @@ implements Filterable{
                                 showTL.putExtra("dataTrackingModels",dataTrackings2);
                                 ctx.startActivity(showTL);
                             }
+                            else if(item.getItemId()==R.id.show_settings){
+                                Dialog dialog = new Dialog(MyRecyclerViewAdapter.this.activity);
+                                dialog.setContentView(R.layout.edit_noti_interval);
+                                EditText editInterval = dialog.findViewById(R.id.edit_interval);
+                                Button save = dialog.findViewById(R.id.saveInterval);
+                                editInterval.setEnabled(true);
+                                save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if(editInterval.getText()!=null) {
+                                            notiInterval = Integer.parseInt(editInterval.getText().toString());
+                                        }
+                                        else notiInterval = 1;
+                                        dialog.cancel();
+                                    }
+                                });
+
+                                dialog.show();
+                            }
                             else{
-                                Intent showFrag = new Intent().setClass(ctx,ShowFragment.class);
+                                Intent showFrag = new Intent().setClass(MyRecyclerViewAdapter.this.activity,ShowFragment.class);
                                 showFrag.putExtra("CellPosition",getAdapterPosition());
                                 showFrag.putExtra("dataTrackings",dataTrackings);
                                 showFrag.putExtra("dataModels",dataSetFilter );
                                 showFrag.putExtra("dataTrackingM",dataTrackingModels);
                                 showFrag.putExtra("dataTrackingModels",dataTrackings2);
-                                ctx.startActivity(showFrag);
+                                MyRecyclerViewAdapter.this.activity.startActivityForResult(showFrag,1);
                             }
                             Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
                             return false;
@@ -124,78 +145,41 @@ implements Filterable{
 
         @Override
         public void onClick(View v) {
-
             this.itemClickListener.onItemClick(v,getLayoutPosition() );
-
         }
-
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,Context ctx, Activity activity, String databasePath) throws ParseException {
+    public void updateAdapter(/* gets params like TITLES,ICONS,NAME,EMAIL,PROFILE*/){
+
+        // update adapter element like NAME, EMAIL e.t.c. here
+
+        // then in order to refresh the views notify the RecyclerView
+        notifyDataSetChanged();
+    }
+
+
+    public MyRecyclerViewAdapter(ArrayList<DataModel> data, ArrayList<DataTrackingModel> dataTracking,ArrayList<ArrayList<DataTrackingModel>> dataTrackings2, ArrayList<ArrayList<DataTracking>> dataTrackings,Context ctx, Activity activity, String databasePath) throws ParseException {
         this.dataSet = data;
         this.ctx = ctx;
         this.activity = activity;
         this.dataSetFilter = data;
         this.dataTrackingModels = dataTracking;
         this.databasePath = databasePath;
-        for(int i = 0; i < data.size(); i++)
-        {
-            dataTrackings2.add(new ArrayList<DataTrackingModel>());
-        }
-        for (int i = 0; i < data.size(); i++ ) {
-            for(int j = 0; j < dataTrackingModels.size(); j++){
-                if((dataTrackingModels.get(j).getTrackableId()==i+1)&&(dataTrackingModels.get(j).getStopTime()!=0)){
-                    Date StartTime = new Date();
-                    Date Endtime = new Date();
-                    Date MeetTime = new Date();
-                    StartTime.setTime(dataTrackingModels.get(j).getDate().getTime());
-                    MeetTime.setTime(dataTrackingModels.get(j).getDate().getTime());
-                    Endtime.setTime(dataTrackingModels.get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackingModels.get(j).getStopTime()));
-                    dataTrackings2.get(i).add(dataTrackingModels.get(j));
-                    Log.i("HEREE",Integer.toString( j ));
-                    jdbcActivity.createNew(new DataTracking(dataTrackingModels.get(j).getTrackableId(), "No Tracking Data",
-                            StartTime,
-                            Endtime,
-                            MeetTime
-                            , 0, 0, dataTrackingModels.get(j).getLatitude(), dataTrackingModels.get(j).getLongitude()),databasePath);
-                }
-            }
-        }
-        for (int i = 0; i < data.size(); i++ ) {
-            if (dataTrackings2.get(i).isEmpty()) {
-                this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-            }
-        }
-        for(int i = 0; i < data.size(); i++)
-        {
-            dataTrackings.add(new ArrayList<DataTracking>());
-        }
-        for (int i = 0; i < data.size(); i++ ) {
-                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
-                    Date StartTime = new Date();
-                    Date Endtime = new Date();
-                    Date MeetTime = new Date();
-                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
-                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-                            StartTime,
-                            Endtime,
-                            MeetTime
-                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
-
-
-                }
+        this.dataTrackings = dataTrackings;
+        this.dataTrackings2 = dataTrackings2;
+        try {
+            mCallback = (CallbackInterface) ctx;
+        } catch (ClassCastException ex) {
+            //.. should log the error or throw and exception
+            Log.e("MyAdapter", "Must implement the CallbackInterface in the Activity", ex);
         }
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View view = inflater.inflate(R.layout.cardview, parent, false);
-        final MyViewHolder holder = new MyViewHolder(view);
-        return holder;
+       LayoutInflater inflater = activity.getLayoutInflater();
+       View view = inflater.inflate(R.layout.cardview, parent, false);
+       final MyViewHolder holder = new MyViewHolder(view);
+       return holder;
     }
     @Override
     public void onBindViewHolder(final MyRecyclerViewAdapter.MyViewHolder holder,final int position) {
@@ -211,6 +195,11 @@ implements Filterable{
         textViewDescription.setText(dataModel.getDescription());
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
+
+//        if(mCallback != null){
+//            mCallback.onHandleSelection(position, dataTrackings);
+//        }
+
 
         try {
             String picImage = "pic" + Integer.parseInt(dataModel.getImage());
@@ -275,7 +264,6 @@ implements Filterable{
     {
         this.dataTrackings.get(position).add(0,new DataTracking(ID,title,startTime,endTime,meetTime,currLat,currLong,meetLat,meetLong));
     }
-
 }
 
 
