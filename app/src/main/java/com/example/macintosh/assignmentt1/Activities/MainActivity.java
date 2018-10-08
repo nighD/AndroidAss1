@@ -42,7 +42,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.CallbackInterface{
+public class MainActivity extends AppCompatActivity {
 
     //    private Activity activity;
 
@@ -353,13 +353,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
     public void displayNoti(Context context, DataTracking dataTracking, NotificationModel notificationModel, LatLng latLng){
         NotificationScheduler.showNoti( context,dataTracking,notificationModel,latLng );
-    }
-    @Override
-    public void onHandleSelection(int position, ArrayList<ArrayList<DataTracking>> updatedArrayList) {
-        // ... Start a new Activity here and pass the values
-        Intent secondActivity = new Intent(MainActivity.this, ShowFragment.class);
-        secondActivity.putExtra("UpdateAdd", updatedArrayList);
-        startActivityForResult(secondActivity, 1);
     }
 
     @Override

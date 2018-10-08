@@ -41,7 +41,6 @@ implements Filterable{
 
 
     private Context ctx;
-    private CallbackInterface mCallback;
     private ArrayList<DataModel> dataSet;
     private ArrayList<DataModel> dataSetFilter;
     private ArrayList<DataTrackingModel> dataTrackingModels;
@@ -55,10 +54,6 @@ implements Filterable{
     JDBCActivity jdbcActivity = new JDBCActivity();
     int id;
 
-    public interface CallbackInterface{
-
-        void onHandleSelection(int position, ArrayList<ArrayList<DataTracking>> updatedArrayList);
-    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -167,12 +162,6 @@ implements Filterable{
         this.databasePath = databasePath;
         this.dataTrackings = dataTrackings;
         this.dataTrackings2 = dataTrackings2;
-        try {
-            mCallback = (CallbackInterface) ctx;
-        } catch (ClassCastException ex) {
-            //.. should log the error or throw and exception
-            Log.e("MyAdapter", "Must implement the CallbackInterface in the Activity", ex);
-        }
     }
     @Override
     public MyRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -196,9 +185,6 @@ implements Filterable{
         textViewWebURL.setText(dataModel.getWebURL());
         textViewCategory.setText(dataModel.getCategory());
 
-//        if(mCallback != null){
-//            mCallback.onHandleSelection(position, dataTrackings);
-//        }
 
 
         try {
