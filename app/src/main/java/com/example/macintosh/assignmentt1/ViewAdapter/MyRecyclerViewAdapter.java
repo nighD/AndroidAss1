@@ -1,13 +1,8 @@
 package com.example.macintosh.assignmentt1.ViewAdapter;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,17 +10,17 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.app.Fragment;
 import android.widget.Toast;
 
 
-import com.example.macintosh.assignmentt1.Activities.MainActivity;
 import com.example.macintosh.assignmentt1.JDBC.JDBCActivity;
 import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.Interfaces.ItemClickListener;
@@ -56,6 +51,7 @@ implements Filterable{
     public DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
     private Activity activity;
     private ShowTrackingListAdapter.RecyclerViewAdapterListener listener;
+    private int notiInterval;
     JDBCActivity jdbcActivity = new JDBCActivity();
     int id;
 
@@ -106,6 +102,25 @@ implements Filterable{
                                 showTL.putExtra("dataTrackingModels",dataTrackings2);
                                 ctx.startActivity(showTL);
                             }
+                            else if(item.getItemId()==R.id.show_settings){
+                                Dialog dialog = new Dialog(MyRecyclerViewAdapter.this.activity);
+                                dialog.setContentView(R.layout.edit_noti_interval);
+                                EditText editInterval = dialog.findViewById(R.id.edit_interval);
+                                Button save = dialog.findViewById(R.id.saveInterval);
+                                editInterval.setEnabled(true);
+                                save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if(editInterval.getText()!=null) {
+                                            notiInterval = Integer.parseInt(editInterval.getText().toString());
+                                        }
+                                        else notiInterval = 1;
+                                        dialog.cancel();
+                                    }
+                                });
+
+                                dialog.show();
+                            }
                             else{
                                 Intent showFrag = new Intent().setClass(MyRecyclerViewAdapter.this.activity,ShowFragment.class);
                                 showFrag.putExtra("CellPosition",getAdapterPosition());
@@ -114,9 +129,6 @@ implements Filterable{
                                 showFrag.putExtra("dataTrackingM",dataTrackingModels);
                                 showFrag.putExtra("dataTrackingModels",dataTrackings2);
                                 MyRecyclerViewAdapter.this.activity.startActivityForResult(showFrag,1);
-//                                if(mCallback != null){
-//                                    mCallback.onHandleSelection(getAdapterPosition(), dataTrackings);
-//                                }
                             }
                             Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show();
                             return false;
