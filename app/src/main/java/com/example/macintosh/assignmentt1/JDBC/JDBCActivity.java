@@ -366,11 +366,11 @@ public class JDBCActivity
                         Date d2 = sdf1.parse(endTime);
                         long elapsed = d2.getTime() - d1.getTime();
                         compare[begin] = elapsed;
-                        Log.i(LOG_TAG,"COMPArE" + elapsed);
+
                         int stopTime = Integer.parseInt(rs.getString("stoptime"));
                         String convert = String.format("%02d:%02d", 0, stopTime );
                         Date stoptime1 = sdf1.parse( convert );
-                        Log.i(LOG_TAG,"stop time "+stoptime1);
+
                         currentMeetLocationModels[begin] = new CurrentMeetLocationModel(
                                 Integer.parseInt( rs.getString( "trackableID" ))
                                 ,d2,stoptime1

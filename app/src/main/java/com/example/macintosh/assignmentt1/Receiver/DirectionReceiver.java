@@ -19,8 +19,6 @@ public class DirectionReceiver extends BroadcastReceiver {
         String location = intent.getExtras().getString("location");
         String current = intent.getExtras().getString( "current" );
         Toast.makeText(context,"Go",Toast.LENGTH_SHORT).show();
-        Log.i(TAG,"Direction " + location);
-        Log.i(TAG,"current " + current);
         Intent map = new Intent( context, DirectionActivity.class );
         map.putExtra( "direction_location",location );
         map.putExtra( "direction_current",current );

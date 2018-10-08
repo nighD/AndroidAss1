@@ -68,7 +68,6 @@ public class NotiReceiver extends BroadcastReceiver {
                     latitude[0] = scanner.next();
                     latLng0[0] = new LatLng( Double.parseDouble( latitude[0] ), Double.parseDouble( longtitude[0] ) );
                     if( chosenClosest != 10){
-                        Log.i("CLOSEST","Closest : " + dataTrackings.get( chosenClosest ).getTrackableId());
                         LatLng latLng1 = new LatLng( dataTrackings.get(chosenClosest).getMeetLocationlatitude()
                             , dataTrackings.get(chosenClosest).getMeetLocationlongtitude() );
                         new HttpClientApacheAsyncTask0( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )

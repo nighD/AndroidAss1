@@ -102,9 +102,6 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    //
-//                    addTrackingData(mIntent.getIntExtra("CellPosition",0)+1, editTitle.getText().toString(), startTime2, endTime2,meetTime2, 0,
-//                            0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude());
                 jdbcActivity.createNew(new DataTracking(dataTracking1.getTrackableId(),editTitle.getText().toString(),dataTracking1.getStartTime(),dataTracking1.getEndTime(),meetTime2,0.0,0.0,
                         dataTracking1.getMeetLocationlatitude(),dataTracking1.getMeetLocationlongtitude()),db);
                 }

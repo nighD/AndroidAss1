@@ -35,7 +35,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         JDBCActivity jdbcActivity = new JDBCActivity();
         //HttpClientApache httpClientApache;
         CurrentMeetLocationModel[] currentMeetLocationModels = jdbcActivity.takeLatLng( db,parseDate("07-05-2018 13:00:00") );
-        Log.i(TAG,"SHIT");
         final String[] currentLocation = new String[1];
         final String[] longtitude = {""};
         final String[] latitude = {""};
@@ -55,11 +54,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     latLng0[0] = new LatLng(Double.parseDouble(latitude[0]),Double.parseDouble(longtitude[0]));
                     Random rand = new Random();
                     int  n = rand.nextInt(3) + 0;
-                    Log.i(TAG,"number "+ n);
-
                     LatLng latLng1 = new LatLng( currentMeetLocationModels[n].getMeetLocationLatitude()
                                 , currentMeetLocationModels[n].getMeetLocationLongtitude() );
-                    Log.i(TAG,"trackableID "+currentMeetLocationModels[n].getTrackableId());
                     new HttpClientApacheAsyncTask( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )
                                 , context, currentMeetLocationModels[n]).execute();
                 }

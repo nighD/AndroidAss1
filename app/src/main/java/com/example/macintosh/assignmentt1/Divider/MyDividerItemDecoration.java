@@ -1,4 +1,4 @@
-package com.example.macintosh.assignmentt1.Activities;
+package com.example.macintosh.assignmentt1.Divider;
 
 
 
