@@ -215,7 +215,9 @@ public class MainActivity extends AppCompatActivity {
             }
             for(int i = 0; i < databaseData.size(); i++){
                 for (int j = 0; j < this.dataa.size(); j++ ){
-                    if(databaseData.get(i).getTrackableId()==j+1){
+                    if( databaseData.get(i).getTrackableId() == j+1){
+                        Log.i(LOG_TAG," J  " + j);
+                        Log.i(LOG_TAG," ID  " + databaseData.get(i).getTrackableId());
                         this.dataTrackings.get(j).add(databaseData.get(i));
                     }
                 }
