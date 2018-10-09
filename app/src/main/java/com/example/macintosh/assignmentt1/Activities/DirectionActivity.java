@@ -86,7 +86,7 @@ public class DirectionActivity extends FragmentActivity implements OnMapReadyCal
         destinationLocation = new LatLng( Double.parseDouble( scanner.next() ),Double.parseDouble( scanner.next() ) );
         currentLocation = new LatLng( Double.parseDouble( scanner0.next() ),Double.parseDouble( scanner0.next() ) );
         try {
-            new DirectionFinder(this, destinationLocation ,currentLocation ).execute();
+            new DirectionFinder(this, currentLocation ,destinationLocation ).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

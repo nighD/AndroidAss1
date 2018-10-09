@@ -32,9 +32,29 @@ import java.util.Scanner;
 public class JDBCActivity
 {
     private String LOG_TAG = this.getClass().getName();
-
+     private Connection connection;
     public JDBCActivity(){
 
+    }
+    public void turnOnConnection(final String db){
+        try {
+            Class.forName("org.sqldroid.SQLDroidDriver");
+            connection = DriverManager.getConnection( db );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    public void turnOffConnection(){
+        try {
+            Class.forName("org.sqldroid.SQLDroidDriver");
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     public void trackingDataDatabase(final Context context, final String db){
         // DB operations should go in separate Thread
@@ -47,11 +67,11 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
                     //st.executeUpdate("Drop table trackingdata");
                     // Create table:
-                    st.executeUpdate("create table IF NOT EXISTS trackingdata( " +
+                    st.executeUpdate("create table trackingdata( " +
                             "date0 date not null, " +
                             "time0 time not null, " +
                             "trackableID int not null, " +
@@ -64,6 +84,7 @@ public class JDBCActivity
                     {
                         // match comma and 0 or more whitespace OR trailing space and newline
                         scanner.useDelimiter(",\\s*|\\s*\\n+");
+                        int begin = 0;
                         while (scanner.hasNext())
                         {
                             Date trackingDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).parse(scanner.next());
@@ -84,6 +105,8 @@ public class JDBCActivity
                             st.execute( "INSERT INTO trackingdata VALUES ('"+date+"', '"+time0+"', "+
                                                                                     trackableID+", "+stopTime+", "
                                                                                     +latitude +", " + longtitude+")");
+                            begin ++;
+                            Log.i(LOG_TAG," SIze of trackingdata " + begin);
                         }
                     }
                     catch (Resources.NotFoundException e)
@@ -106,7 +129,7 @@ public class JDBCActivity
                     //rs.close();
 
                     st.close();
-                    con.close();
+                    ////con.close();
 
                 } catch (SQLException sqlEx)
                 {
@@ -137,11 +160,11 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
                     //st.executeUpdate("Drop table servicedata");
                     // Create table:
-                    st.executeUpdate("create table IF NOT EXISTS servicedata( " +
+                    st.executeUpdate("create table servicedata( " +
                             "ID int not null, " +
                             "title char[100], " +
                             "starttime date not null, " +
@@ -153,7 +176,7 @@ public class JDBCActivity
                             "meetlongtitude double)");
                     Log.i(LOG_TAG, "*** Created table: servicedata");
                     st.close();
-                    con.close();
+                    //con.close();
 
                 } catch (SQLException sqlEx)
                 {
@@ -183,8 +206,8 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
                     st.execute( "INSERT INTO servicedata VALUES("+ dataTracking.getTrackableId() +",' "
                                                                        +dataTracking.getTitle() +"','"+dataTracking.getStartTime()+"','"
                                                                         +dataTracking.getEndTime()+"', '"+dataTracking.getMeetTime()+"', "
@@ -193,7 +216,7 @@ public class JDBCActivity
                                                                            + dataTracking.getMeetLocationlongtitude()+")");
                     Log.i(LOG_TAG,"Add new data successfully");
                     st.close();
-                    con.close();
+                    //con.close();
                 } catch (SQLException sqlEx)
                 {
                     Log.i(LOG_TAG, "Failed to add new data");
@@ -224,12 +247,12 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
                     st.execute("update servicedata set meettime = '"+date+"' where ID= "+Integer.toString(ID));
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
-                    con.close();
+                    //con.close();
 
                 } catch (SQLException sqlEx)
                 {
@@ -259,13 +282,13 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
                     SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY hh:mm:ss");
                     st.execute("update servicedata set title = '"+ title +"' where ID= "+Integer.toString(ID));
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
-                    con.close();
+                    //con.close();
 
                 } catch (SQLException sqlEx)
                 {
@@ -291,8 +314,8 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
 
                     // Query and display results //Step 5
                     ResultSet rs = st.executeQuery("SELECT * FROM servicedata") ;
@@ -316,7 +339,7 @@ public class JDBCActivity
                     // Release resources //Step 7
                     rs.close();
                     st.close();
-                    con.close();
+                    //con.close();
 
                 } catch (SQLException sqlEx)
                 {
@@ -350,8 +373,8 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
 
                     // Query and display results //Step 5
                     ResultSet rs = st.executeQuery("SELECT * FROM trackingdata where stoptime > 0");
@@ -378,6 +401,7 @@ public class JDBCActivity
                                 ,Double.parseDouble( rs.getString("longtitude")));
                         //Log.i(LOG_TAG,Integer.toString( currentMeetLocationModels[begin].getTrackableId() ));
                         begin++;
+                        Log.i(LOG_TAG,"size of time > 0 " + begin);
                     }
 
                     int currentID = currentMeetLocationModels[0].getTrackableId();
@@ -418,7 +442,7 @@ public class JDBCActivity
                     // Release resources //Step 7
                     rs.close();
                     st.close();
-                    con.close();
+                    //con.close();
 
 
 
@@ -453,12 +477,12 @@ public class JDBCActivity
                 {
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
-                    Connection con = DriverManager.getConnection(db);
-                    Statement st = con.createStatement();
+                    //Connection con = DriverManager.getConnection(db);
+                    Statement st = connection.createStatement();
                     st.execute("delete from servicedata from ID = "+Integer.toString(ID));
                     Log.i(LOG_TAG, "*** Delete query : ID " +Integer.toString(ID));
                     st.close();
-                    con.close();
+                    //con.close();
 
                 } catch (SQLException sqlEx)
                 {
