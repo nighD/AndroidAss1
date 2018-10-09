@@ -238,7 +238,7 @@ public class JDBCActivity
             }
         }).start();
     }
-    public void changeMeetTime(final int ID,final Date date,final String db, String title){
+    public void changeMeetTime(final int ID,final Date date,final String db, String newTitle, String oldTitle){
         new Thread(new Runnable()
         {
             @Override
@@ -250,7 +250,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     //Connection con = DriverManager.getConnection(db);
                     Statement st = connection.createStatement();
-                    st.executeUpdate("update servicedata set meettime = '"+date+"' where title= "+title);
+                    st.executeUpdate("update servicedata set meettime = '"+date+"' where title= "+newTitle);
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
                     //con.close();
