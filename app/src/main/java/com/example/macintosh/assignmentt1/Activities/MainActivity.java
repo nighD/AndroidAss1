@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter( adapter );
 
         //NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
-        NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
+//        NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
     }
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {
         return new AdapterView.OnItemSelectedListener() {

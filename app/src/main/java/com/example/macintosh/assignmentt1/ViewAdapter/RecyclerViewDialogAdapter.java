@@ -142,7 +142,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             int index = menuItem.getOrder();
                             meetTime2.setTime(dataTrackings.get(position).getStartTime().getTime());
-                            meetTime2.setMinutes((meetTime2.getMinutes()+index));
+                            meetTime2.setMinutes((dataTrackings.get(position).getStartTime().getMinutes()+index));
                             dataTrackings.get(position).getMeetTime().setTime(meetTime2.getTime());
                             holder.meettime.setText("Meet Time: "+stf.format(meetTime2));
                             showMeetTime.setText("Meet Time: "+stf.format(meetTime2));
