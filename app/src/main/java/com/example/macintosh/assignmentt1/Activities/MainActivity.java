@@ -177,32 +177,25 @@ public class MainActivity extends AppCompatActivity {
                     this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
                 }
             }
-<<<<<<< HEAD
-            for (int i = 0; i < dataa.size(); i++ ) {
-                if (dataTrackings2.get(i).isEmpty()) {
-                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-                }
-            }
-            for (int i = 0; i < dataa.size(); i++ ) {
-                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
-                    Date StartTime = new Date();
-                    Date Endtime = new Date();
-                    Date MeetTime = new Date();
-                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
-                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-                            StartTime,
-                            Endtime,
-                            MeetTime
-                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
-
-                    Log.i("HEREE",Integer.toString( i ));
-                }
-            }
-=======
->>>>>>> 157a1f2b04bf80920b61e8d6109238bb83a6f16b
+//
+//            for (int i = 0; i < dataa.size(); i++ ) {
+//                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
+//                    Date StartTime = new Date();
+//                    Date Endtime = new Date();
+//                    Date MeetTime = new Date();
+//                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+//                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+//                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
+//                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
+//                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
+//                            StartTime,
+//                            Endtime,
+//                            MeetTime
+//                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
+//
+//                    Log.i("HEREE",Integer.toString( i ));
+//                }
+//            }
         }
         else {
 //            Log.i(LOG_TAG,"DATABASE DATA = "+databaseData.get(4).getTrackableId());

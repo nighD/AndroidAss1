@@ -218,10 +218,6 @@ public class ShowFragment extends AppCompatActivity {
                                 }
                             });
                             dialog.show();
-<<<<<<< HEAD
-
-=======
->>>>>>> 157a1f2b04bf80920b61e8d6109238bb83a6f16b
                             Intent updateAdd = new Intent();
                             updateAdd.putExtra("action","add");
                             updateAdd.putExtra("updateAdd",dataTrackings);
