@@ -116,23 +116,16 @@ public class ShowFragment extends AppCompatActivity {
                             final TextView endTime = mView.findViewById(R.id.endTimeTS);
                             final TextView meetTime = mView.findViewById(R.id.meetTimeTS);
                             TextView currLoc = mView.findViewById(R.id.currLocTS);
-                            if(dataTrackings.get(position).isEmpty()==false){
-                                startTime.setText("Start time: "+stf.format(dataTrackings.get(position).get(0).getStartTime()));
-                                endTime.setText("End time: "+stf.format(dataTrackings.get(position).get(0).getEndTime()));
-                                meetTime.setText("Meet time: "+stf.format(dataTrackings.get(position).get(0).getMeetTime()));
-                            }
-                            else{
-                                Date endTime2 = new Date();
-                                endTime2.setTime(dataTrackingModels.get(position).get(0).getDate().getTime());
-                                endTime2.setMinutes((endTime2.getMinutes()+dataTrackingModels.get(position).get(0).getStopTime()));
-                                startTime.setText("Start time: "+stf.format(dataTrackingModels.get(position).get(0).getDate()));
-                                endTime.setText("End time: "+stf.format(endTime2));
-                                meetTime.setText("Meet time: "+stf.format(dataTrackingModels.get(position).get(0).getDate()));
-                            }
+                            final Date endTime2 = new Date();
+                            endTime2.setTime(dataTrackingModels.get(position).get(0).getDate().getTime());
+                            endTime2.setMinutes((endTime2.getMinutes()+dataTrackingModels.get(position).get(0).getStopTime()));
+                            startTime.setText("Start time: "+stf.format(dataTrackingModels.get(position).get(0).getDate()));
+                            endTime.setText("End time: "+stf.format(endTime2));
+                            meetTime.setText("Meet time: "+stf.format(dataTrackingModels.get(position).get(0).getDate()));
+
                             currLoc.setText("No Data");
                             final Date startTime2 = new Date();
                             final Date meetTime2 = new Date();
-                            final Date endTime2 = new Date();
                             final ImageButton chooseStartTime = mView.findViewById(R.id.browseStartTime);
                             final ImageButton chooseMeetTime = mView.findViewById(R.id.browseMeetTime);
                             Button SaveMyName = mView.findViewById(R.id.SaveNow);
@@ -160,9 +153,12 @@ public class ShowFragment extends AppCompatActivity {
                                             startTime2.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
                                             meetTime2.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
                                             //startTime2.setMinutes(startTimeMinutes2);
+                                            Date endTime3 = new Date();
+                                            endTime3.setTime(dataTrackingModels.get(position).get(index).getDate().getTime());
+                                            endTime3.setMinutes((startTime2.getMinutes()+dataTrackingModels.get(position).get(index).getStopTime()));
                                             startTime.setText("Start Time: "+stf.format(dataTrackingModels.get(position).get(index).getDate()));
-                                            endTime.setText("End Time: "+stf.format(dataTrackings.get(position).get(index).getEndTime()));
-                                            endTime2.setTime(dataTrackings.get(position).get(index).getEndTime().getTime());
+                                            endTime.setText("End Time: "+stf.format(endTime3));
+                                            endTime2.setTime(endTime3.getTime());
                                             //chooseStartTime.setEnabled(false);
                                             chooseMeetTime.setEnabled(true);
                                             return false;
@@ -222,7 +218,10 @@ public class ShowFragment extends AppCompatActivity {
                                 }
                             });
                             dialog.show();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 157a1f2b04bf80920b61e8d6109238bb83a6f16b
                             Intent updateAdd = new Intent();
                             updateAdd.putExtra("action","add");
                             updateAdd.putExtra("updateAdd",dataTrackings);
