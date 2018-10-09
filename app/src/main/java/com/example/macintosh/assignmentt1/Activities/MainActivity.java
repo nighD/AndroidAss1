@@ -1,10 +1,15 @@
 package com.example.macintosh.assignmentt1.Activities;
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,6 +40,7 @@ import com.example.macintosh.assignmentt1.NotificationScheduler.NotificationSche
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.ModelClass.Trackable;
 import com.example.macintosh.assignmentt1.ModelClass.TrackingService;
+import com.example.macintosh.assignmentt1.Service.GPS_Service;
 import com.example.macintosh.assignmentt1.ViewAdapter.MyRecyclerViewAdapter;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -62,8 +68,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton locationBtn;
     private Button testAct;
     private String string0;
+    JDBCActivity jdbcActivity = new JDBCActivity();
     private static final int REMINDER_TIME = 10;
-    private static final int CHECK_TIME = 300;
+    private static final int CHECK_TIME = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -87,12 +94,11 @@ public class MainActivity extends AppCompatActivity {
         TrackingService trackingService = new TrackingService();
         trackingService.parseFile(getApplicationContext());
         final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
-        JDBCActivity jdbcActivity = new JDBCActivity();
+        jdbcActivity.turnOnConnection( db );
         jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
         //jdbcActivity.takeLatLng( db );
         jdbcActivity.createServiceDatabase(db);
         Date date = new Date(  );
-        Log.i(LOG_TAG,"Create NEW");
 
         //jdbcActivity.createNew(new DataTracking(1,"No data",date,date,date,0,0,0,0  ),db  );
 
@@ -103,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
-        //NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
+
+
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -211,6 +217,9 @@ public class MainActivity extends AppCompatActivity {
                     this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
                 }
             }
+            for (int i = 0;  i < dataa.size(); i++){
+                this.dataTrackings.get(i).clear();
+            }
             for(int i = 0; i < databaseData.size(); i++){
                 for (int j = 0; j < this.dataa.size(); j++ ){
                     if(databaseData.get(i).getTrackableId()==j+1){
@@ -247,7 +256,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration( new MyDividerItemDecoration( this, DividerItemDecoration.VERTICAL, 36 ) );
         recyclerView.setAdapter( adapter );
 
-
+        //NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
+        //NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
     }
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {
         return new AdapterView.OnItemSelectedListener() {
@@ -321,6 +331,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(LOG_TAG,"STOP");
+        jdbcActivity.turnOffConnection();
+
+    }
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -332,7 +349,27 @@ public class MainActivity extends AppCompatActivity {
         CheckAvailability.activityPaused();// On Pause notify the Application
     }
 
+    private boolean runtime_permissions() {
+        if(Build.VERSION.SDK_INT >= 25 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
 
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
+
+            return true;
+        }
+        return false;
+    }
+            @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 1){
+            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                Intent intent =new Intent(getApplicationContext(),GPS_Service.class);
+                startService(intent);
+            }else {
+                runtime_permissions();
+            }
+        }
+    }
 
     public void displayNotification(NotificationModel notificationModel, Context context, CurrentMeetLocationModel currentMeetLocationModel)
     {

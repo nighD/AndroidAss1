@@ -61,7 +61,7 @@ public class ShowFragment extends AppCompatActivity {
     private ArrayList<DataTrackingModel> trackingData;
     private static ArrayList<ArrayList<DataTracking>> dataTrackings;
     private static ArrayList<ArrayList<DataTrackingModel>> dataTrackingModels;
-
+    JDBCActivity jdbcActivity = new JDBCActivity();
 
     String TIME_FORMAT = "hh:mm";
     SimpleDateFormat stf = new SimpleDateFormat(TIME_FORMAT);
@@ -93,13 +93,14 @@ public class ShowFragment extends AppCompatActivity {
             e.printStackTrace();
         }
         rv.setAdapter(adapter);
+        final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
 
+        jdbcActivity.turnOnConnection( db );
         addButton.setOnClickListener(onAddClickListener(mIntent.getIntExtra("CellPosition",0)));
     }
    public View.OnClickListener onAddClickListener(final int position) {
         final Context c = this.getApplicationContext();
-       final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
-       JDBCActivity jdbcActivity = new JDBCActivity();
+
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,8 +230,11 @@ public class ShowFragment extends AppCompatActivity {
                         }
                     }
                 });
+                //jdbcActivity.turnOffConnection();
             }
+
         };
+
     }
     public void addTrackingData(int ID, String title, Date startTime, Date endTime, Date meetTime, double currLat, double currLong,
                                 double meetLat, double meetLong){
@@ -241,5 +245,10 @@ public class ShowFragment extends AppCompatActivity {
 //        this.dataTracking2 = this.dataTrackings;
 //        super.onStop();
 //    }
+@Override
+protected  void onStop(){
+    super.onStop();
+    //jdbcActivity.turnOffConnection();
+}
 
 }

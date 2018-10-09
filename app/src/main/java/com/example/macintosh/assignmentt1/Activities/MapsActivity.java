@@ -83,7 +83,7 @@ public class MapsActivity extends AppCompatActivity implements
     private BroadcastReceiver broadcastReceiver;
     LocationManager locationManager;
     LocationListener locationListener;
-
+    private JDBCActivity jdbcActivity = new JDBCActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,9 +179,9 @@ public class MapsActivity extends AppCompatActivity implements
     private void getTrackablePos(){
         final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
 
-        JDBCActivity jdbcActivity = new JDBCActivity();
-        //jdbcActivity.trackingDataDatabase(this,db);
 
+        //jdbcActivity.trackingDataDatabase(this,db);
+        jdbcActivity.turnOnConnection( db );
         CurrentMeetLocationModel[] currentMeetLocationModels = jdbcActivity.takeLatLng( db,parseDate("07-05-2018 13:00:00") );
         //Log.i(LOG_TAG,"LatLong = "+ currentMeetLocationModels);
     try{
@@ -391,17 +391,12 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-//        if(broadcastReceiver == null){
-//            broadcastReceiver = new BroadcastReceiver() {
-//                @Override
-//                public void onReceive(Context context, Intent intent) {
-//                    Log.i(LOG_TAG,"HERE");
-//                    Log.i(LOG_TAG,"\n" +intent.getExtras().get("coordinates"));
-//
-//                }
-//            };
-//        }
-//        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
+
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        jdbcActivity.turnOffConnection();
     }
     public static Date parseDate(String date) {
         try {

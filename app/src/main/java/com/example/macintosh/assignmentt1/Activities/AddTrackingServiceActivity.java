@@ -41,13 +41,15 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
     private String LOG_TAG = this.getClass().getName();
     private DataTracking dataTracking1;
     private DataTrackingModel dataTrackingModel1;
+   private JDBCActivity jdbcActivity = new JDBCActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         this.mIntent = getIntent();
         final String db = "jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath();
-        JDBCActivity jdbcActivity = new JDBCActivity();
+
         jdbcActivity.trackingDataDatabase(getApplicationContext(),db);
+        jdbcActivity.turnOnConnection( db );
         jdbcActivity.createServiceDatabase(db);
         setContentView(R.layout.add_tracking_service_acti);
         this.browseMeetTime = findViewById(R.id.browseMeetTime2);
@@ -109,9 +111,11 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
     @Override
     public void onDestroy() {
+        jdbcActivity.turnOffConnection();
         super.onDestroy();
     }
 }

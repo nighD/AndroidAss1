@@ -37,6 +37,7 @@ public class NotiReceiver extends BroadcastReceiver {
         final String db = "jdbc:sqldroid:" + context.getApplicationContext().getDatabasePath( "assignment1.db" ).getAbsolutePath();
         JDBCActivity jdbcActivity = new JDBCActivity();
         //HttpClientApache httpClientApache;
+        jdbcActivity.turnOnConnection( db );
         CurrentMeetLocationModel[] currentMeetLocationModels = jdbcActivity.takeLatLng( db, parseDate( "07-05-2018 13:00:00" ) );
         Log.i( TAG, "SHIT" );
         final String[] currentLocation = new String[1];
@@ -82,7 +83,7 @@ public class NotiReceiver extends BroadcastReceiver {
         // Set the alarm here.
         Log.d( TAG, "onReceive AlarmReceiver: BOOT_COMPLETED" );
         NotificationScheduler.setReminderNoti( context, 10 );
-
+        jdbcActivity.turnOffConnection();
     }
     private static Date parseDate(String date) {
         try {

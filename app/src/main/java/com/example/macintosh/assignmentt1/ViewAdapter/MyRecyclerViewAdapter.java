@@ -26,6 +26,7 @@ import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.Interfaces.ItemClickListener;
 import com.example.macintosh.assignmentt1.ModelClass.DataModel;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
+import com.example.macintosh.assignmentt1.NotificationScheduler.NotificationScheduler;
 import com.example.macintosh.assignmentt1.R;
 import com.example.macintosh.assignmentt1.Activities.ShowFragment;
 import com.example.macintosh.assignmentt1.Activities.show_TL;
@@ -110,6 +111,7 @@ implements Filterable{
                                             notiInterval = Integer.parseInt(editInterval.getText().toString());
                                         }
                                         else notiInterval = 1;
+                                        NotificationScheduler.setReminderNoti( ctx, notiInterval*60 );
                                         dialog.cancel();
                                     }
                                 });
