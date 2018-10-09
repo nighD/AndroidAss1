@@ -162,42 +162,25 @@ public class MainActivity extends AppCompatActivity {
                         MeetTime.setTime(trackingData.get(j).getDate().getTime());
                         Endtime.setTime(trackingData.get(j).getDate().getTime());
                         Endtime.setMinutes((Endtime.getMinutes()+trackingData.get(j).getStopTime()));
-                        dataTrackings2.get(i).add(trackingData.get(j));
-                        jdbcActivity.createNew(new DataTracking(trackingData.get(j).getTrackableId(), "No Tracking Data",
-                                StartTime,
-                                Endtime,
-                                MeetTime
-                                , 0, 0, trackingData.get(j).getLatitude(), trackingData.get(j).getLongitude()),db);
+                        this.dataTrackings2.get(i).add(trackingData.get(j));
+//                        jdbcActivity.createNew(new DataTracking(trackingData.get(j).getTrackableId(), "No Tracking Data",
+//                                StartTime,
+//                                Endtime,
+//                                MeetTime
+//                                , 0, 0, trackingData.get(j).getLatitude(), trackingData.get(j).getLongitude()),db);
                     }
                 }
+                Log.i(LOG_TAG,"DataModels size: "+this.dataTrackings2.size());
             }
-//            for (int i = 0; i < dataa.size(); i++ ) {
-//                if (dataTrackings2.get(i).isEmpty()) {
-//                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-//                }
-//            }
-//            for (int i = 0; i < dataa.size(); i++ ) {
-//                for (int j = 0; j < dataTrackings2.get(i).size(); j++){
-//                    Date StartTime = new Date();
-//                    Date Endtime = new Date();
-//                    Date MeetTime = new Date();
-//                    StartTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-//                    MeetTime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-//                    Endtime.setTime(dataTrackings2.get(i).get(j).getDate().getTime());
-//                    Endtime.setMinutes((Endtime.getMinutes()+dataTrackings2.get(i).get(j).getStopTime()));
-//                    this.dataTrackings.get(i).add(new DataTracking(dataTrackings2.get(i).get(j).getTrackableId(), "No Tracking Data",
-//                            StartTime,
-//                            Endtime,
-//                            MeetTime
-//                            , 0, 0, dataTrackings2.get(i).get(j).getLatitude(), dataTrackings2.get(i).get(j).getLongitude()));
-//
-//                    Log.i("HEREE",Integer.toString( i ));
-//                }
-//            }
+            for (int i = 0; i < dataa.size(); i++ ) {
+                if (dataTrackings2.get(i).isEmpty()) {
+                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
+                }
+            }
         }
         else {
-            Log.i(LOG_TAG,"DATABASE DATA = "+databaseData.get(4).getTrackableId());
-            Log.i(LOG_TAG,"DATABASE DATA = "+databaseData.get(1).getStartTime().toString());
+//            Log.i(LOG_TAG,"DATABASE DATA = "+databaseData.get(4).getTrackableId());
+//            Log.i(LOG_TAG,"DATABASE DATA = "+databaseData.get(1).getStartTime().toString());
             for (int i = 0; i < dataa.size(); i++ ) {
                 for(int j = 0; j < trackingData.size(); j++){
                     if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
@@ -205,11 +188,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-//            for (int i = 0; i < dataa.size(); i++ ) {
-//                if (dataTrackings2.get(i).isEmpty()) {
-//                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-//                }
-//            }
+            for (int i = 0; i < dataa.size(); i++ ) {
+                if (dataTrackings2.get(i).isEmpty()) {
+                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
+                }
+            }
             for (int i = 0;  i < dataa.size(); i++){
                 this.dataTrackings.get(i).clear();
             }
@@ -223,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
+        Log.i(LOG_TAG,"DataModels size: "+this.dataTrackings2.size());
         testAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -427,9 +410,7 @@ public class MainActivity extends AppCompatActivity {
         return dataTrackings;
     }
 
-    public static ArrayList<ArrayList<DataTrackingModel>> getDataTrackings2() {
-        return dataTrackings2;
-    }
+    public static ArrayList<ArrayList<DataTrackingModel>> getDataTrackings2() {return dataTrackings2;}
 }
 
 
