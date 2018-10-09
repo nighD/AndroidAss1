@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -248,6 +249,7 @@ public class ShowFragment extends AppCompatActivity {
 @Override
 protected  void onStop(){
     super.onStop();
+    //Log.i("SHOW FRAGMENT", " STOP");
     //jdbcActivity.turnOffConnection();
 }
 
