@@ -165,8 +165,9 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                             notifyItemRangeChanged(position,dataTrackings.size());
                             RecyclerViewDialogAdapter.super.notifyItemChanged(position,dataTrackings.size());
                             jdbcActivity.turnOnConnection(databasePath);
-                            jdbcActivity.changeMeetTime(dataTrackings.get(position).getTrackableId(),meetTime2,databasePath,editTitle.getText().toString(),oldTitle);
                             jdbcActivity.changetitle(dataTrackings.get(position).getTrackableId(),editTitle.getText().toString(),databasePath,oldTitle);
+                            jdbcActivity.changeMeetTime(dataTrackings.get(position).getTrackableId(),meetTime2,databasePath,editTitle.getText().toString(),oldTitle);
+
                         }
                     });
                     dialog.show();
