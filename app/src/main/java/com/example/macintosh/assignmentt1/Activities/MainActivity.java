@@ -142,8 +142,10 @@ public class MainActivity extends AppCompatActivity {
         {
             dataTrackings.add(new ArrayList<DataTracking>());
         }
-        ArrayList<DataTracking> databaseData = jdbcActivity.getData(db);
+        ArrayList<DataTracking> databaseData = new ArrayList<>();
+        databaseData = jdbcActivity.getData(db);
         if(databaseData.isEmpty()){
+            Log.i(LOG_TAG,"DATABASE IS EMPTY !!!!!");
             for (int i = 0; i < dataa.size(); i++ ) {
                 for(int j = 0; j < trackingData.size(); j++){
                     if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
@@ -188,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else {
+            Log.i(LOG_TAG,"DATABASE DATA = "+databaseData.get(4).getTrackableId());
+            Log.i(LOG_TAG,"DATABASE DATA = "+databaseData.get(1).getStartTime().toString());
             for (int i = 0; i < dataa.size(); i++ ) {
                 for(int j = 0; j < trackingData.size(); j++){
                     if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
