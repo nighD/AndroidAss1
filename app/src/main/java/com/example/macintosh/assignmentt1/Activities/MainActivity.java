@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     //    private Activity activity;
 
     MyRecyclerViewAdapter adapter;
-
+    private static int CHECK_TIME = 10;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
     private ArrayList<DataModel> dataa;
@@ -66,11 +66,9 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver;
     private String LOG_TAG = this.getClass().getName();
     private ImageButton locationBtn;
-    private Button testAct;
     private String string0;
     JDBCActivity jdbcActivity = new JDBCActivity();
     private static final int REMINDER_TIME = 10;
-    private static final int CHECK_TIME = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -86,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView( R.layout.activity_main );
         locationBtn = findViewById(R.id.browseLocation);
-        testAct = findViewById(R.id.testAddActivity);
         getSupportActionBar().setDisplayHomeAsUpEnabled( true );
         getSupportActionBar().setTitle( "Search" );
         Trackable trackable = new Trackable();
@@ -226,23 +223,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         Log.i(LOG_TAG,"DataModels size: "+this.dataTrackings2.size());
-        testAct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(LOG_TAG,jdbcActivity.getData(db).toString());
-                Intent testIntent = new Intent();
-                Date EndTime2 = new Date();
-                EndTime2.setTime(trackingData.get(2).getDate().getTime());
-                EndTime2.setMinutes((EndTime2.getMinutes()+trackingData.get(2).getStopTime()));
-                testIntent.setClass(MainActivity.this,AddTrackingServiceActivity.class);
-                testIntent.putExtra("dataTrackingModel1",trackingData.get(2));
-                testIntent.putExtra("dataTracking1", new DataTracking(trackingData.get(2).getTrackableId(),"No Data",
-                        trackingData.get(2).getDate(),EndTime2,trackingData.get(2).getDate(),0.0,0.0,
-                        trackingData.get(2).getLatitude(),trackingData.get(2).getLongitude()));
-
-                MainActivity.this.startActivityForResult(testIntent,2);
-            }
-        });
         try {
             adapter = new MyRecyclerViewAdapter( this.dataa,this.trackingData,this.dataTrackings2, this.dataTrackings, getApplicationContext(), this,db);
         }
@@ -254,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter( adapter );
 
         //NotificationScheduler.setReminder(MainActivity.this, REMINDER_TIME);
-//        NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
+        NotificationScheduler.setReminderNoti( MainActivity.this,CHECK_TIME );
     }
     private AdapterView.OnItemSelectedListener onItemSelectedListener() {
         return new AdapterView.OnItemSelectedListener() {
@@ -430,6 +410,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static ArrayList<ArrayList<DataTrackingModel>> getDataTrackings2() {return dataTrackings2;}
+    public static void setNotiInterval(int interval){
+        CHECK_TIME = interval;
+    };
 }
 
 
