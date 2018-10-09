@@ -26,8 +26,8 @@ public class JSON
           JSONObject durationObj = (JSONObject)elementObj.get("duration");
           String distance = distanceObj.getString("text");
           String duration = durationObj.getString("text");
-          String origin = jsonArray1.get(0).toString();
-          String destination = jsonArray2.get(0).toString();
+          String origin = jsonArray2.get(0).toString();
+          String destination = jsonArray1.get(0).toString();
           ResponseJSON responseJSON = new ResponseJSON( origin,destination,distance,duration );
           return responseJSON;
     }

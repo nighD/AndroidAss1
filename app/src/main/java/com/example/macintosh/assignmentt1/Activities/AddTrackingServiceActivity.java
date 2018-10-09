@@ -19,6 +19,7 @@ import com.example.macintosh.assignmentt1.ModelClass.DataTracking;
 import com.example.macintosh.assignmentt1.ModelClass.DataTrackingModel;
 import com.example.macintosh.assignmentt1.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,10 +71,12 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
         endTime.setText("End time: "+convert);
         meetTime.setText("Meet time: "+stf.format(dataTracking1.getMeetTime()));
 
-        Log.i(LOG_TAG,"END TIME "+endTIME);
+        Log.i(LOG_TAG,"END TIME "+convert);
         currLoc.setText("No Data");
         final Date startTime2 = new Date();
         final Date meetTime2 = new Date();
+        final Date endTime2 = parseDate( convert );
+        Log.i(LOG_TAG,"END TIME "+endTime2.toString());
         startTime2.setTime(dataTracking1.getStartTime().getTime());
         meetTime2.setTime(startTime2.getTime());
         editTitle.setEnabled(true);
@@ -104,7 +107,8 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                jdbcActivity.createNew(new DataTracking(dataTracking1.getTrackableId(),editTitle.getText().toString(),dataTracking1.getStartTime(),dataTracking1.getEndTime(),meetTime2,0.0,0.0,
+                    Log.i(LOG_TAG,"END TIME " + endTime2.getTime());
+                jdbcActivity.createNew(new DataTracking(dataTracking1.getTrackableId(),editTitle.getText().toString(),dataTracking1.getStartTime(),endTime2,meetTime2,0.0,0.0,
                         dataTracking1.getMeetLocationlatitude(),dataTracking1.getMeetLocationlongtitude()),db);
                 }
                 catch (NumberFormatException e){}
@@ -115,7 +119,15 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
     }
     @Override
     public void onDestroy() {
-        jdbcActivity.turnOffConnection();
+        //jdbcActivity.turnOffConnection();
         super.onDestroy();
+    }
+
+    public static Date parseDate(String date) {
+        try {
+            return new SimpleDateFormat("hh:mm").parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }

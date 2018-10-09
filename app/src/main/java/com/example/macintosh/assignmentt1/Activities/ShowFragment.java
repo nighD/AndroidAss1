@@ -216,12 +216,13 @@ public class ShowFragment extends AppCompatActivity {
                                         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                                     }
                                     catch (NumberFormatException e){}
+                                    jdbcActivity.createNew(new DataTracking(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
+                                            0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),"jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath());
                                     dialog.cancel();
                                 }
                             });
                             dialog.show();
-                            jdbcActivity.createNew(new DataTracking(mIntent.getIntExtra("CellPosition",0)+1, Write.getText().toString(), startTime2, endTime2,meetTime2, 0,
-                                    0,trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLatitude(),trackingData.get(mIntent.getIntExtra("CellPosition",0)).getLongitude()),"jdbc:sqldroid:" + getDatabasePath("assignment1.db").getAbsolutePath());
+
                             Intent updateAdd = new Intent();
                             updateAdd.putExtra("action","add");
                             updateAdd.putExtra("updateAdd",dataTrackings);

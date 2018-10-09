@@ -45,7 +45,7 @@ public class NotiReceiver extends BroadcastReceiver {
         final String[] latitude = {""};
         ArrayList<DataTracking> dataTrackings;
         dataTrackings = jdbcActivity.getData( db );
-        ArrayList<Integer> chosen = getCloserTime( dataTrackings,parseDate( "07-05-2018 13:01:00" ) );
+        ArrayList<Integer> chosen = getCloserTime( dataTrackings,parseDate( "07-05-2018 13:30:00" ) );
         int closest = 10;
         if (chosen.size() > 0){
             closest = chosen.get( 0 );
@@ -72,7 +72,7 @@ public class NotiReceiver extends BroadcastReceiver {
                         LatLng latLng1 = new LatLng( dataTrackings.get(chosenClosest).getMeetLocationlatitude()
                             , dataTrackings.get(chosenClosest).getMeetLocationlongtitude() );
                         new HttpClientApacheAsyncTask0( mainActivity, updateURL.UpdateURLService( latLng0[0], latLng1 )
-                            , context, dataTrackings.get( chosenClosest ),latLng0[0]).execute();
+                            , context, dataTrackings.get( chosenClosest ),latLng0[0],latLng1).execute();
                     }
                 }
             };

@@ -26,6 +26,7 @@ public abstract class AbstractHttpAsyncTask0 extends AsyncTask<Void, Integer, Vo
     public static Context context;
     public static DataTracking dataTracking;
     public static LatLng latLng;
+    public static LatLng latLng1;
     protected MainActivity activity = null;
     private int charsRead;
 
@@ -59,6 +60,6 @@ public abstract class AbstractHttpAsyncTask0 extends AsyncTask<Void, Integer, Vo
     @Override
     protected void onPostExecute(Void result)
     {
-        activity.displayNoti(context,dataTracking,notificationModel,latLng);
+        activity.displayNoti(context,dataTracking,notificationModel,latLng,latLng1);
     }
 }
