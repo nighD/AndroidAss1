@@ -249,8 +249,9 @@ public class JDBCActivity
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     //Connection con = DriverManager.getConnection(db);
+                    turnOnConnection( db );
                     Statement st = connection.createStatement();
-                    st.executeUpdate("update servicedata set meettime = '"+date+"' where ID= "+Integer.toString(ID));
+                    st.executeUpdate("update servicedata set meettime = '"+date+"' where title = '"+title+"'");
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
                     //con.close();
@@ -284,9 +285,10 @@ public class JDBCActivity
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     //Connection con = DriverManager.getConnection(db);
+                    turnOnConnection( db );
                     Statement st = connection.createStatement();
                     SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY hh:mm:ss");
-                    st.execute("update servicedata set title = '"+ title +"' where ID= "+Integer.toString(ID));
+                    st.executeUpdate("update servicedata set title = '"+ title +"' where title = '"+oldTitle+"'");
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
                     //con.close();
