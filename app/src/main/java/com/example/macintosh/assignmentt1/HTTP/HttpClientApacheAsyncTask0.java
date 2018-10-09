@@ -33,7 +33,7 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
     //private Context context;
 
 
-    public HttpClientApacheAsyncTask0(MainActivity activity, String URL, Context context, DataTracking dataTracking0, LatLng latLng0)
+    public HttpClientApacheAsyncTask0(MainActivity activity, String URL, Context context, DataTracking dataTracking0, LatLng latLng0,LatLng latLng1)
     {
         super(activity);
         Log.i(LOG_TAG,URL);
@@ -41,6 +41,7 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
         DistURL = URL;
         this.dataTracking = dataTracking0;
         this.latLng = latLng0;
+        this.latLng1 = latLng1;
 
     }
 
@@ -83,6 +84,7 @@ public class HttpClientApacheAsyncTask0 extends AbstractHttpAsyncTask0
                 this.response = JSON.responseJSON( responseBody );
                 int ID = this.response.getID();
                 String destination = this.response.getDestination();
+                Log.i("Destination", destination);
                 String duration = this.response.getDuration();
                 notificationModel = new NotificationModel( ID,destination,duration );
             }

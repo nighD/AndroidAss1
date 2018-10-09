@@ -4,6 +4,7 @@ package com.example.macintosh.assignmentt1.JDBC;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -249,7 +250,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     //Connection con = DriverManager.getConnection(db);
                     Statement st = connection.createStatement();
-                    st.execute("update servicedata set meettime = '"+date+"' where ID= "+Integer.toString(ID));
+                    st.executeUpdate("update servicedata set meettime = '"+date+"' where ID= "+Integer.toString(ID));
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
                     //con.close();
@@ -468,7 +469,7 @@ public class JDBCActivity
 
 
 
-    public void deleteCol ( final int ID, final String db){
+    public void deleteCol ( final int ID,final String title, final String db){
         new Thread(new Runnable()
         {
             @Override
@@ -479,8 +480,11 @@ public class JDBCActivity
                     Class.forName("org.sqldroid.SQLDroidDriver");
                     Log.i(LOG_TAG, String.format("opening: %s", db));
                     //Connection con = DriverManager.getConnection(db);
+                    turnOnConnection( db );
                     Statement st = connection.createStatement();
-                    st.execute("delete from servicedata from ID = "+Integer.toString(ID));
+                    Log.i(LOG_TAG,"title " + title +"'");
+                    st.executeUpdate("delete from servicedata where title = '"+ title +"'");
+
                     Log.i(LOG_TAG, "*** Delete query : ID " +Integer.toString(ID));
                     st.close();
                     //con.close();
@@ -501,6 +505,7 @@ public class JDBCActivity
                 }
             }
         }).start();
+        turnOffConnection();
     }
 
 

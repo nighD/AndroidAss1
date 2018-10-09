@@ -148,13 +148,13 @@ public class NotificationScheduler
 
 
 
-    public static void showNoti(Context context, DataTracking dataTracking, NotificationModel notificationModel, LatLng latLng)
+    public static void showNoti(Context context, DataTracking dataTracking, NotificationModel notificationModel, LatLng latLng,LatLng latLng1)
     {
         String CHANNEL_ID = "my_channel_02";
         Intent i = new Intent(context,GPS_Service.class);
         context.stopService(i);
 
-        PendingIntent GoIntent = createGoIntent( context,dataTracking,latLng );
+        PendingIntent GoIntent = createGoIntent( context,dataTracking,latLng,latLng1 );
         PendingIntent cancelIntent= createCancelIntent( context );
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -194,10 +194,10 @@ public class NotificationScheduler
 
 
 
-    private static PendingIntent createGoIntent(Context context,DataTracking dataTracking,LatLng latLng) {
+    private static PendingIntent createGoIntent(Context context,DataTracking dataTracking,LatLng latLng,LatLng latLng1) {
         Intent goIntent = new Intent(context, DirectionReceiver.class );
         goIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
-        goIntent.putExtra("location", dataTracking.getMeetLocationlatitude() +" "+ dataTracking.getMeetLocationlongtitude());
+        goIntent.putExtra("location", latLng1.latitude +" "+ latLng1.longitude);
         goIntent.putExtra( "current", latLng.latitude + " "+latLng.longitude );
         Log.i(TAG, "meet " +dataTracking.getMeetLocationlatitude() +" "+ dataTracking.getMeetLocationlongtitude() );
         Log.i(TAG, "start " +latLng.latitude + " "+latLng.longitude);

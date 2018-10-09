@@ -94,6 +94,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_cardview,parent,false);
+
         ViewHolder holder=new ViewHolder(v);
         return holder;
     }
@@ -163,6 +164,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                             dialog.cancel();
                             notifyItemRangeChanged(position,dataTrackings.size());
                             RecyclerViewDialogAdapter.super.notifyItemChanged(position,dataTrackings.size());
+                            jdbcActivity.turnOnConnection(databasePath);
                             jdbcActivity.changeMeetTime(dataTrackings.get(position).getTrackableId(),meetTime2,databasePath,oldTitle);
                             jdbcActivity.changetitle(dataTrackings.get(position).getTrackableId(),editTitle.getText().toString(),databasePath,oldTitle);
                         }
@@ -201,7 +203,9 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jdbcActivity.deleteCol(dataTrackings.get(position).getTrackableId(),databasePath);
+                Log.i("DELETE","delete");
+                jdbcActivity.turnOnConnection( databasePath );
+                jdbcActivity.deleteCol(dataTrackings.get(position).getTrackableId(),dataTrackings.get( position ).getTitle(),databasePath);
                 removeTrackingData(position);
                 notifyItemRangeChanged(position,dataTrackings.size());
                 notifyDataSetChanged();
