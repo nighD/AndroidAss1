@@ -237,7 +237,7 @@ public class JDBCActivity
             }
         }).start();
     }
-    public void changeMeetTime(final int ID,final Date date,final String db){
+    public void changeMeetTime(final int ID,final Date date,final String db, String title){
         new Thread(new Runnable()
         {
             @Override
@@ -253,7 +253,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
                     //con.close();
-
+                    Log.i("CHANGE MEETTIME","Success");
                 } catch (SQLException sqlEx)
                 {
                     while (sqlEx != null)
@@ -272,7 +272,7 @@ public class JDBCActivity
         }).start();
     }
 
-    public void changetitle(final int ID,final String title,final String db){
+    public void changetitle(final int ID,final String title,final String db,String oldTitle){
         new Thread(new Runnable()
         {
             @Override
@@ -289,6 +289,7 @@ public class JDBCActivity
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
                     //con.close();
+                    Log.i("CHANGE TITLE", "Success");
 
                 } catch (SQLException sqlEx)
                 {

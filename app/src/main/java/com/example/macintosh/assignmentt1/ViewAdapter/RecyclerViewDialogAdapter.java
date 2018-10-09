@@ -48,7 +48,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     private String url;
     private String databasePath;
     JDBCActivity jdbcActivity = new JDBCActivity();
-
+    private String oldTitle;
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
@@ -62,7 +62,6 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
     ImageButton Delete;
     ImageButton Edit;
     TextView date;
-
     TextView stoptime;
     TextView longtitude;
     TextView latitude;
@@ -112,7 +111,7 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
             holder.meetlocation.setText("Meet Location: "+ Double.toString(dataTrackings.get(position).getMeetLocationlatitude() )
                     +" "+ Double.toString(dataTrackings.get(position).getMeetLocationlongtitude()) );
             final Date meetTime2 = new Date();
-
+            oldTitle = dataTrackings.get(position).getTitle();
             holder.Edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -154,8 +153,6 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                         }
                     });
                     editTime.show();
-                    jdbcActivity.changeMeetTime(dataTrackings.get(position).getTrackableId(),meetTime2,databasePath);
-                    jdbcActivity.changetitle(dataTrackings.get(position).getTrackableId(),editTitle.getText().toString(),databasePath);
                         }
                     });
                     Save.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +163,8 @@ public class RecyclerViewDialogAdapter extends RecyclerView.Adapter<RecyclerView
                             dialog.cancel();
                             notifyItemRangeChanged(position,dataTrackings.size());
                             RecyclerViewDialogAdapter.super.notifyItemChanged(position,dataTrackings.size());
+                            jdbcActivity.changeMeetTime(dataTrackings.get(position).getTrackableId(),meetTime2,databasePath,oldTitle);
+                            jdbcActivity.changetitle(dataTrackings.get(position).getTrackableId(),editTitle.getText().toString(),databasePath,oldTitle);
                         }
                     });
                     dialog.show();
