@@ -251,11 +251,10 @@ public class JDBCActivity
                     //Connection con = DriverManager.getConnection(db);
                     turnOnConnection( db );
                     Statement st = connection.createStatement();
-<<<<<<< HEAD
-                    st.executeUpdate("update servicedata set meettime = '"+date+"' where title = '"+title+"'");
-=======
-                    st.executeUpdate("update servicedata set meettime = '"+date+"' where title= "+title);
->>>>>>> b2986ab501d9b9526ec1aefb73ba138b5b34a494
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                    String dateStart = sdf.format(date);
+                    st.executeUpdate("update servicedata set meettime = '" + dateStart+ "' where ID =" + Integer.toString( ID ));
+
                     Log.i(LOG_TAG, "*** Update query: ID " +Integer.toString(ID));
                     st.close();
                     //con.close();

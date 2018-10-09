@@ -112,7 +112,7 @@ public class AddTrackingServiceActivity extends AppCompatActivity {
                         dataTracking1.getMeetLocationlatitude(),dataTracking1.getMeetLocationlongtitude()),db);
                 }
                 catch (NumberFormatException e){}
-                
+
                 finish();
             }
         });
