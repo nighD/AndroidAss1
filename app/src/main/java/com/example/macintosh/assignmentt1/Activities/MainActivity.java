@@ -171,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-            for (int i = 0; i < dataa.size(); i++ ) {
-                if (dataTrackings2.get(i).isEmpty()) {
-                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-                }
-            }
+//            for (int i = 0; i < dataa.size(); i++ ) {
+//                if (dataTrackings2.get(i).isEmpty()) {
+//                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
+//                }
+//            }
             for (int i = 0; i < dataa.size(); i++ ) {
                 for (int j = 0; j < dataTrackings2.get(i).size(); j++){
                     Date StartTime = new Date();
@@ -201,22 +201,15 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < dataa.size(); i++ ) {
                 for(int j = 0; j < trackingData.size(); j++){
                     if((trackingData.get(j).getTrackableId()==i+1)&&(trackingData.get(j).getStopTime()!=0)){
-                        Date StartTime = new Date();
-                        Date Endtime = new Date();
-                        Date MeetTime = new Date();
-                        StartTime.setTime(trackingData.get(j).getDate().getTime());
-                        MeetTime.setTime(trackingData.get(j).getDate().getTime());
-                        Endtime.setTime(trackingData.get(j).getDate().getTime());
-                        Endtime.setMinutes((Endtime.getMinutes()+trackingData.get(j).getStopTime()));
                         dataTrackings2.get(i).add(trackingData.get(j));
                     }
                 }
             }
-            for (int i = 0; i < dataa.size(); i++ ) {
-                if (dataTrackings2.get(i).isEmpty()) {
-                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
-                }
-            }
+//            for (int i = 0; i < dataa.size(); i++ ) {
+//                if (dataTrackings2.get(i).isEmpty()) {
+//                    this.dataTrackings2.get(i).add(new DataTrackingModel(new Date(),0,i+1,5,0,0));
+//                }
+//            }
             for (int i = 0;  i < dataa.size(); i++){
                 this.dataTrackings.get(i).clear();
             }
